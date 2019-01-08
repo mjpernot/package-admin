@@ -1,0 +1,133 @@
+#!/usr/bin/python
+# Classification (U)
+
+"""Program:  list_ins_pkg.py
+
+    Description:  Unit testing of list_ins_pkg in package_admin.py.
+
+    Usage:
+        test/unit/package_admin/list_ins_pkg.py
+
+    Arguments:
+        None
+
+"""
+
+# Libraries and Global Variables
+
+# Standard
+import sys
+import os
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
+# Third-party
+import mock
+
+# Local
+sys.path.append(os.getcwd())
+import package_admin
+import version
+
+# Version
+__version__ = version.__version__
+
+
+class UnitTest(unittest.TestCase):
+
+    """Class:  UnitTest
+
+    Description:  Class which is a representation of a unit testing.
+
+    Super-Class:  unittest.TestCase
+
+    Sub-Classes:  None
+
+    Methods:
+        setUp -> Unit testing initilization.
+        test_list_upd_pkg -> Test call to list_upd_pkg function.
+
+    """
+
+    def setUp(self):
+
+        """Function:  setUp
+
+        Description:  Initialization for unit testing.
+
+        Arguments:
+            None
+
+        """
+
+        class Yum(object):
+
+            """Class:  Yum
+
+            Description:  Class which is a representation of the Yum class.
+
+            Super-Class:  object
+
+            Sub-Classes:  None
+
+            Methods:
+                __init__ -> Initialize configuration environment.
+                fetch_install_pkgs -> Set self.data attribute.
+
+            """
+
+            def __init__(self):
+
+                """Method:  __init__
+
+                Description:  Initialization instance of the Mail class.
+
+                Arguments:
+                        None
+
+                """
+
+                self.hostname = ""
+                self.data = ""
+
+            def fetch_install_pkgs(self):
+
+                """Method:  fetch_install_pkgs
+
+                Description:  Set self.data attribute.
+
+                Arguments:
+                    None
+
+                """
+
+                self.data = "Installed_Packages_List"
+
+        self.yum = Yum()
+
+        self.args_array = {"-i": "Database_Name:Table_Name"}
+        self.func_name = self.yum.fetch_install_pkgs
+
+    @mock.patch("package_admin.process_yum")
+    def test_list_ins_pkg(self, mock_yum):
+
+        """Function:  test_list_ins_pkg
+
+        Description:  Test call to list_ins_pkg function.
+
+        Arguments:
+            mock_yum -> Mock Ref:  package_admin.process_yum
+
+        """
+
+        # Set mock values.
+        mock_yum.return_value = True
+
+        self.assertFalse(package_admin.list_ins_pkg(self.args_array, self.yum))
+
+
+if __name__ == "__main__":
+    unittest.main()

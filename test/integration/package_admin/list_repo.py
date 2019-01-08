@@ -1,0 +1,338 @@
+#!/usr/bin/python
+# Classification (U)
+
+"""Program:  list_repo.py
+
+    Description:  Integration testing of list_repo in package_admin.py.
+
+    Usage:
+        test/integration/package_admin/list_repo.py
+
+    Arguments:
+        None
+
+"""
+
+# Libraries and Global Variables
+
+# Standard
+import sys
+import os
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest
+else:
+    import unittest
+
+import datetime
+import filecmp
+
+# Third-party
+import mock
+
+# Local
+sys.path.append(os.getcwd())
+import package_admin
+import lib.gen_libs as gen_libs
+import mongo_lib.mongo_libs as mongo_libs
+import mongo_lib.mongo_class as mongo_class
+import lib.cmds_gen as cmds_gen
+import version
+
+# Version
+__version__ = version.__version__
+
+
+class UnitTest(unittest.TestCase):
+
+    """Class:  UnitTest
+
+    Description:  Class which is a representation of a unit testing.
+
+    Super-Class:  unittest.TestCase
+
+    Sub-Classes:  None
+
+    Methods:
+        setUp -> Integration testing initilization.
+        test_list_repo_file -> Test writing to file.
+        test_list_repo_file_json -> Test writing to file in JSON format.
+        test_list_repo_sup_std -> Test suppressing standard out.
+        test_list_repo_out_std -> Test writing to standard out.
+        test_list_repo_mongo -> Test writing to Mongo database.
+        test_list_repo_mongo_file -> Test writing to Mongo database & file.
+        tearDown -> Clean up of integration testing.
+
+    """
+
+    def setUp(self):
+
+        """Function:  setUp
+
+        Description:  Initialization for unit testing.
+
+        Arguments:
+            None
+
+        """
+
+        class Yum(object):
+
+            """Class:  Yum
+
+            Description:  Class which is a representation of the Yum class.
+
+            Super-Class:  object
+
+            Sub-Classes:  None
+
+            Methods:
+                __init__ -> Initialize configuration environment.
+                get_hostname -> Return Server's hostname.
+                get_distro -> Reuturn class' linux_distribution.
+                fetch_update_pkgs -> Return Server's update package data.
+
+            """
+
+            def __init__(self):
+
+                """Method:  __init__
+
+                Description:  Initialization instance of the Mail class.
+
+                Arguments:
+                        None
+
+                """
+
+                self.hostname = "Server_Host_Name"
+                self.data = ['REPOSITORY_LIST']
+                self.distro = ("OS_Name", "Version_Release", "Type_Release")
+
+            def get_distro(self):
+
+                """Method:  get_distro
+
+                Description:  Return self.distro attribute.
+
+                Arguments:
+                    (output) self.distro -> Linux distribution tuple value.
+
+                """
+
+                return self.distro
+
+            def get_hostname(self):
+
+                """Method:  get_hostname
+
+                Description:  Return Server's hostname.
+
+                Arguments:
+                    (output) self.hostname -> Server's hostname.
+
+                """
+
+                return self.hostname
+
+            def fetch_repos(self):
+
+                """Method:  fetch_repos
+
+                Description:  Return Server's update package data.
+
+                Arguments:
+                    (output) self.data -> Server's update package data.
+
+                """
+
+                return self.data
+
+        self.yum = Yum()
+
+        self.base_dir = "test/integration/package_admin"
+        self.test_path = os.path.join(os.getcwd(), self.base_dir)
+
+        self.config_path = os.path.join(self.test_path, "config")
+        self.mongo_cfg = gen_libs.load_module("mongo", self.config_path)
+
+        self.out_path = os.path.join(self.test_path, "out")
+        self.out_file = os.path.join(self.out_path, "package_repo.txt")
+        self.non_json_file = os.path.join(self.out_path,
+                                          "package_repo_non_json")
+        self.json_file = os.path.join(self.out_path, "package_repo_json")
+
+        self.db = "test_sysmon"
+        self.tbl = "test_server_pkgs"
+        self.args_array = {"-i": "test_sysmon:test_server_pkgs",
+                           "-o": self.out_file, "-n": True}
+        self.args_array2 = {"-o": self.out_file, "-n": True}
+        self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-n": True}
+        self.args_array4 = {"-n": True}
+        self.args_array5 = {"-n": False}
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_file(self, mock_date):
+
+        """Function:  test_list_repo_file
+
+        Description:  Test writing to file.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        package_admin.list_repo(self.args_array2, self.yum,
+                                class_cfg=self.mongo_cfg)
+
+        status = filecmp.cmp(self.out_file, self.non_json_file)
+
+        self.assertTrue(status)
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_file_json(self, mock_date):
+
+        """Function:  test_list_repo_file_json
+
+        Description:  Test writing to file in JSON format.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        self.args_array2["-j"] = True
+
+        package_admin.list_repo(self.args_array2, self.yum,
+                                class_cfg=self.mongo_cfg)
+
+        status = filecmp.cmp(self.out_file, self.json_file)
+
+        self.assertTrue(status)
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_sup_std(self, mock_date):
+
+        """Function:  test_list_repo_sup_std
+
+        Description:  Test suppressing standard out.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        self.assertFalse(package_admin.list_repo(self.args_array4, self.yum,
+                                                 class_cfg=self.mongo_cfg))
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_out_std(self, mock_date):
+
+        """Function:  test_list_repo_out_std
+
+        Description:  Test writing to standard out.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        with gen_libs.no_std_out():
+            self.assertFalse(package_admin.list_repo(
+                self.args_array5, self.yum, class_cfg=self.mongo_cfg))
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_mongo(self, mock_date):
+
+        """Function:  test_list_repo_mongo
+
+        Description:  Test writing to Mongo database.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        package_admin.list_repo(self.args_array3, self.yum,
+                                class_cfg=self.mongo_cfg)
+
+        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        COLL.connect()
+
+        if COLL.coll_find1()["Server"] == self.yum.hostname:
+            status = True
+
+        else:
+            status = False
+
+        cmds_gen.disconnect([COLL])
+
+        self.assertTrue(status)
+
+    @mock.patch("package_admin.datetime")
+    def test_list_repo_mongo_file(self, mock_date):
+
+        """Function:  test_list_repo_mongo_file
+
+        Description:  Test writing to Mongo database and to a file.
+
+        Arguments:
+            mock_date -> Mock Ref:  package_admin.datetime
+
+        """
+
+        mock_date.datetime.strftime.return_value = "2018-01-01 01:00:00"
+
+        package_admin.list_repo(self.args_array, self.yum,
+                                class_cfg=self.mongo_cfg)
+
+        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        COLL.connect()
+
+        if COLL.coll_find1()["Server"] == self.yum.hostname:
+            status = filecmp.cmp(self.out_file, self.non_json_file)
+
+        else:
+            status = False
+
+        cmds_gen.disconnect([COLL])
+
+        self.assertTrue(status)
+
+    def tearDown(self):
+
+        """Function:  tearDown
+
+        Description:  Clean up of integration testing.
+
+        Arguments:
+            None
+
+        """
+
+        DB = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
+                            self.mongo_cfg.passwd, self.mongo_cfg.host,
+                            self.mongo_cfg.port, self.db, self.mongo_cfg.auth,
+                            self.mongo_cfg.conf_file)
+
+        DB.db_connect(self.db)
+        DB.db_cmd("dropDatabase")
+        cmds_gen.disconnect([DB])
+
+        if os.path.isfile(self.out_file):
+            os.remove(self.out_file)
+
+
+if __name__ == "__main__":
+    unittest.main()

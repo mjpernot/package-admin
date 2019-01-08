@@ -1,0 +1,8 @@
+{
+    "Repos": [
+        "REPOSITORY_LIST"
+    ], 
+    "Asof": "2018-01-01 01:00:00", 
+    "OS_Release": "OS_Name Version_Release", 
+    "Server": "Server_Host_Name"
+}
