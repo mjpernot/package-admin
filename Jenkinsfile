@@ -21,6 +21,7 @@ pipeline {
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock --user
+                pip2 install pymongo --user
                 ./test/unit/package_admin/help_message.py
                 ./test/unit/package_admin/process_yum.py
                 ./test/unit/package_admin/list_upd_pkg.py
