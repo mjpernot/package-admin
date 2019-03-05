@@ -64,9 +64,9 @@ exit
 Install supporting classes and libraries.
 
 ```
-pip install -r requirements2.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements3.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements2.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Configuration (optional):
@@ -233,9 +233,9 @@ exit
 Install supporting classes and libraries.
 
 ```
-pip install -r requirements2.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements3.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements2.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Unit test runs for package_admin.py:
@@ -329,9 +329,9 @@ exit
 Install supporting classes and libraries.
 
 ```
-pip install -r requirements2.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements3.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements2.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 ### Configuration:
@@ -457,9 +457,9 @@ exit
 Install supporting classes and libraries.
 
 ```
-pip install -r requirements2.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements3.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements2.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 ### Configuration:
