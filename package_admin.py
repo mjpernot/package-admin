@@ -200,7 +200,7 @@ def list_repo(args_array, yum, **kwargs):
 
     """
 
-    process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
+    process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
 
 
 def run_program(args_array, func_dict, **kwargs):
