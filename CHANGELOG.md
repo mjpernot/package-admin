@@ -7,6 +7,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ## [2.1.5] - 2019-03-06
 ### Changed
 - process_yum:  Changed output to camelCase.
+- list_upd_pkg:  Changed output to camelCase.
 - main: Refactored code to bring into standard convention.
 
 

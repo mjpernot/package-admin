@@ -164,7 +164,7 @@ def list_upd_pkg(args_array, yum, **kwargs):
 
     """
 
-    process_yum(args_array, yum, "Update_Packages", yum.fetch_update_pkgs,
+    process_yum(args_array, yum, "updatePackages", yum.fetch_update_pkgs,
                 **kwargs)
 
 
