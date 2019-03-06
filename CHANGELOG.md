@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [2.1.5] - 2019-03-05
+## [2.1.5] - 2019-03-06
 ### Changed
+- process_yum:  Changed output to camelCase.
 - main: Refactored code to bring into standard convention.
 
 
