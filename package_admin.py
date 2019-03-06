@@ -129,9 +129,9 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     os_distro = yum.get_distro()
 
-    data = {"Server": yum.get_hostname(),
-            "OS_Release": os_distro[0] + " " + os_distro[1],
-            "Asof": datetime.datetime.strftime(datetime.datetime.now(),
+    data = {"server": yum.get_hostname(),
+            "osRelease": os_distro[0] + " " + os_distro[1],
+            "asOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
 
@@ -164,7 +164,7 @@ def list_upd_pkg(args_array, yum, **kwargs):
 
     """
 
-    process_yum(args_array, yum, "Update_Packages", yum.fetch_update_pkgs,
+    process_yum(args_array, yum, "updatePackages", yum.fetch_update_pkgs,
                 **kwargs)
 
 
@@ -182,7 +182,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
-    process_yum(args_array, yum, "Installed_Packages", yum.fetch_install_pkgs,
+    process_yum(args_array, yum, "installedPackages", yum.fetch_install_pkgs,
                 **kwargs)
 
 
@@ -200,7 +200,7 @@ def list_repo(args_array, yum, **kwargs):
 
     """
 
-    process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
+    process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
 
 
 def run_program(args_array, func_dict, **kwargs):
