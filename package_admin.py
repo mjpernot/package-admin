@@ -200,6 +200,7 @@ def list_repo(args_array, yum, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
 
 
