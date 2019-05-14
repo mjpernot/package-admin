@@ -33,7 +33,6 @@ import lib.cmds_gen as cmds_gen
 import mongo_lib.mongo_class as mongo_class
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -56,9 +55,7 @@ def file_check(out_file, hold_file, search_list, json_fmt=False, **kwargs):
     status = True
 
     if os.path.isfile(out_file):
-
         for item in search_list:
-
             if item not in open(out_file).read():
                 status = False
                 print("\t\tError:  %s not present in %s" % (item, out_file))
@@ -67,22 +64,40 @@ def file_check(out_file, hold_file, search_list, json_fmt=False, **kwargs):
                     shutil.copy2(out_file, hold_file)
 
         if json_fmt:
-
-            try:
-                data = json.load(open(out_file))
-
-            except:
-                status = False
-                print("\t\tError:  %s is not in JSON format" % (out_file))
-
-                if not os.path.isfile(hold_file):
-                    shutil.copy2(out_file, hold_file)
+            status = _check_json(out_file, status, hold_file)
 
         os.remove(out_file)
 
     else:
         status = False
         print("\t\tError:  %s is not present" % (out_file))
+
+    return status
+
+
+def _check_json(out_file, status, hold_file, **kwargs):
+
+    """Function:  _check_json
+
+    Description:  Private function for file_check function.
+
+    Arguments:
+        (input) out_file -> Path and file name of output file.
+        (input) status -> Status of check.
+        (input) hold_file -> Name of file if file check fail.
+        (output) status -> True|False - Status of check.
+
+    """
+
+    try:
+        data = json.load(open(out_file))
+
+    except:
+        status = False
+        print("\t\tError:  %s is not in JSON format" % (out_file))
+
+        if not os.path.isfile(hold_file):
+            shutil.copy2(out_file, hold_file)
 
     return status
 
@@ -136,6 +151,26 @@ def mongo_cleanup(mongo_cfg, db, **kwargs):
     cmds_gen.Disconnect([DB])
 
 
+def _check_status(status, status_1, status_2, **kwargs):
+
+    """Function:  _check_status
+
+    Description:  Private function for main function.
+
+    Arguments:
+        (input) status -> Status of check.
+        (input) status1 -> File check status.
+        (input) status2 -> Mongo check status.
+        (output) status -> True|False - Status of check.
+
+    """
+
+    if not (status_1 and status_2):
+        status = False
+
+    return status
+
+
 def main():
 
     """Function:  main
@@ -186,9 +221,7 @@ def main():
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
-
-        if not (status_1 and status_2):
-            status = False
+        status = _check_status(status, status_1, status_2)
 
     elif "-j" in sys.argv and "-o" in sys.argv:
         status = file_check(out_file, hold_file, search_list, json_fmt=True)
@@ -197,9 +230,7 @@ def main():
         status_1 = file_check(out_file, hold_file, search_list)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
-
-        if not (status_1 and status_2):
-            status = False
+        status = _check_status(status, status_1, status_2)
 
     elif "-i" in sys.argv:
         status = mongo_check(mongo_cfg, hostname, db, tbl)
