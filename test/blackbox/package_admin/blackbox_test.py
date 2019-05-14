@@ -85,7 +85,7 @@ def _check_json(out_file, status, hold_file, **kwargs):
         (input) out_file -> Path and file name of output file.
         (input) status -> Status of check.
         (input) hold_file -> Name of file if file check fail.
-        (output) status -> True|False - Status of checks.
+        (output) status -> True|False - Status of check.
 
     """
 
@@ -151,6 +151,26 @@ def mongo_cleanup(mongo_cfg, db, **kwargs):
     cmds_gen.Disconnect([DB])
 
 
+def _check_status(status, status_1, status_2, **kwargs):
+
+    """Function:  _check_status
+
+    Description:  Private function for main function.
+
+    Arguments:
+        (input) status -> Status of check.
+        (input) status1 -> File check status.
+        (input) status2 -> Mongo check status.
+        (output) status -> True|False - Status of check.
+
+    """
+
+    if not (status_1 and status_2):
+        status = False
+
+    return status
+
+
 def main():
 
     """Function:  main
@@ -201,9 +221,7 @@ def main():
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
-
-        if not (status_1 and status_2):
-            status = False
+        status = _check_status(status, status_1, status_2)
 
     elif "-j" in sys.argv and "-o" in sys.argv:
         status = file_check(out_file, hold_file, search_list, json_fmt=True)
@@ -212,9 +230,7 @@ def main():
         status_1 = file_check(out_file, hold_file, search_list)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
-
-        if not (status_1 and status_2):
-            status = False
+        status = _check_status(status, status_1, status_2)
 
     elif "-i" in sys.argv:
         status = mongo_check(mongo_cfg, hostname, db, tbl)
