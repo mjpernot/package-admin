@@ -129,7 +129,6 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     args_array = dict(args_array)
     os_distro = yum.get_distro()
-
     data = {"server": yum.get_hostname(),
             "osRelease": os_distro[0] + " " + os_distro[1],
             "asOf": datetime.datetime.strftime(datetime.datetime.now(),
@@ -138,7 +137,6 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     # Send data to output.
     if args_array.get("-i", False) and kwargs.get("class_cfg", False):
-
         db, tbl = args_array.get("-i").split(":")
         mongo_libs.ins_doc(kwargs.get("class_cfg"), db, tbl, data)
 
