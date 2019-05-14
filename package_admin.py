@@ -127,8 +127,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     os_distro = yum.get_distro()
-
     data = {"server": yum.get_hostname(),
             "osRelease": os_distro[0] + " " + os_distro[1],
             "asOf": datetime.datetime.strftime(datetime.datetime.now(),
@@ -137,7 +137,6 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     # Send data to output.
     if args_array.get("-i", False) and kwargs.get("class_cfg", False):
-
         db, tbl = args_array.get("-i").split(":")
         mongo_libs.ins_doc(kwargs.get("class_cfg"), db, tbl, data)
 
@@ -164,6 +163,7 @@ def list_upd_pkg(args_array, yum, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     process_yum(args_array, yum, "updatePackages", yum.fetch_update_pkgs,
                 **kwargs)
 
@@ -182,6 +182,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     process_yum(args_array, yum, "installedPackages", yum.fetch_install_pkgs,
                 **kwargs)
 
@@ -200,6 +201,7 @@ def list_repo(args_array, yum, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
 
 
@@ -217,6 +219,8 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
     yum = gen_class.Yum()
     mongo_cfg = None
 

@@ -5,30 +5,12 @@
 #   is located at.
 
 echo ""
-echo "Unit test:  help_message"
+echo "Unit test:  package_admin.py"
 test/unit/package_admin/help_message.py
-
-echo ""
-echo "Unit test:  process_yum"
 test/unit/package_admin/process_yum.py
-
-echo ""
-echo "Unit test:  list_upd_pkg"
 test/unit/package_admin/list_upd_pkg.py
-
-echo ""
-echo "Unit test:  list_ins_pkg"
 test/unit/package_admin/list_ins_pkg.py
-
-echo ""
-echo "Unit test:  list_repo"
 test/unit/package_admin/list_repo.py
-
-echo ""
-echo "Unit test:  run_program"
 test/unit/package_admin/run_program.py
-
-echo ""
-echo "Unit test:  main"
 test/unit/package_admin/main.py
 
