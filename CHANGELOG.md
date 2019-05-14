@@ -8,6 +8,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 ### Fixed
 - run_program:  Fixed problem with mutable default arguments issue.
 - list_repo:  Fixed problem with mutable default arguments issue.
+- list_ins_pkg:  Fixed problem with mutable default arguments issue.
 
 
 ## [2.1.5] - 2019-03-06

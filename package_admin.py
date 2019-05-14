@@ -182,6 +182,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     process_yum(args_array, yum, "installedPackages", yum.fetch_install_pkgs,
                 **kwargs)
 
