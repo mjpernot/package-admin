@@ -127,6 +127,7 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     """
 
+    args_array = dict(args_array)
     os_distro = yum.get_distro()
 
     data = {"server": yum.get_hostname(),

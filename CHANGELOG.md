@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - list_repo:  Fixed problem with mutable default arguments issue.
 - list_ins_pkg:  Fixed problem with mutable default arguments issue.
 - list_upd_pkg:  Fixed problem with mutable default arguments issue.
+- process_yum:  Fixed problem with mutable default arguments issue.
 
 
 ## [2.1.5] - 2019-03-06
