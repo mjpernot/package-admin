@@ -217,6 +217,8 @@ def run_program(args_array, func_dict, **kwargs):
 
     """
 
+    args_array = dict(args_array)
+    func_dict = dict(func_dict)
     yum = gen_class.Yum()
     mongo_cfg = None
 

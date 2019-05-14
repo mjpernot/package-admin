@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.6] - 2019-05-14
+### Fixed
+- run_program:  Fixed problem with mutable default arguments issue.
+
+
 ## [2.1.5] - 2019-03-06
 ### Changed
 - process_yum:  Changed output to camelCase.
