@@ -16,7 +16,7 @@
         -L => List all packages installed on the server.
         -U => List update packages awaiting for the server.
         -R => List current repositories.
-        -j => Return output in JSON format.
+        -j => Return output in formatted JSON format.
         -i { database:collection } => Name of database and collection to
             insert the database statistics data into.  Available for -U option.
             Requires options:  -c and -d
@@ -83,6 +83,9 @@
 import sys
 import datetime
 
+# Third-Party
+import json
+
 # Local
 import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
@@ -90,7 +93,6 @@ import lib.gen_class as gen_class
 import mongo_lib.mongo_libs as mongo_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -133,18 +135,27 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
 
-    # Send data to output.
-    if args_array.get("-i", False) and kwargs.get("class_cfg", False):
-        db, tbl = args_array.get("-i").split(":")
-        mongo_libs.ins_doc(kwargs.get("class_cfg"), db, tbl, data)
+    ofile = args_array.get("-o", False)
+    json_fmt = args_array.get("-j", False)
+    sup_std = args_array.get("-n", False)
+    db_tbl = args_array.get("-i", False)
+    class_cfg = kwargs.get("class_cfg", False)
 
-    err_flag, err_msg = gen_libs.data_multi_out(data,
-                                                args_array.get("-o", False),
-                                                args_array.get("-j", False),
-                                                args_array.get("-n", False))
+    if db_tbl and class_cfg:
+        db, tbl = db_tbl.split(":")
+        mongo_libs.ins_doc(class_cfg, db, tbl, data)
 
-    if err_flag:
-        print(err_msg)
+    if ofile and json_fmt:
+        gen_libs.write_file(ofile, "w", json.dumps(data, indent=4))
+
+    elif ofile:
+        gen_libs.write_file(ofile, "w", data)
+
+    if not sup_std and json_fmt:
+        print(json.dumps(data, indent=4))
+
+    elif not sup_std:
+        print(data)
 
 
 def list_upd_pkg(args_array, yum, **kwargs):
