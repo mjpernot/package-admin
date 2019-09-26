@@ -9,7 +9,6 @@
         test/unit/package_admin/process_yum.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import package_admin
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -42,10 +40,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -69,7 +63,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -78,10 +71,6 @@ class UnitTest(unittest.TestCase):
             """Class:  Yum
 
             Description:  Class which is a representation of the Yum class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -98,7 +87,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the Mail class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -161,12 +149,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test first "if" statement for true and true.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
-            mock_insert -> Mock Ref:  mongo_libs.ins_doc
 
         """
 
-        # Set mock values.
         mock_data.return_value = (False, None)
         mock_insert.return_value = True
 
@@ -183,11 +168,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test first "if" statement for true and false.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
         mock_data.return_value = (False, None)
 
         self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
@@ -202,11 +185,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test first "if" statement for false and true.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
         mock_data.return_value = (False, None)
 
         self.args_array = {"-a": "Database_Name:Table_Name"}
@@ -224,11 +205,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test first "if" statement for false and false.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
         mock_data.return_value = (False, None)
 
         self.args_array = {"-a": "Database_Name:Table_Name"}
@@ -245,11 +224,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test err_flag "if" statement as false.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
         mock_data.return_value = (False, None)
 
         self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
@@ -264,11 +241,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test err_flag "if" statement as true.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
         mock_data.return_value = (True, "Error_Message_Here")
 
         with gen_libs.no_std_out():
