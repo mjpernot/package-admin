@@ -9,7 +9,6 @@
         test/blackbox/package_admin/blackbox_test.py
 
     Arguments:
-        None
 
 """
 
@@ -187,7 +186,6 @@ def main():
         status -> True|False - Status of checks.
 
     Arguments:
-        None
 
     """
 

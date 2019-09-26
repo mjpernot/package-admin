@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.1.7] - 2019-09-26
+### Changed
+- process_yum:  Replaced "gen_libs.data_multi_out" with own internal code.
+- Documentation update.
+
+
 ## [2.1.6] - 2019-05-14
 ### Fixed
 - run_program:  Fixed problem with mutable default arguments issue.
@@ -81,7 +87,7 @@ Breaking Change
 - Changed import library from "cmds_mongo" to "mongo_libs".
 - process_yum:  Changed library from "cmds_mongo" to "mongo_libs".
 - help_message:  Standardized the argument call.
-- process_yum:  Refactored code on "**kwargs" arguments parsing.
+- process_yum:  Refactored code on "\*\*kwargs" arguments parsing.
 - Changed function names from uppercase to lowercase.
 - Moved Mongo support libraries to "mongo_lib" directory.
 - Setup single-source version control.
@@ -101,7 +107,7 @@ Breaking Change
 - Change versioning information.
 - Change single quotes to double quotes.
 - Changed to use local libraries from ./lib directory.
-- Help_Message:  Replace docstring with printing the programs __doc__.
+- Help_Message:  Replace docstring with printing the programs \_\_doc\_\_.
 
 
 ## [1.1.0] - 2017-08-14

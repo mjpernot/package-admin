@@ -9,7 +9,6 @@
         test/unit/package_admin/run_program.py
 
     Arguments:
-        None
 
 """
 
@@ -32,7 +31,6 @@ sys.path.append(os.getcwd())
 import package_admin
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -57,10 +55,6 @@ class UnitTest(unittest.TestCase):
 
     Description:  Class which is a representation of a unit testing.
 
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
-
     Methods:
         setUp -> Unit testing initilization.
         test_args_array_true -> Test args_array if statement for true.
@@ -77,7 +71,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -86,10 +79,6 @@ class UnitTest(unittest.TestCase):
             """Class:  Yum
 
             Description:  Class which is a representation of the Yum class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -104,7 +93,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the Mail class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -125,12 +113,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test args_array if statement for true.
 
         Arguments:
-            mock_yum -> Mock Ref:  package_admin.gen_class.Yum
-            mock_load -> Mock Ref:  package_admin.gen_libs.load_module
 
         """
 
-        # Set mock values.
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
@@ -146,12 +131,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test args_array if statement for false.
 
         Arguments:
-            mock_yum -> Mock Ref:  package_admin.gen_class.Yum
-            mock_load -> Mock Ref:  package_admin.gen_libs.load_module
 
         """
 
-        # Set mock values.
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
@@ -167,12 +149,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test loop with zero loops.
 
         Arguments:
-            mock_yum -> Mock Ref:  package_admin.gen_class.Yum
-            mock_load -> Mock Ref:  package_admin.gen_libs.load_module
 
         """
 
-        # Set mock values.
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
@@ -188,14 +167,11 @@ class UnitTest(unittest.TestCase):
         Description:  Test loop with one loop.
 
         Arguments:
-            mock_yum -> Mock Ref:  package_admin.gen_class.Yum
-            mock_load -> Mock Ref:  package_admin.gen_libs.load_module
 
         """
 
         self.args_array["-L"] = True
 
-        # Set mock values.
         mock_yum.return_value = self.yum
         mock_yum.list_ins_pkg.return_Value = True
         mock_load.return_value = "Config_File"

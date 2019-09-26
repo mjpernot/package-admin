@@ -9,7 +9,6 @@
         test/integration/package_admin/list_upd_pkg.py
 
     Arguments:
-        None
 
 """
 
@@ -39,7 +38,6 @@ import mongo_lib.mongo_class as mongo_class
 import lib.cmds_gen as cmds_gen
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -48,10 +46,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Integration testing initilization.
@@ -72,7 +66,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -81,10 +74,6 @@ class UnitTest(unittest.TestCase):
             """Class:  Yum
 
             Description:  Class which is a representation of the Yum class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -101,7 +90,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the Mail class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -180,7 +168,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -201,7 +188,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file in JSON format.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -224,7 +210,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test suppressing standard out.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -241,7 +226,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to standard out.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -259,7 +243,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to Mongo database.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -268,16 +251,16 @@ class UnitTest(unittest.TestCase):
         package_admin.list_upd_pkg(self.args_array3, self.yum,
                                    class_cfg=self.mongo_cfg)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.yum.hostname:
+        if mongo.coll_find1()["Server"] == self.yum.hostname:
             status = True
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -289,7 +272,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to Mongo database and to a file.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
 
         """
 
@@ -298,16 +280,16 @@ class UnitTest(unittest.TestCase):
         package_admin.list_upd_pkg(self.args_array, self.yum,
                                    class_cfg=self.mongo_cfg)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.yum.hostname:
+        if mongo.coll_find1()["Server"] == self.yum.hostname:
             status = filecmp.cmp(self.out_file, self.non_json_file)
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -318,18 +300,17 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 
-        DB = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
-                            self.mongo_cfg.passwd, self.mongo_cfg.host,
-                            self.mongo_cfg.port, self.db, self.mongo_cfg.auth,
-                            self.mongo_cfg.conf_file)
+        mongo = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
+                               self.mongo_cfg.passwd, self.mongo_cfg.host,
+                               self.mongo_cfg.port, self.db,
+                               self.mongo_cfg.auth, self.mongo_cfg.conf_file)
 
-        DB.db_connect(self.db)
-        DB.db_cmd("dropDatabase")
-        cmds_gen.disconnect([DB])
+        mongo.db_connect(self.db)
+        mongo.db_cmd("dropDatabase")
+        cmds_gen.disconnect([mongo])
 
         if os.path.isfile(self.out_file):
             os.remove(self.out_file)
