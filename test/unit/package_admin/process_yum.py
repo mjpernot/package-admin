@@ -46,7 +46,7 @@ class UnitTest(unittest.TestCase):
         test_mongo_insert -> Test with sending data to Mongo database.
         test_write_file_json -> Test with write to file as formatted JSON.
         test_write_file_true -> Test with write to file is set to True.
-        test_suppress_false_json -> Test with standard suppression in JSON format.
+        test_suppress_false_json -> Test standard suppression in JSON format.
         test_suppression_false -> Test with standard suppression set to false.
         test_suppression_true -> Test with standard suppression set to true.
 
