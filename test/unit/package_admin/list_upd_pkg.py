@@ -109,7 +109,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        # Set mock values.
         mock_yum.return_value = True
 
         self.assertFalse(package_admin.list_upd_pkg(self.args_array, self.yum))
