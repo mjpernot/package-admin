@@ -9,7 +9,6 @@
         test/unit/package_admin/list_upd_pkg.py
 
     Arguments:
-        None
 
 """
 
@@ -32,7 +31,6 @@ sys.path.append(os.getcwd())
 import package_admin
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -41,10 +39,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -59,7 +53,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -68,10 +61,6 @@ class UnitTest(unittest.TestCase):
             """Class:  Yum
 
             Description:  Class which is a representation of the Yum class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -86,7 +75,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the Mail class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -100,7 +88,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Set self.data attribute.
 
                 Arguments:
-                    None
 
                 """
 
@@ -119,11 +106,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test call to test_list_upd_pkg function.
 
         Arguments:
-            mock_yum -> Mock Ref:  package_admin.process_yum
 
         """
 
-        # Set mock values.
         mock_yum.return_value = True
 
         self.assertFalse(package_admin.list_upd_pkg(self.args_array, self.yum))

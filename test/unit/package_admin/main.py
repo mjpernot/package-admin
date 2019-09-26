@@ -9,7 +9,6 @@
         test/unit/package_admin/main.py
 
     Arguments:
-        None
 
 """
 
@@ -32,7 +31,6 @@ sys.path.append(os.getcwd())
 import package_admin
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -41,10 +39,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Unit testing initilization.
@@ -66,7 +60,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -81,12 +74,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test help if returns true.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = True
 
@@ -102,12 +92,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test help if returns false.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = False
@@ -124,13 +111,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_cond_req if returns false.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = False
@@ -148,14 +131,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_cond_req if returns true.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
-            mock_dir_chk -> Mock Ref:  package_admin.arg_parser.arg_dir_chk_crt
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = True
@@ -174,14 +152,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_dir_chk_crt if returns true.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
-            mock_dir_chk -> Mock Ref:  package_admin.arg_parser.arg_dir_chk_crt
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = True
@@ -202,15 +175,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_dir_chk_crt if returns false.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
-            mock_dir_chk -> Mock Ref:  package_admin.arg_parser.arg_dir_chk_crt
-            mock_file_chk -> Mock_Ref:  package_admin.arg_parser.arg_file_chk
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = True
@@ -232,15 +199,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_file_chk if returns true.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
-            mock_dir_chk -> Mock Ref:  package_admin.arg_parser.arg_dir_chk_crt
-            mock_file_chk -> Mock_Ref:  package_admin.arg_parser.arg_file_chk
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = True
@@ -263,16 +224,9 @@ class UnitTest(unittest.TestCase):
         Description:  Test arg_file_chk if returns false.
 
         Arguments:
-            mock_arg -> Mock Ref:  package_admin.arg_parser.arg_parse2
-            mock_help -> Mock Ref:  package_admin.gen_libs.help_func
-            mock_cond -> Mock Ref:  package_admin.arg_parser.arg_cond_req
-            mock_dir_chk -> Mock Ref:  package_admin.arg_parser.arg_dir_chk_crt
-            mock_file_chk -> Mock_Ref:  package_admin.arg_parser.arg_file_chk
-            mock_run -> Mock Ref:  package_admin.run_program
 
         """
 
-        # Set mock values.
         mock_arg.return_value = self.args_array
         mock_help.return_value = False
         mock_cond.return_value = True

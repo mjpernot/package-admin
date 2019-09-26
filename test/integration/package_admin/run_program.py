@@ -9,7 +9,6 @@
         test/integration/package_admin/run_program.py
 
     Arguments:
-        None
 
 """
 
@@ -40,7 +39,6 @@ import lib.cmds_gen as cmds_gen
 
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -49,10 +47,6 @@ class UnitTest(unittest.TestCase):
     """Class:  UnitTest
 
     Description:  Class which is a representation of a unit testing.
-
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
 
     Methods:
         setUp -> Integration testing initilization.
@@ -100,7 +94,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for integration testing.
 
         Arguments:
-            None
 
         """
 
@@ -164,11 +157,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file for update option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -197,11 +185,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file in JSON format for update option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -229,10 +212,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test suppressing standard out for update option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
 
         """
 
@@ -255,10 +234,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to standard out for update option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
 
         """
 
@@ -282,10 +257,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to Mongo database for update option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
 
         """
 
@@ -297,16 +268,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array3, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = True
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -323,11 +294,6 @@ class UnitTest(unittest.TestCase):
             option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_update_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -340,16 +306,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = filecmp.cmp(self.out_file, self.list_non_json_file)
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -365,11 +331,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -398,11 +359,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file in JSON format for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -430,10 +386,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test suppressing standard out for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
 
         """
 
@@ -456,10 +408,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to standard out for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
 
         """
 
@@ -483,10 +431,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to Mongo database for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
 
         """
 
@@ -498,16 +442,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array3, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = True
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -524,11 +468,6 @@ class UnitTest(unittest.TestCase):
             option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:
-                package_admin.gen_class.Yum.fetch_install_pkgs
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -541,16 +480,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = filecmp.cmp(self.out_file, self.ins_non_json_file)
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -566,10 +505,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.list_repo
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -598,10 +533,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to file in JSON format for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.fetch_repo
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -629,9 +560,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test suppressing standard out for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.fetch_repos
 
         """
 
@@ -654,9 +582,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to standard out for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.fetch_repos
 
         """
 
@@ -680,9 +605,6 @@ class UnitTest(unittest.TestCase):
         Description:  Test writing to Mongo database for install option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.fetch_repos
 
         """
 
@@ -694,16 +616,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array3, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = True
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -720,10 +642,6 @@ class UnitTest(unittest.TestCase):
             option.
 
         Arguments:
-            mock_date -> Mock Ref:  package_admin.datetime
-            mock_host -> Mock Ref:  package_admin.gen_class.Yum.get_hostname
-            mock_data -> Mock Ref:  package_admin.gen_class.Yum.fetch_repos
-            mock_distro -> Mock Ref:  package_admin.gen_class.Yum.get_distro
 
         """
 
@@ -736,16 +654,16 @@ class UnitTest(unittest.TestCase):
 
         package_admin.run_program(self.args_array, self.func_dict)
 
-        COLL = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
-        COLL.connect()
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo.connect()
 
-        if COLL.coll_find1()["Server"] == self.hostname:
+        if mongo.coll_find1()["Server"] == self.hostname:
             status = filecmp.cmp(self.out_file, self.repo_non_json_file)
 
         else:
             status = False
 
-        cmds_gen.disconnect([COLL])
+        cmds_gen.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -756,18 +674,17 @@ class UnitTest(unittest.TestCase):
         Description:  Clean up of integration testing.
 
         Arguments:
-            None
 
         """
 
-        DB = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
-                            self.mongo_cfg.passwd, self.mongo_cfg.host,
-                            self.mongo_cfg.port, self.db, self.mongo_cfg.auth,
-                            self.mongo_cfg.conf_file)
+        mongo = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
+                               self.mongo_cfg.passwd, self.mongo_cfg.host,
+                               self.mongo_cfg.port, self.db,
+                               self.mongo_cfg.auth, self.mongo_cfg.conf_file)
 
-        DB.db_connect(self.db)
-        DB.db_cmd("dropDatabase")
-        cmds_gen.disconnect([DB])
+        mongo.db_connect(self.db)
+        mongo.db_cmd("dropDatabase")
+        cmds_gen.disconnect([mongo])
 
         if os.path.isfile(self.out_file):
             os.remove(self.out_file)

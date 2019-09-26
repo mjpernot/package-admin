@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  This program is used to adminstrate packages on a Linux server.  This will include detecting packages requiring to be updated and reporting on these packages via JSON and/or Mongo database entries.
+  Linux Package administration program for handling packages on a Linux server.  This program is used to adminstrate packages on a Linux server.  This will include detecting packages requiring to be updated and reporting on these packages via JSON and/or Mongo database entries.
 
 
 #####  This README file is broken down into the following sections:
@@ -10,9 +10,7 @@
   * Prerequisites
   * Installation
   * Configuration
-  * Program Description
   * Program Help Function
-  * Help Message
   * Testing
     - Unit
     - Integration
@@ -109,11 +107,6 @@ chmod 600 mongo.py
 ```
 
 
-# Program Description:
-### Program:  package_admin.py
-##### Description:  Linux Package administration program for handling packages on a Linux server.
-
-
 # Program Help Function:
 
   All of the programs, except the command and class files, will have an -h (Help option) that will show display a help message for that particular program.  The help message will usually consist of a description, usage, arugments to the program, example, notes about the program, and any known bugs not yet fixed.  To run the help command:
@@ -122,84 +115,6 @@ chmod 600 mongo.py
 ```
 {Python_Project}/package-admin/package_admin.py -h
 ```
-
-
-# Help Message:
-  Below is the help message for the program the program.  Run the program with the -h option get the latest help message for the program.
-
-    Program:      package_admin.py
-
-    Description:  Linux Package administration program for handling packages on
-        a Linux server.  This program has a number of functions to include
-        listing current packages, listing any new package updates, installing
-        package updates, and listing current repositories.
-
-    Usage:
-        package_admin.py {-L | -U | -R} {-j}
-            {-i db_name:table_name -c file -d path} {-v | -h}
-
-    Arguments:
-        -L => List all packages installed on the server.
-        -U => List update packages awaiting for the server.
-        -R => List current repositories.
-        -j => Return output in JSON format.
-        -i {database:collection} => Name of database and collection to
-            insert the database statistics data into.  Available for -U option.
-            Requires options:  -c and -d
-            Default:  sysmon:server_pkgs
-        -c file => Mongo server configuration file.  Required for -i option.
-        -d dir path => Directory path to config file (-c).  Required for -i
-            option.
-        -n => No standard.  Do not send output to standard out.
-        -o path/file => Directory path and file name for output.
-            Available for -L, -U, and -R options.
-        -v => Display version of this program.
-        -h => Help and usage message.
-
-        NOTE 1: -v and -h overrides all other options.
-
-    Notes:
-        Mongo configuration file format (mongo.py).  The configuration file
-        format for the Mongo connection used for inserting data into a
-        database.  There are two ways to connect:  single or replica set.
-
-            1.)  Mongo single database connection:
-
-            # All Mongo configuration settings.
-            user = "USER"
-            passwd = "PASSWORD"
-            # Mongo DB host information
-            host = "IP_ADDRESS"
-            name = "HOSTNAME"
-            # Mongo database port (default is 27017)
-            port = 27017
-            # Mongo configuration settings
-            conf_file = None
-            # Authentication required:  True|False
-            auth = True
-
-            2.)  Mongo replica set connection:
-            Same format as single Mongo database connection and with these
-            additional entries in the configuration file:
-
-            # Replica Set Mongo configuration settings.
-            # Replica set name.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset = "REPLICA_SET_NAME"
-            repset = None
-            # Replica host listing.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            repset_hosts = None
-            # Database to authentication to.
-            #    Example:  db_auth = "AUTHENTICATION_DATABASE"
-            db_auth = None
-
-        Configuration modules -> Name is runtime dependent as it can be used to
-            connect to different databases with different names.
-
-    Example:
-        package_admin.py -U -j -c mongo -d config -i
 
 
 # Testing:

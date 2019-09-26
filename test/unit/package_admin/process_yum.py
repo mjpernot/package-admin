@@ -9,7 +9,6 @@
         test/unit/package_admin/process_yum.py
 
     Arguments:
-        None
 
 """
 
@@ -33,7 +32,6 @@ import package_admin
 import lib.gen_libs as gen_libs
 import version
 
-# Version
 __version__ = version.__version__
 
 
@@ -43,22 +41,14 @@ class UnitTest(unittest.TestCase):
 
     Description:  Class which is a representation of a unit testing.
 
-    Super-Class:  unittest.TestCase
-
-    Sub-Classes:  None
-
     Methods:
         setUp -> Unit testing initilization.
-        test_args_array_class_cfg_true_true -> Test first "if" statement for
-            true and true.
-        test_args_array_class_cfg_true_false -> Test first "if" statement for
-            true and false.
-        test_args_array_class_cfg_false_true -> Test first "if" statement for
-            false and true.
-        test_args_array_class_cfg_false_false -> Test first "if" statement for
-            false and false.
-        test_err_flag_false -> Test err_flag "if" statement as false.
-        test_err_flag_true -> Test err_flag "if" statement as true.
+        test_mongo_insert -> Test with sending data to Mongo database.
+        test_write_file_json -> Test with write to file as formatted JSON.
+        test_write_file_true -> Test with write to file is set to True.
+        test_suppress_false_json -> Test standard suppression in JSON format.
+        test_suppression_false -> Test with standard suppression set to false.
+        test_suppression_true -> Test with standard suppression set to true.
 
     """
 
@@ -69,7 +59,6 @@ class UnitTest(unittest.TestCase):
         Description:  Initialization for unit testing.
 
         Arguments:
-            None
 
         """
 
@@ -78,10 +67,6 @@ class UnitTest(unittest.TestCase):
             """Class:  Yum
 
             Description:  Class which is a representation of the Yum class.
-
-            Super-Class:  object
-
-            Sub-Classes:  None
 
             Methods:
                 __init__ -> Initialize configuration environment.
@@ -98,7 +83,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Initialization instance of the Mail class.
 
                 Arguments:
-                        None
 
                 """
 
@@ -153,128 +137,112 @@ class UnitTest(unittest.TestCase):
         self.func_name = self.yum.fetch_update_pkgs
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_args_array_class_cfg_true_true(self, mock_data, mock_insert):
+    def test_mongo_insert(self, mock_insert):
 
-        """Function:  test_args_array_class_cfg_true_true
+        """Function:  test_mongo_insert
 
-        Description:  Test first "if" statement for true and true.
+        Description:  Test with sending data to Mongo database.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
-            mock_insert -> Mock Ref:  mongo_libs.ins_doc
 
         """
 
-        # Set mock values.
-        mock_data.return_value = (False, None)
         mock_insert.return_value = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
-                                                   self.dict_key,
-                                                   self.func_name,
-                                                   class_cfg=self.class_cfg))
+        self.args_array["-n"] = True
 
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_args_array_class_cfg_true_false(self, mock_data):
+        self.assertFalse(package_admin.process_yum(
+            self.args_array, self.yum, self.dict_key, self.func_name,
+            class_cfg=self.class_cfg))
 
-        """Function:  test_args_array_class_cfg_true_false
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_write_file_json(self, mock_write):
 
-        Description:  Test first "if" statement for true and false.
+        """Function:  test_write_file_json
+
+        Description:  Test with write to file as formatted JSON.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
-        mock_data.return_value = (False, None)
+        mock_write.return_value = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
-                                                   self.dict_key,
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-n"] = True
+        self.args_array["-j"] = True
+
+        self.assertFalse(package_admin.process_yum(self.args_array,
+                                                   self.yum, self.dict_key,
                                                    self.func_name))
 
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_args_array_class_cfg_false_true(self, mock_data):
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_write_file_true(self, mock_write):
 
-        """Function:  test_args_array_class_cfg_false_true
+        """Function:  test_write_file_true
 
-        Description:  Test first "if" statement for false and true.
+        Description:  Test with write to file is set to True.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
-        mock_data.return_value = (False, None)
+        mock_write.return_value = True
 
-        self.args_array = {"-a": "Database_Name:Table_Name"}
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-n"] = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
-                                                   self.dict_key,
-                                                   self.func_name,
-                                                   class_cfg=self.class_cfg))
-
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_args_array_class_cfg_false_false(self, mock_data):
-
-        """Function:  test_args_array_class_cfg_false_false
-
-        Description:  Test first "if" statement for false and false.
-
-        Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
-
-        """
-
-        # Set mock values.
-        mock_data.return_value = (False, None)
-
-        self.args_array = {"-a": "Database_Name:Table_Name"}
-
-        self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
-                                                   self.dict_key,
+        self.assertFalse(package_admin.process_yum(self.args_array,
+                                                   self.yum, self.dict_key,
                                                    self.func_name))
 
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_err_flag_false(self, mock_data):
+    def test_suppress_false_json(self):
 
-        """Function:  test_err_flag_false
+        """Function:  test_suppress_false_json
 
-        Description:  Test err_flag "if" statement as false.
+        Description:  Test with standard suppression in JSON format.
 
         Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
 
         """
 
-        # Set mock values.
-        mock_data.return_value = (False, None)
-
-        self.assertFalse(package_admin.process_yum(self.args_array, self.yum,
-                                                   self.dict_key,
-                                                   self.func_name))
-
-    @mock.patch("package_admin.gen_libs.data_multi_out")
-    def test_err_flag_true(self, mock_data):
-
-        """Function:  test_err_flag_true
-
-        Description:  Test err_flag "if" statement as true.
-
-        Arguments:
-            mock_data -> Mock Ref:  gen_libs.data_multi_out
-
-        """
-
-        # Set mock values.
-        mock_data.return_value = (True, "Error_Message_Here")
+        self.args_array["-j"] = True
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.process_yum(self.args_array,
                                                        self.yum, self.dict_key,
                                                        self.func_name))
+
+    def test_suppression_false(self):
+
+        """Function:  test_suppression_false
+
+        Description:  Test with standard suppression set to false.
+
+        Arguments:
+
+        """
+
+        with gen_libs.no_std_out():
+            self.assertFalse(package_admin.process_yum(self.args_array,
+                                                       self.yum, self.dict_key,
+                                                       self.func_name))
+
+    def test_suppression_true(self):
+
+        """Function:  test_suppression_true
+
+        Description:  Test with standard suppression set to true.
+
+        Arguments:
+
+        """
+
+        self.args_array["-n"] = True
+
+        self.assertFalse(package_admin.process_yum(self.args_array,
+                                                   self.yum, self.dict_key,
+                                                   self.func_name))
 
 
 if __name__ == "__main__":
