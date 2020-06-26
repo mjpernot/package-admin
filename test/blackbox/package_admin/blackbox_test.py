@@ -89,7 +89,7 @@ def _check_json(out_file, status, hold_file, **kwargs):
     """
 
     try:
-        data = json.load(open(out_file))
+        _ = json.load(open(out_file))
 
     except:
         status = False
