@@ -22,6 +22,7 @@ pipeline {
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
                 pip2 install pymongo==3.2.0 --user
+                pip2 install psutil==5.4.3 --user
                 ./test/unit/package_admin/help_message.py
                 ./test/unit/package_admin/process_yum.py
                 ./test/unit/package_admin/list_upd_pkg.py
@@ -52,32 +53,32 @@ pipeline {
             steps {
                 script {
                     server = Artifactory.server('Artifactory')
-                    server.credentialsId = 'svc-highpoint-artifactory'
+                    server.credentialsId = 'art-svc-highpoint-dev'
                     uploadSpec = """{
                         "files": [
                             {
                                 "pattern": "./*.py",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/package-admin/"
+                                "target": "pypi-proj-local/highpoint/package-admin/"
                             },
                             {
                                 "pattern": "./*.txt",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/package-admin/"
+                                "target": "pypi-proj-local/highpoint/package-admin/"
                             },
                             {
                                 "pattern": "./*.md",
                                 "recursive": false,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/package-admin/"
+                                "target": "pypi-proj-local/highpoint/package-admin/"
                             },
                             {
                                 "pattern": "*.TEMPLATE",
                                 "recursive": true,
                                 "excludePatterns": [],
-                                "target": "generic-local/highpoint/package-admin/config/"
+                                "target": "pypi-proj-local/highpoint/package-admin/config/"
                             }
                         ]
                     }"""

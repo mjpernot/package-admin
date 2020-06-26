@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.2.0] - 2020-06-26
+
+
 ## [2.1.7] - 2019-09-26
 ### Changed
 - process_yum:  Replaced "gen_libs.data_multi_out" with own internal code.
