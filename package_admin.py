@@ -264,6 +264,7 @@ def main():
         func_dict -> dictionary list for the function calls or other options.
         opt_def_dict -> contains options with their default values.
         opt_con_req_list -> contains the options that require other options.
+        opt_multi_list -> contains the options that will have multiple values.
         opt_val_list -> contains options which require values.
 
     Arguments:
@@ -276,18 +277,19 @@ def main():
     file_crt_list = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"]}
-    opt_val_list = ["-c", "-d", "-i", "-o"]
+    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
+    opt_multi_list = ["-e", "-s"]
+    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict)
+    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict,
+                                       multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-
         run_program(args_array, func_dict)
 
 
