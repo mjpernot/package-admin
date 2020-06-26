@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.2.0] - 2020-06-26
+### Changed
+- mongo.py.TEMPLATE: Changed format of the Mongo connection.
 
 
 ## [2.1.7] - 2019-09-26
