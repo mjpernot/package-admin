@@ -9,6 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Added email capability to program.
 
 ### Changed
+- process_yum:  Added email capability for output.
 - main:  Added email options to the setup.
 - mongo.py.TEMPLATE: Changed format of the Mongo connection.
 

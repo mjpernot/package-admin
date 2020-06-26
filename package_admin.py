@@ -168,6 +168,18 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     elif not sup_std:
         print(data)
 
+    if args_array.get("-e", False):
+        mail = gen_class.setup_mail(args_array.get("-e"),
+                                    subj=args_array.get("-s", None))
+
+        if json_fmt:
+            mail.add_2_msg(json.dumps(data, indent=4))
+
+        else:
+            mail.add_2_msg(data)
+
+        mail.send_mail()
+
 
 def list_upd_pkg(args_array, yum, **kwargs):
 
