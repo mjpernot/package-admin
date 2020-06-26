@@ -33,11 +33,12 @@
         NOTE 1: -v and -h overrides all other options.
 
     Notes:
-        Mongo configuration file format (mongo.py).  The configuration file
-        format for the Mongo connection used for inserting data into a
-        database.  There are two ways to connect:  single or replica set.
+        Mongo configuration file format (config/mongo.py.TEMPLATE).
+        The configuration file format for the Mongo connection used for
+        inserting data into a database.
+        There are two ways to connect:  single or replica set.
 
-            1.)  Mongo single database connection:
+            1.)  Mongo single connection:
 
             # All Mongo configuration settings.
             user = "USER"
@@ -57,16 +58,17 @@
             additional entries in the configuration file:
 
             # Replica Set Mongo configuration settings.
+            # By default all settings are set to None.
+            #    None means the Mongo database is not part of a replica set.
+            #
             # Replica set name.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset = "REPLICA_SET_NAME"
+            #    Format:  repset = "REPLICA_SET_NAME"
             repset = None
-            # Replica host listing.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            # Replica host listing.  List of mongo databases in replica set.
+            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             repset_hosts = None
             # Database to authentication to.
-            #    Example:  db_auth = "AUTHENTICATION_DATABASE"
+            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
             db_auth = None
 
         Configuration modules -> Name is runtime dependent as it can be used to
