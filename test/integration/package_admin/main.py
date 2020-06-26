@@ -161,8 +161,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-U")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -190,9 +191,10 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-U")
         self.argv_list2.append("-j")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -217,8 +219,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.upd_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list4.append("-U")
-        sys.argv = self.argv_list4
+        cmdline.argv = self.argv_list4
 
         self.assertFalse(package_admin.main())
 
@@ -239,8 +242,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.upd_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list5.append("-U")
-        sys.argv = self.argv_list5
+        cmdline.argv = self.argv_list5
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
@@ -262,8 +266,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.upd_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list3.append("-U")
-        sys.argv = self.argv_list3
+        cmdline.argv = self.argv_list3
 
         package_admin.main()
 
@@ -301,8 +306,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-U")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         package_admin.main()
 
@@ -338,8 +344,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-L")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -367,9 +374,10 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-L")
         self.argv_list2.append("-j")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -394,8 +402,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.ins_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list4.append("-L")
-        sys.argv = self.argv_list4
+        cmdline.argv = self.argv_list4
 
         self.assertFalse(package_admin.main())
 
@@ -416,8 +425,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.ins_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list5.append("-L")
-        sys.argv = self.argv_list5
+        cmdline.argv = self.argv_list5
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
@@ -439,8 +449,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.ins_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list3.append("-L")
-        sys.argv = self.argv_list3
+        cmdline.argv = self.argv_list3
 
         package_admin.main()
 
@@ -478,8 +489,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-L")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         package_admin.main()
 
@@ -516,8 +528,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-R")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -545,9 +558,10 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-R")
         self.argv_list2.append("-j")
-        sys.argv = self.argv_list2
+        cmdline.argv = self.argv_list2
 
         package_admin.main()
 
@@ -572,8 +586,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.repo_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list4.append("-R")
-        sys.argv = self.argv_list4
+        cmdline.argv = self.argv_list4
 
         self.assertFalse(package_admin.main())
 
@@ -594,8 +609,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.repo_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list5.append("-R")
-        sys.argv = self.argv_list5
+        cmdline.argv = self.argv_list5
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
@@ -617,8 +633,9 @@ class UnitTest(unittest.TestCase):
         mock_data.return_value = self.repo_data
         mock_host.return_value = self.hostname
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list3.append("-R")
-        sys.argv = self.argv_list3
+        cmdline.argv = self.argv_list3
 
         package_admin.main()
 
@@ -656,8 +673,9 @@ class UnitTest(unittest.TestCase):
         mock_host.return_value = self.hostname
         mock_distro.return_value = self.distro
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list.append("-R")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         package_admin.main()
 
@@ -684,12 +702,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.config_path = os.path.join(self.test_path, "bad_config")
         self.argv_list2.append("-c")
         self.argv_list2.append("mongo")
         self.argv_list2.append("-d")
         self.argv_list2.append(self.config_path)
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
@@ -704,9 +723,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-c")
         self.argv_list2.append("mongo")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
@@ -721,8 +741,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-h")
-        sys.argv = self.argv_list
+        cmdline.argv = self.argv_list
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.main())
