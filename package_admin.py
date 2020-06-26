@@ -9,14 +9,23 @@
         package updates, and listing current repositories.
 
     Usage:
-        package_admin.py { -L | -U | -R } { -j }
-            { -i db_name:table_name -c file -d path } { -v | -h }
+        package_admin.py {-L | -U | -R} [-j] [-n]
+            [-i db_name:table_name -c file -d path]
+            [-e to_email [to_email2 ...] [-s subject_line]]
+            [-o dir_path/file]
+            [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
         -U => List update packages awaiting for the server.
         -R => List current repositories.
         -j => Return output in formatted JSON format.
+        -e to_email_address(es) => Enables emailing capability for an option if
+            the option allows it.  Sends output to one or more email addresses.
+            Email addresses are delimited by spaces.
+        -s subject_line => Subject line of email.
+            Note:  Will create own subject line if one is not provided.
+            This option requires option:  -e
         -i { database:collection } => Name of database and collection to
             insert the database statistics data into.  Available for -U option.
             Requires options:  -c and -d
