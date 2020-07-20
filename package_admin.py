@@ -9,14 +9,23 @@
         package updates, and listing current repositories.
 
     Usage:
-        package_admin.py { -L | -U | -R } { -j }
-            { -i db_name:table_name -c file -d path } { -v | -h }
+        package_admin.py {-L | -U | -R} [-j] [-n]
+            [-i db_name:table_name -c file -d path]
+            [-e to_email [to_email2 ...] [-s subject_line]]
+            [-o dir_path/file]
+            [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
         -U => List update packages awaiting for the server.
         -R => List current repositories.
         -j => Return output in formatted JSON format.
+        -e to_email_address(es) => Enables emailing capability for an option if
+            the option allows it.  Sends output to one or more email addresses.
+            Email addresses are delimited by spaces.
+        -s subject_line => Subject line of email.
+            Note:  Will create own subject line if one is not provided.
+            This option requires option:  -e
         -i { database:collection } => Name of database and collection to
             insert the database statistics data into.  Available for -U option.
             Requires options:  -c and -d
@@ -33,11 +42,12 @@
         NOTE 1: -v and -h overrides all other options.
 
     Notes:
-        Mongo configuration file format (mongo.py).  The configuration file
-        format for the Mongo connection used for inserting data into a
-        database.  There are two ways to connect:  single or replica set.
+        Mongo configuration file format (config/mongo.py.TEMPLATE).
+        The configuration file format for the Mongo connection used for
+        inserting data into a database.
+        There are two ways to connect:  single or replica set.
 
-            1.)  Mongo single database connection:
+            1.)  Mongo single connection:
 
             # All Mongo configuration settings.
             user = "USER"
@@ -57,16 +67,17 @@
             additional entries in the configuration file:
 
             # Replica Set Mongo configuration settings.
+            # By default all settings are set to None.
+            #    None means the Mongo database is not part of a replica set.
+            #
             # Replica set name.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset = "REPLICA_SET_NAME"
+            #    Format:  repset = "REPLICA_SET_NAME"
             repset = None
-            # Replica host listing.
-            #    None means the Mongo database is not part of a replica set.
-            #    Example:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            # Replica host listing.  List of mongo databases in replica set.
+            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             repset_hosts = None
             # Database to authentication to.
-            #    Example:  db_auth = "AUTHENTICATION_DATABASE"
+            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
             db_auth = None
 
         Configuration modules -> Name is runtime dependent as it can be used to
@@ -156,6 +167,18 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     elif not sup_std:
         print(data)
+
+    if args_array.get("-e", False):
+        mail = gen_class.setup_mail(args_array.get("-e"),
+                                    subj=args_array.get("-s", None))
+
+        if json_fmt:
+            mail.add_2_msg(json.dumps(data, indent=4))
+
+        else:
+            mail.add_2_msg(data)
+
+        mail.send_mail()
 
 
 def list_upd_pkg(args_array, yum, **kwargs):
@@ -253,6 +276,7 @@ def main():
         func_dict -> dictionary list for the function calls or other options.
         opt_def_dict -> contains options with their default values.
         opt_con_req_list -> contains the options that require other options.
+        opt_multi_list -> contains the options that will have multiple values.
         opt_val_list -> contains options which require values.
 
     Arguments:
@@ -260,23 +284,25 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"]}
-    opt_val_list = ["-c", "-d", "-i", "-o"]
+    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
+    opt_multi_list = ["-e", "-s"]
+    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(sys.argv, opt_val_list, opt_def_dict)
+    args_array = arg_parser.arg_parse2(
+        cmdline.argv, opt_val_list, opt_def_dict, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-
         run_program(args_array, func_dict)
 
 
