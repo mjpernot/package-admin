@@ -295,7 +295,6 @@ chmod 600 mongo.py
 ```
 
 ### Testing:
-  * This test must be ran the root account.
   * Replace **{Python_Project}** with the baseline path of the python program.
 
 ```
