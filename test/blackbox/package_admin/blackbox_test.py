@@ -198,21 +198,21 @@ def main():
     ext = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     hold_file = out_file + "." + ext + ".HOLD"
-    search_list = ["Asof", "Server"]
+    search_list = ["asOf", "server"]
     status = True
-    mongo_cfg = gen_libs.Load_Module("mongo", config_path)
+    mongo_cfg = gen_libs.load_module("mongo", config_path)
     hostname = socket.gethostname()
     db = "test_sysmon"
     tbl = "test_server_pkgs"
 
     if "-L" in cmdline.argv:
-        search_list.append("Installed_Packages")
+        search_list.append("installedPackages")
 
     elif "-U" in cmdline.argv:
-        search_list.append("Update_Packages")
+        search_list.append("updatePackages")
 
     elif "-R" in cmdline.argv:
-        search_list.append("Repos")
+        search_list.append("repos")
 
     if "-j" in cmdline.argv and "-o" in cmdline.argv and "-i" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
