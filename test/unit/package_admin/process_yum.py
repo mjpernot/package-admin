@@ -35,6 +35,59 @@ import version
 __version__ = version.__version__
 
 
+class Mail(object):
+
+    """Class:  Mail
+
+    Description:  Class stub holder for gen_class.Mail class.
+
+    Methods:
+        __init__ -> Class initialization.
+        add_2_msg -> add_2_msg method.
+        send_mail -> send_mail method.
+
+    """
+
+    def __init__(self, lag_time=1):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.lag_time = lag_time
+        self.data = None
+
+    def add_2_msg(self, data):
+
+        """Method:  add_2_msg
+
+        Description:  Stub method holder for Mail.add_2_msg.
+
+        Arguments:
+
+        """
+
+        self.data = data
+
+        return True
+
+    def send_mail(self):
+
+        """Method:  get_name
+
+        Description:  Stub method holder for Mail.send_mail.
+
+        Arguments:
+
+        """
+
+        return True
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -43,6 +96,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_email_json -> Test with email in json format.
+        test_email_std -> Test with email in standard format.
         test_mongo_insert -> Test with sending data to Mongo database.
         test_write_file_json -> Test with write to file as formatted JSON.
         test_write_file_true -> Test with write to file is set to True.
@@ -130,11 +185,48 @@ class UnitTest(unittest.TestCase):
                 return self.data
 
         self.yum = Yum()
-
         self.args_array = {"-i": "Database_Name:Table_Name"}
         self.class_cfg = "class_cfg_listing"
         self.dict_key = "Update_Packages"
         self.func_name = self.yum.fetch_update_pkgs
+        self.mail = Mail()
+        self.args_array2 = {"-n": True, "-e": "email", "-s": "subj"}
+        self.args_array3 = {"-n": True, "-e": "email", "-s": "subj",
+                            "-j": True}
+
+    @mock.patch("package_admin.gen_class.setup_mail")
+    def test_email_json(self, mock_mail):
+
+        """Function:  test_email_json
+
+        Description:  Test with email in json format.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail
+
+        self.assertFalse(package_admin.process_yum(
+            self.args_array3, self.yum, self.dict_key, self.func_name,
+            class_cfg=self.class_cfg))
+
+    @mock.patch("package_admin.gen_class.setup_mail")
+    def test_email_std(self, mock_mail):
+
+        """Function:  test_email_std
+
+        Description:  Test with email in standard format.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail
+
+        self.assertFalse(package_admin.process_yum(
+            self.args_array2, self.yum, self.dict_key, self.func_name,
+            class_cfg=self.class_cfg))
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
     def test_mongo_insert(self, mock_insert):

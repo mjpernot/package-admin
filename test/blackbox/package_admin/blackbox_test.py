@@ -89,7 +89,7 @@ def _check_json(out_file, status, hold_file, **kwargs):
     """
 
     try:
-        data = json.load(open(out_file))
+        _ = json.load(open(out_file))
 
     except:
         status = False
@@ -115,16 +115,16 @@ def mongo_check(mongo_cfg, hostname, db, tbl, **kwargs):
 
     """
 
-    COLL = mongo_libs.crt_coll_inst(mongo_cfg, db, tbl)
-    COLL.connect()
+    coll = mongo_libs.crt_coll_inst(mongo_cfg, db, tbl)
+    coll.connect()
 
-    if COLL.coll_find1()["Server"] == hostname:
+    if coll.coll_find1()["Server"] == hostname:
         status = True
 
     else:
         status = False
 
-    cmds_gen.Disconnect([COLL])
+    cmds_gen.Disconnect([coll])
 
     return status
 
@@ -141,13 +141,13 @@ def mongo_cleanup(mongo_cfg, db, **kwargs):
 
     """
 
-    DB = mongo_class.DB(mongo_cfg.name, mongo_cfg.user, mongo_cfg.passwd,
-                        mongo_cfg.host, mongo_cfg.port, db, mongo_cfg.auth,
-                        mongo_cfg.conf_file)
+    mongo = mongo_class.DB(mongo_cfg.name, mongo_cfg.user, mongo_cfg.passwd,
+                           mongo_cfg.host, mongo_cfg.port, db, mongo_cfg.auth,
+                           mongo_cfg.conf_file)
 
-    DB.db_connect(db)
-    DB.db_cmd("dropDatabase")
-    cmds_gen.Disconnect([DB])
+    mongo.db_connect(db)
+    mongo.db_cmd("dropDatabase")
+    cmds_gen.Disconnect([mongo])
 
 
 def _check_status(status, status_1, status_2, **kwargs):
@@ -189,52 +189,51 @@ def main():
 
     """
 
+    cmdline = gen_libs.get_inst(sys)
     base_dir = "test/blackbox/package_admin"
     test_path = os.path.join(os.getcwd(), base_dir)
     config_path = os.path.join(test_path, "config")
-
     out_path = os.path.join(base_dir, "out")
     out_file = os.path.join(out_path, "package_out.txt")
     ext = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     hold_file = out_file + "." + ext + ".HOLD"
-    search_list = ["Asof", "Server"]
+    search_list = ["asOf", "server"]
     status = True
-
-    mongo_cfg = gen_libs.Load_Module("mongo", config_path)
+    mongo_cfg = gen_libs.load_module("mongo", config_path)
     hostname = socket.gethostname()
     db = "test_sysmon"
     tbl = "test_server_pkgs"
 
-    if "-L" in sys.argv:
-        search_list.append("Installed_Packages")
+    if "-L" in cmdline.argv:
+        search_list.append("installedPackages")
 
-    elif "-U" in sys.argv:
-        search_list.append("Update_Packages")
+    elif "-U" in cmdline.argv:
+        search_list.append("updatePackages")
 
-    elif "-R" in sys.argv:
-        search_list.append("Repos")
+    elif "-R" in cmdline.argv:
+        search_list.append("repos")
 
-    if "-j" in sys.argv and "-o" in sys.argv and "-i" in sys.argv:
+    if "-j" in cmdline.argv and "-o" in cmdline.argv and "-i" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
         status = _check_status(status, status_1, status_2)
 
-    elif "-j" in sys.argv and "-o" in sys.argv:
+    elif "-j" in cmdline.argv and "-o" in cmdline.argv:
         status = file_check(out_file, hold_file, search_list, json_fmt=True)
 
-    elif "-i" in sys.argv and "-o" in sys.argv:
+    elif "-i" in cmdline.argv and "-o" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list)
         status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
         status = _check_status(status, status_1, status_2)
 
-    elif "-i" in sys.argv:
+    elif "-i" in cmdline.argv:
         status = mongo_check(mongo_cfg, hostname, db, tbl)
         mongo_cleanup(mongo_cfg, db)
 
-    elif "-o" in sys.argv:
+    elif "-o" in cmdline.argv:
         status = file_check(out_file, hold_file, search_list)
 
     if status:
