@@ -147,8 +147,8 @@ class UnitTest(unittest.TestCase):
         self.out_path = os.path.join(self.test_path, "out")
         self.out_file = os.path.join(self.out_path, "package_list.txt")
         self.non_json_file = os.path.join(self.out_path,
-                                          "package_list_non_json")
-        self.json_file = os.path.join(self.out_path, "package_list_json")
+                                          "package_proc_list_non_json")
+        self.json_file = os.path.join(self.out_path, "package_proc_list_json")
         self.db = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.args_array = {"-i": "test_sysmon:test_server_pkgs",
@@ -237,6 +237,7 @@ class UnitTest(unittest.TestCase):
                 self.args_array5, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.mongo_cfg))
 
+    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_process_yum_mongo(self, mock_date):
 
@@ -256,7 +257,7 @@ class UnitTest(unittest.TestCase):
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["Server"] == self.yum.hostname:
+        if mongo.coll_find1()["server"] == self.yum.hostname:
             status = True
 
         else:
@@ -266,6 +267,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
+    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_process_yum_mongo_file(self, mock_date):
 
@@ -285,7 +287,7 @@ class UnitTest(unittest.TestCase):
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["Server"] == self.yum.hostname:
+        if mongo.coll_find1()["server"] == self.yum.hostname:
             status = filecmp.cmp(self.out_file, self.non_json_file)
 
         else:
@@ -305,10 +307,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mongo = mongo_class.DB(self.mongo_cfg.name, self.mongo_cfg.user,
-                               self.mongo_cfg.passwd, self.mongo_cfg.host,
-                               self.mongo_cfg.port, self.db,
-                               self.mongo_cfg.auth, self.mongo_cfg.conf_file)
+        mongo = mongo_class.DB(
+            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.passwd,
+            self.mongo_cfg.host, self.mongo_cfg.port, db=self.db,
+            auth=self.mongo_cfg.auth, conf_file=self.mongo_cfg.conf_file)
 
         mongo.db_connect(self.db)
         mongo.db_cmd("dropDatabase")
