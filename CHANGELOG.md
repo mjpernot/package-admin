@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.3.0] - 2021-01-22
 ### Changed
+- config/mongo.py.TEMPLATE:  Add authentication mechanism entries.
 - process_yum:  Converted dictionary keys to PascalCase.
 - Documentation updates.
 
