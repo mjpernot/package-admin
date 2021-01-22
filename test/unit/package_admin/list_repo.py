@@ -42,6 +42,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_mongo_failure -> Test with failed Mongo connection.
+        test_mongo_successful -> Test with successful Mongo connection.
         test_list_repo -> Test call to list_repo function.
 
     """
@@ -97,6 +99,41 @@ class UnitTest(unittest.TestCase):
 
         self.args_array = {"-i": "Database_Name:Table_Name"}
         self.func_name = self.yum.fetch_repos
+        self.status = (True, None)
+        self.status2 = (False, "Error Message")
+        self.results = (False, "list_repo: Error Message")
+
+    @mock.patch("package_admin.process_yum")
+    def test_mongo_failure(self, mock_yum):
+
+        """Function:  test_mongo_failure
+
+        Description:  Test with failed Mongo connection.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.status2
+
+        self.assertEqual(package_admin.list_repo(self.args_array, self.yum),
+                         self.results)
+
+    @mock.patch("package_admin.process_yum")
+    def test_mongo_successful(self, mock_yum):
+
+        """Function:  test_mongo_successful
+
+        Description:  Test with successful Mongo connection.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.status
+
+        self.assertEqual(package_admin.list_repo(self.args_array, self.yum),
+                         self.status)
 
     @mock.patch("package_admin.process_yum")
     def test_list_repo(self, mock_yum):
@@ -109,9 +146,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_yum.return_value = True
+        mock_yum.return_value = self.status
 
-        self.assertFalse(package_admin.list_repo(self.args_array, self.yum))
+        self.assertEqual(package_admin.list_repo(self.args_array, self.yum),
+                         self.status)
 
 
 if __name__ == "__main__":
