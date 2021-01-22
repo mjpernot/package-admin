@@ -213,7 +213,7 @@ def list_upd_pkg(args_array, yum, **kwargs):
 
     args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "updatePackages", yum.fetch_update_pkgs, **kwargs)
+        args_array, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_upd_pkg: " + status[1])
@@ -240,7 +240,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "installedPackages", yum.fetch_install_pkgs, **kwargs)
+        args_array, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_ins_pkg: " + status[1])
@@ -266,7 +266,7 @@ def list_repo(args_array, yum, **kwargs):
     """
 
     args_array = dict(args_array)
-    status = process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
