@@ -139,9 +139,13 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         (input) func_name -> Name of class method to call.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
+    status = (True, None)
     args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
@@ -158,7 +162,10 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     if db_tbl and class_cfg:
         db, tbl = db_tbl.split(":")
-        mongo_libs.ins_doc(class_cfg, db, tbl, data)
+        status = mongo_libs.ins_doc(class_cfg, db, tbl, data)
+
+        if not status[0]:
+            status = (status[0], "Mongo_Insert: " + status[1])
 
     if ofile and json_fmt:
         gen_libs.write_file(ofile, "w", json.dumps(data, indent=4))
@@ -183,6 +190,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
             mail.add_2_msg(data)
 
         mail.send_mail()
+
+    return status
 
 
 def list_upd_pkg(args_array, yum, **kwargs):
