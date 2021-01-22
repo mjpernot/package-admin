@@ -23,7 +23,6 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-import datetime
 import filecmp
 
 # Third-party
@@ -33,9 +32,9 @@ import mock
 sys.path.append(os.getcwd())
 import package_admin
 import lib.gen_libs as gen_libs
+import lib.cmds_gen as cmds_gen
 import mongo_lib.mongo_libs as mongo_libs
 import mongo_lib.mongo_class as mongo_class
-import lib.cmds_gen as cmds_gen
 
 import version
 
@@ -120,7 +119,7 @@ class UnitTest(unittest.TestCase):
                                                "package_repo_non_json")
         self.repo_json_file = os.path.join(self.out_path,
                                            "package_repo_json")
-        self.db = "test_sysmon"
+        self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.hostname = "Server_Host_Name"
         self.distro = ("OS_Name", "Version_Release", "Type_Release")
@@ -273,14 +272,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["Server"] == self.hostname:
-            status = True
-
-        else:
-            status = False
+        status = \
+            True if mongo.coll_find1()["Server"] == self.hostname else False
 
         cmds_gen.disconnect([mongo])
 
@@ -314,7 +310,7 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
         if mongo.coll_find1()["Server"] == self.hostname:
@@ -458,14 +454,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["Server"] == self.hostname:
-            status = True
-
-        else:
-            status = False
+        status = \
+            True if mongo.coll_find1()["Server"] == self.hostname else False
 
         cmds_gen.disconnect([mongo])
 
@@ -499,7 +492,7 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
         if mongo.coll_find1()["Server"] == self.hostname:
@@ -644,14 +637,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["Server"] == self.hostname:
-            status = True
-
-        else:
-            status = False
+        status = \
+            True if mongo.coll_find1()["Server"] == self.hostname else False
 
         cmds_gen.disconnect([mongo])
 
@@ -685,7 +675,7 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.db, self.tbl)
+        mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
         if mongo.coll_find1()["Server"] == self.hostname:
@@ -766,10 +756,10 @@ class UnitTest(unittest.TestCase):
 
         mongo = mongo_class.DB(
             self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.passwd,
-            self.mongo_cfg.host, self.mongo_cfg.port, db=self.db,
+            self.mongo_cfg.host, self.mongo_cfg.port, db=self.dbn,
             auth=self.mongo_cfg.auth, conf_file=self.mongo_cfg.conf_file)
 
-        mongo.db_connect(self.db)
+        mongo.db_connect(self.dbn)
         mongo.db_cmd("dropDatabase")
         cmds_gen.disconnect([mongo])
 
