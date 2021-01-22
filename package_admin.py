@@ -9,33 +9,48 @@
         package updates, and listing current repositories.
 
     Usage:
-        package_admin.py {-L | -U | -R} [-j] [-n]
-            [-i db_name:table_name -c file -d path]
-            [-e to_email [to_email2 ...] [-s subject_line]]
-            [-o dir_path/file]
+        package_admin.py
+            {-L [-j] [-n] [-e to_email [to_email2 ...] [-s subject_line]]
+                [-o dir_path/file] |
+             -R [-j] [-n] [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-o dir_path/file] |
+             -U [-j] [-n] [-i db_name:table_name -c file -d path]
+                 [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-o dir_path/file]}
             [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
+            -j => Return output in formatted JSON format.
+            -n => No standard out.  Do not send output to standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+
         -U => List update packages awaiting for the server.
+            -j => Return output in formatted JSON format.
+            -n => No standard out.  Do not send output to standard out.
+            -i { database:collection } => Name of database and collection to
+                    insert into Mongo database.  Default:  sysmon:server_pkgs
+                -c file => Mongo server configuration file.
+                -d dir path => Directory path to config file (-c).
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+
         -R => List current repositories.
-        -j => Return output in formatted JSON format.
-        -e to_email_address(es) => Enables emailing capability for an option if
-            the option allows it.  Sends output to one or more email addresses.
-            Email addresses are delimited by spaces.
-        -s subject_line => Subject line of email.
-            Note:  Will create own subject line if one is not provided.
-            This option requires option:  -e
-        -i { database:collection } => Name of database and collection to
-            insert the database statistics data into.  Available for -U option.
-            Requires options:  -c and -d
-            Default:  sysmon:server_pkgs
-        -c file => Mongo server configuration file.  Required for -i option.
-        -d dir path => Directory path to config file (-c).  Required for -i
-            option.
-        -n => No standard out.  Do not send output to standard out.
-        -o path/file => Directory path and file name for output.
-            Available for -L, -U, and -R options.
+            -j => Return output in formatted JSON format.
+            -n => No standard out.  Do not send output to standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -47,38 +62,27 @@
         inserting data into a database.
         There are two ways to connect:  single or replica set.
 
-            1.)  Mongo single connection:
+            1.)  Single database connection:
 
-            # All Mongo configuration settings.
+            # Single Configuration file for Mongo Database Server.
             user = "USER"
-            passwd = "PASSWORD"
-            # Mongo DB host information
-            host = "IP_ADDRESS"
+            japd = "PSWORD"
+            host = "HOST_IP"
             name = "HOSTNAME"
-            # Mongo database port (default is 27017)
             port = 27017
-            # Mongo configuration settings
             conf_file = None
-            # Authentication required:  True|False
             auth = True
+            auth_db = "admin"
+            auth_mech = "SCRAM-SHA-1"
+            use_arg = True
+            use_uri = False
 
-            2.)  Mongo replica set connection:
-            Same format as single Mongo database connection and with these
-            additional entries in the configuration file:
+            2.)  Replica Set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file:
 
-            # Replica Set Mongo configuration settings.
-            # By default all settings are set to None.
-            #    None means the Mongo database is not part of a replica set.
-            #
-            # Replica set name.
-            #    Format:  repset = "REPLICA_SET_NAME"
-            repset = None
-            # Replica host listing.  List of mongo databases in replica set.
-            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            repset_hosts = None
-            # Database to authentication to.
-            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
-            db_auth = None
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.

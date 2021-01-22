@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.3.0] - 2021-01-22
+### Changed
+- Documentation updates.
+
+
 ## [2.2.0] - 2020-06-26
 ### Fixed
 - main:  Fixed handling command line arguments from SonarQube scan finding.
@@ -25,19 +30,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.6] - 2019-05-14
 ### Fixed
-- run_program:  Fixed problem with mutable default arguments issue.
-- list_repo:  Fixed problem with mutable default arguments issue.
-- list_ins_pkg:  Fixed problem with mutable default arguments issue.
-- list_upd_pkg:  Fixed problem with mutable default arguments issue.
-- process_yum:  Fixed problem with mutable default arguments issue.
+- list_repo, list_ins_pkg, list_upd_pkg, process_yum, run_program:  Fixed problem with mutable default arguments issue.
 
 
 ## [2.1.5] - 2019-03-06
 ### Changed
-- process_yum:  Changed output to camelCase.
-- list_upd_pkg:  Changed output to camelCase.
-- list_ins_pkg:  Changed output to camelCase.
-- list_repo:  Changed output to camelCase.
+- list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Changed output to camelCase.
 - main: Refactored code to bring into standard convention.
 
 
@@ -45,11 +43,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Tested on Python 2.7.
 
 ### Changed
-- process_yum:  Changed Yum instance name from "YUM" to "yum".
-- list_upd_pkg:  Changed Yum instance name from "YUM" to "yum".
-- list_ins_pkg:  Changed Yum instance name from "YUM" to "yum".
-- list_repo:  Changed Yum instance name from "YUM" to "yum".
-- run_program:  Changed Yum instance name from "YUM" to "yum".
+- list_upd_pkg, list_ins_pkg, list_repo, run_program, process_yum:  Changed Yum instance name from "YUM" to "yum".
 - Documentation updates.
 
 
