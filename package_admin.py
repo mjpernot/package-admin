@@ -205,12 +205,20 @@ def list_upd_pkg(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "updatePackages", yum.fetch_update_pkgs,
-                **kwargs)
+    status = process_yum(
+        args_array, yum, "updatePackages", yum.fetch_update_pkgs, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_upd_pkg: " + status[1])
+
+    return status
 
 
 def list_ins_pkg(args_array, yum, **kwargs):
@@ -224,12 +232,20 @@ def list_ins_pkg(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "installedPackages", yum.fetch_install_pkgs,
-                **kwargs)
+    status = process_yum(
+        args_array, yum, "installedPackages", yum.fetch_install_pkgs, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_ins_pkg: " + status[1])
+
+    return status
 
 
 def list_repo(args_array, yum, **kwargs):
@@ -243,11 +259,19 @@ def list_repo(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_repo: " + status[1])
+
+    return status
 
 
 def run_program(args_array, func_dict, **kwargs):
