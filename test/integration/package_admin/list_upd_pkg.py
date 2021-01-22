@@ -32,7 +32,6 @@ import mock
 sys.path.append(os.getcwd())
 import package_admin
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import mongo_lib.mongo_libs as mongo_libs
 import mongo_lib.mongo_class as mongo_class
 import version
@@ -255,7 +254,7 @@ class UnitTest(unittest.TestCase):
             True if mongo.coll_find1()["Server"] == self.yum.hostname \
             else False
 
-        cmds_gen.disconnect([mongo])
+        mongo_libs.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -285,7 +284,7 @@ class UnitTest(unittest.TestCase):
         else:
             status = False
 
-        cmds_gen.disconnect([mongo])
+        mongo_libs.disconnect([mongo])
 
         self.assertTrue(status)
 
@@ -306,7 +305,7 @@ class UnitTest(unittest.TestCase):
 
         mongo.db_connect(self.dbn)
         mongo.db_cmd("dropDatabase")
-        cmds_gen.disconnect([mongo])
+        mongo_libs.disconnect([mongo])
 
         if os.path.isfile(self.out_file):
             os.remove(self.out_file)
