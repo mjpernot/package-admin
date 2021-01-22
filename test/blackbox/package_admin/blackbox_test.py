@@ -195,7 +195,7 @@ def main():
     ext = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     hold_file = out_file + "." + ext + ".HOLD"
-    search_list = ["asOf", "server"]
+    search_list = ["AsOf", "Server"]
     status = True
     mongo_cfg = gen_libs.load_module("mongo", config_path)
     hostname = socket.gethostname()
