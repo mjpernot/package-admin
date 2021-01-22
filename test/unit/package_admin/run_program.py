@@ -46,7 +46,13 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
-    pass
+    status = True
+    class_cfg = kwargs.get("class_cfg", None)
+
+    if args_array and yum and class_cfg:
+        status = True
+
+    return status
 
 
 class UnitTest(unittest.TestCase):
