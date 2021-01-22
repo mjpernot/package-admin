@@ -156,6 +156,7 @@ class UnitTest(unittest.TestCase):
         self.args_array4 = {"-n": True}
         self.args_array5 = {"-n": False}
         self.time_str = "2018-01-01 01:00:00"
+        self.results = (True, None)
 
     @mock.patch("package_admin.datetime")
     def test_process_yum_file(self, mock_date):
@@ -212,10 +213,10 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        self.assertFalse(package_admin.process_yum(self.args_array4, self.yum,
-                                                   self.dict_key,
-                                                   self.func_name,
-                                                   class_cfg=self.mongo_cfg))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array4, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.mongo_cfg), self.results)
 
     @mock.patch("package_admin.datetime")
     def test_process_yum_out_std(self, mock_date):
@@ -231,9 +232,10 @@ class UnitTest(unittest.TestCase):
         mock_date.datetime.strftime.return_value = self.time_str
 
         with gen_libs.no_std_out():
-            self.assertFalse(package_admin.process_yum(
-                self.args_array5, self.yum, self.dict_key, self.func_name,
-                class_cfg=self.mongo_cfg))
+            self.assertEqual(
+                package_admin.process_yum(
+                    self.args_array5, self.yum, self.dict_key, self.func_name,
+                    class_cfg=self.mongo_cfg), self.results)
 
     @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
