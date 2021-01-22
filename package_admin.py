@@ -295,8 +295,11 @@ def run_program(args_array, func_dict, **kwargs):
         mongo_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
     # Intersect args_array & func_dict to find which functions to call.
-    for x in set(args_array.keys()) & set(func_dict.keys()):
-        func_dict[x](args_array, yum, class_cfg=mongo_cfg, **kwargs)
+    for item in set(args_array.keys()) & set(func_dict.keys()):
+        status = func_dict[item](args_array, yum, class_cfg=mongo_cfg)
+
+        if not status[0]:
+            print("Error Detected: %s" % (status[1]))
 
 
 def main():
