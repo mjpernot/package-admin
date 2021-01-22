@@ -144,9 +144,9 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     args_array = dict(args_array)
     os_distro = yum.get_distro()
-    data = {"server": yum.get_hostname(),
-            "osRelease": os_distro[0] + " " + os_distro[1],
-            "asOf": datetime.datetime.strftime(datetime.datetime.now(),
+    data = {"Server": yum.get_hostname(),
+            "OsRelease": os_distro[0] + " " + os_distro[1],
+            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
 
