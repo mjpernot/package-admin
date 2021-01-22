@@ -27,7 +27,6 @@ import json
 # Local
 sys.path.append(os.getcwd())
 import lib.gen_libs as gen_libs
-import lib.cmds_gen as cmds_gen
 import mongo_lib.mongo_libs as mongo_libs
 import mongo_lib.mongo_class as mongo_class
 import version
@@ -120,7 +119,7 @@ def mongo_check(mongo_cfg, hostname, dbn, tbl):
 
     status = True if coll.coll_find1()["Server"] == hostname else False
 
-    cmds_gen.disconnect([coll])
+    mongo_libs.disconnect([coll])
 
     return status
 
@@ -144,7 +143,7 @@ def mongo_cleanup(mongo_cfg, dbn):
 
     mongo.db_connect(dbn)
     mongo.db_cmd("dropDatabase")
-    cmds_gen.disconnect([mongo])
+    mongo_libs.disconnect([mongo])
 
 
 def _check_status(status, status_1, status_2):
