@@ -143,18 +143,20 @@ class UnitTest(unittest.TestCase):
         self.config_path = os.path.join(self.test_path, "config")
         self.mongo_cfg = gen_libs.load_module("mongo", self.config_path)
         self.out_path = os.path.join(self.test_path, "out")
-        self.out_file = os.path.join(self.out_path, "package_list.txt")
+        self.tmp_path = os.path.join(self.test_path, "tmp")
+        self.out_file = os.path.join(self.tmp_path, "package_list.txt")
         self.non_json_file = os.path.join(self.out_path,
                                           "package_proc_list_non_json")
         self.json_file = os.path.join(self.out_path, "package_proc_list_json")
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.args_array = {"-i": "test_sysmon:test_server_pkgs",
-                           "-o": self.out_file, "-n": True}
-        self.args_array2 = {"-o": self.out_file, "-n": True}
-        self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-n": True}
-        self.args_array4 = {"-n": True}
-        self.args_array5 = {"-n": False}
+                           "-o": self.out_file, "-z": True}
+        self.args_array2 = {"-o": self.out_file, "-z": True, "-f": True}
+        self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-z": True}
+        self.args_array4 = {"-z": True}
+        self.args_array5 = {"-z": False}
+        self.args_array6 = {"-o": self.out_file, "-z": True}
         self.time_str = "2018-01-01 01:00:00"
         self.results = (True, None)
 
@@ -191,9 +193,7 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        self.args_array2["-j"] = True
-
-        package_admin.process_yum(self.args_array2, self.yum, self.dict_key,
+        package_admin.process_yum(self.args_array6, self.yum, self.dict_key,
                                   self.func_name, class_cfg=self.mongo_cfg)
 
         status = filecmp.cmp(self.out_file, self.json_file)
@@ -218,6 +218,8 @@ class UnitTest(unittest.TestCase):
                 self.args_array4, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.mongo_cfg), self.results)
 
+    @mock.patch("package_admin.gen_libs.write_file",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.datetime")
     def test_process_yum_out_std(self, mock_date):
 
@@ -231,11 +233,10 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                package_admin.process_yum(
-                    self.args_array5, self.yum, self.dict_key, self.func_name,
-                    class_cfg=self.mongo_cfg), self.results)
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array5, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.mongo_cfg), self.results)
 
     @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
