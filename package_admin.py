@@ -17,7 +17,7 @@
              -U [-j] [-n] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line]]
                  [-o dir_path/file]}
-            [-v | -h]
+            [-y flavor_id] [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
@@ -51,6 +51,7 @@
                     subject line if one is not provided.
             -o path/file => Directory path and file name for output.
 
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -332,7 +333,7 @@ def main():
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
     opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
     opt_multi_list = ["-e", "-s"]
-    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s"]
+    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(
@@ -343,7 +344,16 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-        run_program(args_array, func_dict)
+
+        try:
+            proglock = gen_class.ProgramLock(cmdline.argv,
+                                             args_array.get("-y", ""))
+            run_program(args_array, func_dict)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  Lock in place for package_admin with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":

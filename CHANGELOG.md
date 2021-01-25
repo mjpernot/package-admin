@@ -6,12 +6,16 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.3.0] - 2021-01-22
 ### Changed
+- main:  Added program lock to running the run_program call.
 - run_program:  Captured and process status from function calls.
 - list_upd_pkg, list_ins_pkg, list_repo:  Capture and process status from process_yum function.
 - process_yum:  Capture and process status from Mongo insert connection.
 - config/mongo.py.TEMPLATE:  Add authentication mechanism entries.
 - list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Converted dictionary keys to PascalCase.
 - Documentation updates.
+
+### Added
+- Added Program lock capability.
 
 
 ## [2.2.0] - 2020-06-26
