@@ -10,19 +10,19 @@
 
     Usage:
         package_admin.py
-            {-L [-j] [-n] [-e to_email [to_email2 ...] [-s subject_line]]
+            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
                 [-o dir_path/file] |
-             -R [-j] [-n] [-e to_email [to_email2 ...] [-s subject_line]]
+             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
                  [-o dir_path/file] |
-             -U [-j] [-n] [-i db_name:table_name -c file -d path]
+             -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line]]
                  [-o dir_path/file]}
             [-y flavor_id] [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
-            -j => Return output in formatted JSON format.
-            -n => No standard out.  Do not send output to standard out.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
@@ -30,8 +30,8 @@
             -o path/file => Directory path and file name for output.
 
         -U => List update packages awaiting for the server.
-            -j => Return output in formatted JSON format.
-            -n => No standard out.  Do not send output to standard out.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
             -i { database:collection } => Name of database and collection to
                     insert into Mongo database.  Default:  sysmon:server_pkgs
                 -c file => Mongo server configuration file.
@@ -43,8 +43,8 @@
             -o path/file => Directory path and file name for output.
 
         -R => List current repositories.
-            -j => Return output in formatted JSON format.
-            -n => No standard out.  Do not send output to standard out.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
@@ -89,7 +89,7 @@
             connect to different databases with different names.
 
     Example:
-        package_admin.py -U -j -c mongo -d config -i
+        package_admin.py -U -f -c mongo -d config -i
 
 """
 
@@ -147,6 +147,7 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     """
 
     status = (True, None)
+    indent = 4
     args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
@@ -156,10 +157,11 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
             dict_key: func_name()}
 
     ofile = args_array.get("-o", False)
-    json_fmt = args_array.get("-j", False)
-    sup_std = args_array.get("-n", False)
     db_tbl = args_array.get("-i", False)
     class_cfg = kwargs.get("class_cfg", False)
+
+    if args_array.get("-f", False):
+        indent = None
 
     if db_tbl and class_cfg:
         db, tbl = db_tbl.split(":")
@@ -168,28 +170,19 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         if not status[0]:
             status = (status[0], "Mongo_Insert: " + status[1])
 
-    if ofile and json_fmt:
-        gen_libs.write_file(ofile, "w", json.dumps(data, indent=4))
+    data = json.dumps(data, indent=indent)
 
-    elif ofile:
+    if ofile:
         gen_libs.write_file(ofile, "w", data)
 
-    if not sup_std and json_fmt:
-        print(json.dumps(data, indent=4))
-
-    elif not sup_std:
-        print(data)
+    if not args_array.get("-z", False):
+        gen_libs.display_data(data)
 
     if args_array.get("-e", False):
         mail = gen_class.setup_mail(args_array.get("-e"),
                                     subj=args_array.get("-s", None))
 
-        if json_fmt:
-            mail.add_2_msg(json.dumps(data, indent=4))
-
-        else:
-            mail.add_2_msg(data)
-
+        mail.add_2_msg(data)
         mail.send_mail()
 
     return status
