@@ -151,7 +151,7 @@ class UnitTest(unittest.TestCase):
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.args_array = {"-i": "test_sysmon:test_server_pkgs",
-                           "-o": self.out_file, "-z": True}
+                           "-o": self.out_file, "-z": True, "-f": True}
         self.args_array2 = {"-o": self.out_file, "-z": True, "-f": True}
         self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-z": True}
         self.args_array4 = {"-z": True}
@@ -200,6 +200,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.datetime")
     def test_process_yum_sup_std(self, mock_date):
 
@@ -218,7 +220,7 @@ class UnitTest(unittest.TestCase):
                 self.args_array4, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.mongo_cfg), self.results)
 
-    @mock.patch("package_admin.gen_libs.write_file",
+    @mock.patch("package_admin.gen_libs.display_data",
                 mock.Mock(return_value=True))
     @mock.patch("package_admin.datetime")
     def test_process_yum_out_std(self, mock_date):
@@ -238,7 +240,6 @@ class UnitTest(unittest.TestCase):
                 self.args_array5, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.mongo_cfg), self.results)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_process_yum_mongo(self, mock_date):
 
@@ -259,14 +260,13 @@ class UnitTest(unittest.TestCase):
         mongo.connect()
 
         status = \
-            True if mongo.coll_find1()["server"] == self.yum.hostname \
+            True if mongo.coll_find1()["Server"] == self.yum.hostname \
             else False
 
         mongo_libs.disconnect([mongo])
 
         self.assertTrue(status)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_process_yum_mongo_file(self, mock_date):
 
@@ -286,7 +286,7 @@ class UnitTest(unittest.TestCase):
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
 
-        if mongo.coll_find1()["server"] == self.yum.hostname:
+        if mongo.coll_find1()["Server"] == self.yum.hostname:
             status = filecmp.cmp(self.out_file, self.non_json_file)
 
         else:
@@ -307,7 +307,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mongo = mongo_class.DB(
-            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.passwd,
+            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.japd,
             self.mongo_cfg.host, self.mongo_cfg.port, db=self.dbn,
             auth=self.mongo_cfg.auth, conf_file=self.mongo_cfg.conf_file)
 
