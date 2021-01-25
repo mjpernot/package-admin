@@ -96,6 +96,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_append_file_json -> Test with append to file as formatted JSON.
+        test_append_file -> Test with append to file is set to True.
         test_mongo_conn_fail -> Test with failed Mongo connection.
         test_mongo_conn_success -> Test with successful Mongo connection.
         test_email_json -> Test with email in json format.
@@ -194,10 +196,55 @@ class UnitTest(unittest.TestCase):
         self.mail = Mail()
         self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
         self.args_array3 = {"-z": True, "-e": "email", "-s": "subj",
-                            "-j": True}
+                            "-f": True}
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
         self.results = (False, "Mongo_Insert: Error_Message")
+
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_append_file_json(self, mock_write):
+
+        """Function:  test_append_file_json
+
+        Description:  Test with append to file as formatted JSON.
+
+        Arguments:
+
+        """
+
+        mock_write.return_value = True
+
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-z"] = True
+        self.args_array["-f"] = True
+        self.args_array["-a"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
+
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_append_file(self, mock_write):
+
+        """Function:  test_append_file
+
+        Description:  Test with append to file is set to True.
+
+        Arguments:
+
+        """
+
+        mock_write.return_value = True
+
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-z"] = True
+        self.args_array["-a"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
     def test_mongo_conn_fail(self, mock_insert):
@@ -310,7 +357,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array["-o"] = "File_Name"
         self.args_array["-z"] = True
-        self.args_array["-j"] = True
+        self.args_array["-f"] = True
 
         self.assertEqual(
             package_admin.process_yum(
@@ -350,7 +397,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-j"] = True
+        self.args_array["-f"] = True
 
         self.assertEqual(
             package_admin.process_yum(
