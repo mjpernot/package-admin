@@ -11,12 +11,12 @@
     Usage:
         package_admin.py
             {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
-                [-o dir_path/file] |
+                [-o dir_path/file [-a]] |
              -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
-                 [-o dir_path/file] |
+                 [-o dir_path/file [-a]] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line]]
-                 [-o dir_path/file]}
+                 [-o dir_path/file [-a]]}
             [-y flavor_id] [-v | -h]
 
     Arguments:
@@ -28,6 +28,7 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
             -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
 
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
@@ -41,6 +42,7 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
             -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
 
         -R => List current repositories.
             -f => Flatten the JSON data structure.
@@ -50,6 +52,7 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
             -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
 
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
@@ -148,6 +151,7 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
 
     status = (True, None)
     indent = 4
+    mode = "w"
     args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
@@ -159,6 +163,9 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     ofile = args_array.get("-o", False)
     db_tbl = args_array.get("-i", False)
     class_cfg = kwargs.get("class_cfg", False)
+
+    if args_array.get("-a", False):
+        mode = "a"
 
     if args_array.get("-f", False):
         indent = None
@@ -173,7 +180,7 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     data = json.dumps(data, indent=indent)
 
     if ofile:
-        gen_libs.write_file(ofile, "w", data)
+        gen_libs.write_file(ofile, mode, data)
 
     if not args_array.get("-z", False):
         gen_libs.display_data(data)

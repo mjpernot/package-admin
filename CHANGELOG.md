@@ -6,11 +6,13 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.3.0] - 2021-01-22
 - Changed -n with -z option to standardize among the other programs.
+- Added -a option to append to a file.
 
 ### Fixed
 - process_yum:  Replaced -j option with -f option to flatten JSON document.
 
 ### Changed
+- process_yum:  Added -a option to allow for appending of data to a file.
 - process_yum:  Changed -n with -z option.
 - main:  Added program lock to running the run_program call.
 - run_program:  Captured and process status from function calls.
