@@ -192,8 +192,8 @@ class UnitTest(unittest.TestCase):
         self.dict_key = "Update_Packages"
         self.func_name = self.yum.fetch_update_pkgs
         self.mail = Mail()
-        self.args_array2 = {"-n": True, "-e": "email", "-s": "subj"}
-        self.args_array3 = {"-n": True, "-e": "email", "-s": "subj",
+        self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
+        self.args_array3 = {"-z": True, "-e": "email", "-s": "subj",
                             "-j": True}
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
@@ -212,7 +212,7 @@ class UnitTest(unittest.TestCase):
 
         mock_insert.return_value = self.status2
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
         self.assertEqual(
             package_admin.process_yum(
@@ -232,7 +232,7 @@ class UnitTest(unittest.TestCase):
 
         mock_insert.return_value = self.status
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
         self.assertEqual(
             package_admin.process_yum(
@@ -288,7 +288,7 @@ class UnitTest(unittest.TestCase):
 
         mock_insert.return_value = self.status
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
         self.assertEqual(
             package_admin.process_yum(
@@ -309,7 +309,7 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.args_array["-o"] = "File_Name"
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
         self.args_array["-j"] = True
 
         self.assertEqual(
@@ -331,13 +331,15 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.args_array["-o"] = "File_Name"
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
         self.assertEqual(
             package_admin.process_yum(
                 self.args_array, self.yum, self.dict_key, self.func_name),
             self.status)
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     def test_suppress_false_json(self):
 
         """Function:  test_suppress_false_json
@@ -350,12 +352,13 @@ class UnitTest(unittest.TestCase):
 
         self.args_array["-j"] = True
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                package_admin.process_yum(
-                    self.args_array, self.yum, self.dict_key, self.func_name),
-                self.status)
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     def test_suppression_false(self):
 
         """Function:  test_suppression_false
@@ -366,11 +369,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertEqual(
-                package_admin.process_yum(
-                    self.args_array, self.yum, self.dict_key, self.func_name),
-                self.status)
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
     def test_suppression_true(self):
 
@@ -382,7 +384,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
         self.assertEqual(
             package_admin.process_yum(
