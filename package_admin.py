@@ -171,8 +171,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         indent = None
 
     if db_tbl and class_cfg:
-        db, tbl = db_tbl.split(":")
-        status = mongo_libs.ins_doc(class_cfg, db, tbl, data)
+        dbn, tbl = db_tbl.split(":")
+        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
 
         if not status[0]:
             status = (status[0], "Mongo_Insert: " + status[1])
