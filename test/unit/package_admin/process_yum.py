@@ -435,7 +435,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array,self.yum, self.dict_key, self.func_name),
+                self.args_array, self.yum, self.dict_key, self.func_name),
             self.status)
 
 
