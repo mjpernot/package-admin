@@ -315,6 +315,5 @@ class UnitTest(unittest.TestCase):
             os.remove(self.out_file)
 
 
-
 if __name__ == "__main__":
     unittest.main()
