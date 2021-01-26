@@ -102,7 +102,8 @@ class UnitTest(unittest.TestCase):
         self.config_path = os.path.join(self.test_path, "config")
         self.mongo_cfg = gen_libs.load_module("mongo", self.config_path)
         self.out_path = os.path.join(self.test_path, "out")
-        self.out_file = os.path.join(self.out_path, "package_out.txt")
+        self.tmp_path = os.path.join(self.test_path, "tmp")
+        self.out_file = os.path.join(self.tmp_path, "package_out.txt")
         self.list_non_json_file = os.path.join(self.out_path,
                                                "package_list_non_json")
         self.list_json_file = os.path.join(self.out_path, "package_list_json")
@@ -129,14 +130,14 @@ class UnitTest(unittest.TestCase):
         self.repo_data = ['REPOSITORY_LIST']
         self.argv_list = [os.path.join(self.base_dir, self.main),
                           "-i", "test_sysmon:test_server_pkgs",
-                          "-o", self.out_file, "-n", "-c", "mongo",
+                          "-o", self.out_file, "-z", "-c", "mongo",
                           "-d", self.config_path]
         self.argv_list2 = [os.path.join(self.base_dir, self.main),
-                           "-o", self.out_file, "-n"]
+                           "-o", self.out_file, "-z"]
         self.argv_list3 = [os.path.join(self.base_dir, self.main),
-                           "-i", "test_sysmon:test_server_pkgs", "-n",
+                           "-i", "test_sysmon:test_server_pkgs", "-z",
                            "-c", "mongo", "-d", self.config_path]
-        self.argv_list4 = [os.path.join(self.base_dir, self.main), "-n"]
+        self.argv_list4 = [os.path.join(self.base_dir, self.main), "-z"]
         self.argv_list5 = [os.path.join(self.base_dir, self.main)]
         self.time_str = "2018-01-01 01:00:00"
 
@@ -191,7 +192,7 @@ class UnitTest(unittest.TestCase):
 
         cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-U")
-        self.argv_list2.append("-j")
+        self.argv_list2.append("-f")
         cmdline.argv = self.argv_list2
 
         package_admin.main()
@@ -223,6 +224,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.Yum.fetch_update_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -244,10 +247,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list5.append("-U")
         cmdline.argv = self.argv_list5
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.main())
+        self.assertFalse(package_admin.main())
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.fetch_update_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -281,7 +282,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.get_distro")
     @mock.patch("package_admin.gen_class.Yum.fetch_update_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -373,7 +373,7 @@ class UnitTest(unittest.TestCase):
 
         cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-L")
-        self.argv_list2.append("-j")
+        self.argv_list2.append("-f")
         cmdline.argv = self.argv_list2
 
         package_admin.main()
@@ -405,6 +405,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.Yum.fetch_install_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -426,10 +428,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list5.append("-L")
         cmdline.argv = self.argv_list5
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.main())
+        self.assertFalse(package_admin.main())
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.fetch_install_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -463,7 +463,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.get_distro")
     @mock.patch("package_admin.gen_class.Yum.fetch_install_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -556,7 +555,7 @@ class UnitTest(unittest.TestCase):
 
         cmdline = gen_libs.get_inst(sys)
         self.argv_list2.append("-R")
-        self.argv_list2.append("-j")
+        self.argv_list2.append("-f")
         cmdline.argv = self.argv_list2
 
         package_admin.main()
@@ -588,6 +587,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.Yum.fetch_repos")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -609,10 +610,8 @@ class UnitTest(unittest.TestCase):
         self.argv_list5.append("-R")
         cmdline.argv = self.argv_list5
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.main())
+        self.assertFalse(package_admin.main())
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.fetch_repos")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
     @mock.patch("package_admin.datetime")
@@ -646,7 +645,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.gen_class.Yum.get_distro")
     @mock.patch("package_admin.gen_class.Yum.fetch_repos")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -754,7 +752,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mongo = mongo_class.DB(
-            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.passwd,
+            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.japd,
             self.mongo_cfg.host, self.mongo_cfg.port, db=self.dbn,
             auth=self.mongo_cfg.auth, conf_file=self.mongo_cfg.conf_file)
 
