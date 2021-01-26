@@ -1,10 +1,1 @@
-{
-    "osRelease": "OS_Name Version_Release", 
-    "installedPackages": {
-        "Arch": "LINUX", 
-        "Ver": "0.0.0", 
-        "Package": "PACKAGE_NAME"
-    }, 
-    "asOf": "2018-01-01 01:00:00", 
-    "server": "Server_Host_Name"
-}
+{"OsRelease": "OS_Name Version_Release", "InstalledPackages": {"Arch": "LINUX", "Ver": "0.0.0", "Package": "PACKAGE_NAME"}, "AsOf": "2018-01-01 01:00:00", "Server": "Server_Host_Name"}

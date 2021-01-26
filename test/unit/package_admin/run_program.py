@@ -29,9 +29,31 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import package_admin
+import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
+
+
+def list_upd_pkg(args_array, yum, **kwargs):
+
+    """Function:  list_upd_pkg
+
+    Description:  This is a function stub for package_admin.list_upd_pkg.
+
+    Arguments:
+        args_array -> Stub argument holder.
+        yum -> Stub argument holder.
+
+    """
+
+    status = (False, "Error Message")
+    class_cfg = kwargs.get("class_cfg", None)
+
+    if args_array and yum and class_cfg:
+        status = (False, "Error Message")
+
+    return status
 
 
 def list_ins_pkg(args_array, yum, **kwargs):
@@ -46,7 +68,13 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
-    pass
+    status = (True, None)
+    class_cfg = kwargs.get("class_cfg", None)
+
+    if args_array and yum and class_cfg:
+        status = (True, None)
+
+    return status
 
 
 class UnitTest(unittest.TestCase):
@@ -57,6 +85,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_func_failed -> Test with failed function run.
+        test_func_successful -> Test with successful function run.
         test_args_array_true -> Test args_array if statement for true.
         test_args_array_false -> Test args_array if statement for false.
         test_loop_zero -> Test loop with zero loops.
@@ -102,7 +132,47 @@ class UnitTest(unittest.TestCase):
         self.yum = Yum()
 
         self.args_array = {"-c": "mongo", "-d": "config"}
+        self.args_array2 = {"-c": "mongo", "-d": "config", "-L": True}
+        self.args_array3 = {"-c": "mongo", "-d": "config", "-U": True}
         self.func_dict = {"-L": list_ins_pkg}
+        self.func_dict2 = {"-U": list_upd_pkg}
+
+    @mock.patch("package_admin.gen_libs.load_module")
+    @mock.patch("package_admin.gen_class.Yum")
+    def test_func_failed(self, mock_yum, mock_load):
+
+        """Function:  test_func_failed
+
+        Description:  Test with failed function run.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.yum
+        mock_load.return_value = "Config_File"
+
+        with gen_libs.no_std_out():
+            self.assertFalse(package_admin.run_program(self.args_array3,
+                                                       self.func_dict2))
+
+    @mock.patch("package_admin.gen_libs.load_module")
+    @mock.patch("package_admin.gen_class.Yum")
+    def test_func_successful(self, mock_yum, mock_load):
+
+        """Function:  test_func_successful
+
+        Description:  Test with successful function run.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.yum
+        mock_load.return_value = "Config_File"
+
+        self.assertFalse(package_admin.run_program(self.args_array2,
+                                                   self.func_dict))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -170,13 +240,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-L"] = True
-
         mock_yum.return_value = self.yum
         mock_yum.list_ins_pkg.return_Value = True
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array,
+        self.assertFalse(package_admin.run_program(self.args_array2,
                                                    self.func_dict))
 
 

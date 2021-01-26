@@ -29,7 +29,6 @@ import mock
 # Local
 sys.path.append(os.getcwd())
 import package_admin
-import lib.gen_libs as gen_libs
 import version
 
 __version__ = version.__version__
@@ -96,6 +95,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp -> Unit testing initilization.
+        test_append_file_json -> Test with append to file as formatted JSON.
+        test_append_file -> Test with append to file is set to True.
+        test_mongo_conn_fail -> Test with failed Mongo connection.
+        test_mongo_conn_success -> Test with successful Mongo connection.
         test_email_json -> Test with email in json format.
         test_email_std -> Test with email in standard format.
         test_mongo_insert -> Test with sending data to Mongo database.
@@ -190,9 +193,97 @@ class UnitTest(unittest.TestCase):
         self.dict_key = "Update_Packages"
         self.func_name = self.yum.fetch_update_pkgs
         self.mail = Mail()
-        self.args_array2 = {"-n": True, "-e": "email", "-s": "subj"}
-        self.args_array3 = {"-n": True, "-e": "email", "-s": "subj",
-                            "-j": True}
+        self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
+        self.args_array3 = {"-z": True, "-e": "email", "-s": "subj",
+                            "-f": True}
+        self.status = (True, None)
+        self.status2 = (False, "Error_Message")
+        self.results = (False, "Mongo_Insert: Error_Message")
+
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_append_file_json(self, mock_write):
+
+        """Function:  test_append_file_json
+
+        Description:  Test with append to file as formatted JSON.
+
+        Arguments:
+
+        """
+
+        mock_write.return_value = True
+
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-z"] = True
+        self.args_array["-f"] = True
+        self.args_array["-a"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
+
+    @mock.patch("package_admin.gen_libs.write_file")
+    def test_append_file(self, mock_write):
+
+        """Function:  test_append_file
+
+        Description:  Test with append to file is set to True.
+
+        Arguments:
+
+        """
+
+        mock_write.return_value = True
+
+        self.args_array["-o"] = "File_Name"
+        self.args_array["-z"] = True
+        self.args_array["-a"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
+
+    @mock.patch("package_admin.mongo_libs.ins_doc")
+    def test_mongo_conn_fail(self, mock_insert):
+
+        """Function:  test_mongo_conn_fail
+
+        Description:  Test with failed Mongo connection.
+
+        Arguments:
+
+        """
+
+        mock_insert.return_value = self.status2
+
+        self.args_array["-z"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.results)
+
+    @mock.patch("package_admin.mongo_libs.ins_doc")
+    def test_mongo_conn_success(self, mock_insert):
+
+        """Function:  test_mongo_conn_success
+
+        Description:  Test with successful Mongo connection.
+
+        Arguments:
+
+        """
+
+        mock_insert.return_value = self.status
+
+        self.args_array["-z"] = True
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_json(self, mock_mail):
@@ -207,9 +298,10 @@ class UnitTest(unittest.TestCase):
 
         mock_mail.return_value = self.mail
 
-        self.assertFalse(package_admin.process_yum(
-            self.args_array3, self.yum, self.dict_key, self.func_name,
-            class_cfg=self.class_cfg))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array3, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_std(self, mock_mail):
@@ -224,9 +316,10 @@ class UnitTest(unittest.TestCase):
 
         mock_mail.return_value = self.mail
 
-        self.assertFalse(package_admin.process_yum(
-            self.args_array2, self.yum, self.dict_key, self.func_name,
-            class_cfg=self.class_cfg))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array2, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
     def test_mongo_insert(self, mock_insert):
@@ -239,13 +332,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_insert.return_value = True
+        mock_insert.return_value = self.status
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
-        self.assertFalse(package_admin.process_yum(
-            self.args_array, self.yum, self.dict_key, self.func_name,
-            class_cfg=self.class_cfg))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
     def test_write_file_json(self, mock_write):
@@ -261,12 +355,13 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.args_array["-o"] = "File_Name"
-        self.args_array["-n"] = True
-        self.args_array["-j"] = True
+        self.args_array["-z"] = True
+        self.args_array["-f"] = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array,
-                                                   self.yum, self.dict_key,
-                                                   self.func_name))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
     def test_write_file_true(self, mock_write):
@@ -282,12 +377,15 @@ class UnitTest(unittest.TestCase):
         mock_write.return_value = True
 
         self.args_array["-o"] = "File_Name"
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array,
-                                                   self.yum, self.dict_key,
-                                                   self.func_name))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     def test_suppress_false_json(self):
 
         """Function:  test_suppress_false_json
@@ -298,13 +396,15 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-j"] = True
+        self.args_array["-f"] = True
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.process_yum(self.args_array,
-                                                       self.yum, self.dict_key,
-                                                       self.func_name))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     def test_suppression_false(self):
 
         """Function:  test_suppression_false
@@ -315,10 +415,10 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.process_yum(self.args_array,
-                                                       self.yum, self.dict_key,
-                                                       self.func_name))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
     def test_suppression_true(self):
 
@@ -330,11 +430,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-n"] = True
+        self.args_array["-z"] = True
 
-        self.assertFalse(package_admin.process_yum(self.args_array,
-                                                   self.yum, self.dict_key,
-                                                   self.func_name))
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array, self.yum, self.dict_key, self.func_name),
+            self.status)
 
 
 if __name__ == "__main__":

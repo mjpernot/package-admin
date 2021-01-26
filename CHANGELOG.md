@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.3.0] - 2021-01-22
+- Changed -n with -z option to standardize among the other programs.
+- Added -a option to append to a file.
+
+### Fixed
+- process_yum:  Replaced -j option with -f option to flatten JSON document.
+
+### Changed
+- process_yum:  Added -a option to allow for appending of data to a file.
+- process_yum:  Changed -n with -z option.
+- main:  Added program lock to running the run_program call.
+- run_program:  Captured and process status from function calls.
+- list_upd_pkg, list_ins_pkg, list_repo:  Capture and process status from process_yum function.
+- process_yum:  Capture and process status from Mongo insert connection.
+- config/mongo.py.TEMPLATE:  Add authentication mechanism entries.
+- list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Converted dictionary keys to PascalCase.
+- Documentation updates.
+
+### Added
+- Added Program lock capability.
+
+
 ## [2.2.0] - 2020-06-26
 ### Fixed
 - main:  Fixed handling command line arguments from SonarQube scan finding.
@@ -25,19 +47,12 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.6] - 2019-05-14
 ### Fixed
-- run_program:  Fixed problem with mutable default arguments issue.
-- list_repo:  Fixed problem with mutable default arguments issue.
-- list_ins_pkg:  Fixed problem with mutable default arguments issue.
-- list_upd_pkg:  Fixed problem with mutable default arguments issue.
-- process_yum:  Fixed problem with mutable default arguments issue.
+- list_repo, list_ins_pkg, list_upd_pkg, process_yum, run_program:  Fixed problem with mutable default arguments issue.
 
 
 ## [2.1.5] - 2019-03-06
 ### Changed
-- process_yum:  Changed output to camelCase.
-- list_upd_pkg:  Changed output to camelCase.
-- list_ins_pkg:  Changed output to camelCase.
-- list_repo:  Changed output to camelCase.
+- list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Changed output to camelCase.
 - main: Refactored code to bring into standard convention.
 
 
@@ -45,11 +60,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Tested on Python 2.7.
 
 ### Changed
-- process_yum:  Changed Yum instance name from "YUM" to "yum".
-- list_upd_pkg:  Changed Yum instance name from "YUM" to "yum".
-- list_ins_pkg:  Changed Yum instance name from "YUM" to "yum".
-- list_repo:  Changed Yum instance name from "YUM" to "yum".
-- run_program:  Changed Yum instance name from "YUM" to "yum".
+- list_upd_pkg, list_ins_pkg, list_repo, run_program, process_yum:  Changed Yum instance name from "YUM" to "yum".
 - Documentation updates.
 
 
