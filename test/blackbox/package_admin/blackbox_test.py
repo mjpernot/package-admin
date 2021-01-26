@@ -137,7 +137,7 @@ def mongo_cleanup(mongo_cfg, dbn):
     """
 
     mongo = mongo_class.DB(
-        mongo_cfg.name, mongo_cfg.user, mongo_cfg.passwd, host=mongo_cfg.host,
+        mongo_cfg.name, mongo_cfg.user, mongo_cfg.japd, host=mongo_cfg.host,
         port=mongo_cfg.port, db=dbn, auth=mongo_cfg.auth,
         conf_file=mongo_cfg.conf_file)
 
@@ -190,7 +190,8 @@ def main():
     test_path = os.path.join(os.getcwd(), base_dir)
     config_path = os.path.join(test_path, "config")
     out_path = os.path.join(base_dir, "out")
-    out_file = os.path.join(out_path, "package_out.txt")
+    tmp_path = os.path.join(test_path, "tmp")
+    out_file = os.path.join(tmp_path, "package_out.txt")
     ext = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     hold_file = out_file + "." + ext + ".HOLD"
@@ -202,13 +203,13 @@ def main():
     tbl = "test_server_pkgs"
 
     if "-L" in cmdline.argv:
-        search_list.append("installedPackages")
+        search_list.append("InstalledPackages")
 
     elif "-U" in cmdline.argv:
-        search_list.append("updatePackages")
+        search_list.append("UpdatePackages")
 
     elif "-R" in cmdline.argv:
-        search_list.append("repos")
+        search_list.append("Repos")
 
     if "-j" in cmdline.argv and "-o" in cmdline.argv and "-i" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
