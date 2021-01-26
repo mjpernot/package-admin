@@ -9,33 +9,52 @@
         package updates, and listing current repositories.
 
     Usage:
-        package_admin.py {-L | -U | -R} [-j] [-n]
-            [-i db_name:table_name -c file -d path]
-            [-e to_email [to_email2 ...] [-s subject_line]]
-            [-o dir_path/file]
-            [-v | -h]
+        package_admin.py
+            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+                [-o dir_path/file [-a]] |
+             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-o dir_path/file [-a]] |
+             -U [-f] [-z] [-i db_name:table_name -c file -d path]
+                 [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-o dir_path/file [-a]]}
+            [-y flavor_id] [-v | -h]
 
     Arguments:
         -L => List all packages installed on the server.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
+
         -U => List update packages awaiting for the server.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
+            -i { database:collection } => Name of database and collection to
+                    insert into Mongo database.  Default:  sysmon:server_pkgs
+                -c file => Mongo server configuration file.
+                -d dir path => Directory path to config file (-c).
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
+
         -R => List current repositories.
-        -j => Return output in formatted JSON format.
-        -e to_email_address(es) => Enables emailing capability for an option if
-            the option allows it.  Sends output to one or more email addresses.
-            Email addresses are delimited by spaces.
-        -s subject_line => Subject line of email.
-            Note:  Will create own subject line if one is not provided.
-            This option requires option:  -e
-        -i { database:collection } => Name of database and collection to
-            insert the database statistics data into.  Available for -U option.
-            Requires options:  -c and -d
-            Default:  sysmon:server_pkgs
-        -c file => Mongo server configuration file.  Required for -i option.
-        -d dir path => Directory path to config file (-c).  Required for -i
-            option.
-        -n => No standard out.  Do not send output to standard out.
-        -o path/file => Directory path and file name for output.
-            Available for -L, -U, and -R options.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+            -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
+
+        -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
         -h => Help and usage message.
 
@@ -47,44 +66,33 @@
         inserting data into a database.
         There are two ways to connect:  single or replica set.
 
-            1.)  Mongo single connection:
+            1.)  Single database connection:
 
-            # All Mongo configuration settings.
+            # Single Configuration file for Mongo Database Server.
             user = "USER"
-            passwd = "PASSWORD"
-            # Mongo DB host information
-            host = "IP_ADDRESS"
+            japd = "PSWORD"
+            host = "HOST_IP"
             name = "HOSTNAME"
-            # Mongo database port (default is 27017)
             port = 27017
-            # Mongo configuration settings
             conf_file = None
-            # Authentication required:  True|False
             auth = True
+            auth_db = "admin"
+            auth_mech = "SCRAM-SHA-1"
+            use_arg = True
+            use_uri = False
 
-            2.)  Mongo replica set connection:
-            Same format as single Mongo database connection and with these
-            additional entries in the configuration file:
+            2.)  Replica Set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file:
 
-            # Replica Set Mongo configuration settings.
-            # By default all settings are set to None.
-            #    None means the Mongo database is not part of a replica set.
-            #
-            # Replica set name.
-            #    Format:  repset = "REPLICA_SET_NAME"
-            repset = None
-            # Replica host listing.  List of mongo databases in replica set.
-            #    Format:  repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            repset_hosts = None
-            # Database to authentication to.
-            #    Format:  db_auth = "AUTHENTICATION_DATABASE"
-            db_auth = None
+            repset = "REPLICA_SET_NAME"
+            repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
+            db_auth = "AUTHENTICATION_DATABASE"
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
 
     Example:
-        package_admin.py -U -j -c mongo -d config -i
+        package_admin.py -U -f -c mongo -d config -i
 
 """
 
@@ -135,50 +143,56 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         (input) func_name -> Name of class method to call.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
+    status = (True, None)
+    indent = 4
+    mode = "w"
     args_array = dict(args_array)
     os_distro = yum.get_distro()
-    data = {"server": yum.get_hostname(),
-            "osRelease": os_distro[0] + " " + os_distro[1],
-            "asOf": datetime.datetime.strftime(datetime.datetime.now(),
+    data = {"Server": yum.get_hostname(),
+            "OsRelease": os_distro[0] + " " + os_distro[1],
+            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
 
     ofile = args_array.get("-o", False)
-    json_fmt = args_array.get("-j", False)
-    sup_std = args_array.get("-n", False)
     db_tbl = args_array.get("-i", False)
     class_cfg = kwargs.get("class_cfg", False)
 
+    if args_array.get("-a", False):
+        mode = "a"
+
+    if args_array.get("-f", False):
+        indent = None
+
     if db_tbl and class_cfg:
-        db, tbl = db_tbl.split(":")
-        mongo_libs.ins_doc(class_cfg, db, tbl, data)
+        dbn, tbl = db_tbl.split(":")
+        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
 
-    if ofile and json_fmt:
-        gen_libs.write_file(ofile, "w", json.dumps(data, indent=4))
+        if not status[0]:
+            status = (status[0], "Mongo_Insert: " + status[1])
 
-    elif ofile:
-        gen_libs.write_file(ofile, "w", data)
+    data = json.dumps(data, indent=indent)
 
-    if not sup_std and json_fmt:
-        print(json.dumps(data, indent=4))
+    if ofile:
+        gen_libs.write_file(ofile, mode, data)
 
-    elif not sup_std:
-        print(data)
+    if not args_array.get("-z", False):
+        gen_libs.display_data(data)
 
     if args_array.get("-e", False):
         mail = gen_class.setup_mail(args_array.get("-e"),
                                     subj=args_array.get("-s", None))
 
-        if json_fmt:
-            mail.add_2_msg(json.dumps(data, indent=4))
-
-        else:
-            mail.add_2_msg(data)
-
+        mail.add_2_msg(data)
         mail.send_mail()
+
+    return status
 
 
 def list_upd_pkg(args_array, yum, **kwargs):
@@ -192,12 +206,20 @@ def list_upd_pkg(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "updatePackages", yum.fetch_update_pkgs,
-                **kwargs)
+    status = process_yum(
+        args_array, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_upd_pkg: " + status[1])
+
+    return status
 
 
 def list_ins_pkg(args_array, yum, **kwargs):
@@ -211,12 +233,20 @@ def list_ins_pkg(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "installedPackages", yum.fetch_install_pkgs,
-                **kwargs)
+    status = process_yum(
+        args_array, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_ins_pkg: " + status[1])
+
+    return status
 
 
 def list_repo(args_array, yum, **kwargs):
@@ -230,11 +260,19 @@ def list_repo(args_array, yum, **kwargs):
         (input) yum -> Yum class instance.
         (input) **kwargs:
             class_cfg -> Mongo server configuration.
+        (output) status -> Tuple on connection status.
+            status[0] - True|False - Mongo connection successful.
+            status[1] - Error message if Mongo connection failed.
 
     """
 
     args_array = dict(args_array)
-    process_yum(args_array, yum, "repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
+
+    if not status[0]:
+        status = (status[0], "list_repo: " + status[1])
+
+    return status
 
 
 def run_program(args_array, func_dict, **kwargs):
@@ -258,8 +296,11 @@ def run_program(args_array, func_dict, **kwargs):
         mongo_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
 
     # Intersect args_array & func_dict to find which functions to call.
-    for x in set(args_array.keys()) & set(func_dict.keys()):
-        func_dict[x](args_array, yum, class_cfg=mongo_cfg, **kwargs)
+    for item in set(args_array.keys()) & set(func_dict.keys()):
+        status = func_dict[item](args_array, yum, class_cfg=mongo_cfg)
+
+        if not status[0]:
+            print("Error Detected: %s" % (status[1]))
 
 
 def main():
@@ -292,7 +333,7 @@ def main():
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
     opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
     opt_multi_list = ["-e", "-s"]
-    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s"]
+    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(
@@ -303,7 +344,16 @@ def main():
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
        and not arg_parser.arg_file_chk(args_array, file_chk_list,
                                        file_crt_list):
-        run_program(args_array, func_dict)
+
+        try:
+            proglock = gen_class.ProgramLock(cmdline.argv,
+                                             args_array.get("-y", ""))
+            run_program(args_array, func_dict)
+            del proglock
+
+        except gen_class.SingleInstanceException:
+            print("WARNING:  Lock in place for package_admin with id of: %s"
+                  % (args_array.get("-y", "")))
 
 
 if __name__ == "__main__":

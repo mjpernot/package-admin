@@ -28,14 +28,13 @@ import json
 sys.path.append(os.getcwd())
 import lib.gen_libs as gen_libs
 import mongo_lib.mongo_libs as mongo_libs
-import lib.cmds_gen as cmds_gen
 import mongo_lib.mongo_class as mongo_class
 import version
 
 __version__ = version.__version__
 
 
-def file_check(out_file, hold_file, search_list, json_fmt=False, **kwargs):
+def file_check(out_file, hold_file, search_list, json_fmt=False):
 
     """Function:  file_check
 
@@ -74,7 +73,7 @@ def file_check(out_file, hold_file, search_list, json_fmt=False, **kwargs):
     return status
 
 
-def _check_json(out_file, status, hold_file, **kwargs):
+def _check_json(out_file, status, hold_file):
 
     """Function:  _check_json
 
@@ -91,7 +90,7 @@ def _check_json(out_file, status, hold_file, **kwargs):
     try:
         _ = json.load(open(out_file))
 
-    except:
+    except ValueError:
         status = False
         print("\t\tError:  %s is not in JSON format" % (out_file))
 
@@ -101,7 +100,7 @@ def _check_json(out_file, status, hold_file, **kwargs):
     return status
 
 
-def mongo_check(mongo_cfg, hostname, db, tbl, **kwargs):
+def mongo_check(mongo_cfg, hostname, dbn, tbl):
 
     """Function:  mongo_check
 
@@ -110,26 +109,22 @@ def mongo_check(mongo_cfg, hostname, db, tbl, **kwargs):
     Arguments:
         (input) mongo_cfg -> Mongo server configuration.
         (input) hostname -> Host name of the server running the check.
-        (input) db -> Name of the database in Mongo.
+        (input) dbn -> Name of the database in Mongo.
         (input) tbl -> Name of the table in Mongo.
 
     """
 
-    coll = mongo_libs.crt_coll_inst(mongo_cfg, db, tbl)
+    coll = mongo_libs.crt_coll_inst(mongo_cfg, dbn, tbl)
     coll.connect()
 
-    if coll.coll_find1()["Server"] == hostname:
-        status = True
+    status = True if coll.coll_find1()["Server"] == hostname else False
 
-    else:
-        status = False
-
-    cmds_gen.Disconnect([coll])
+    mongo_libs.disconnect([coll])
 
     return status
 
 
-def mongo_cleanup(mongo_cfg, db, **kwargs):
+def mongo_cleanup(mongo_cfg, dbn):
 
     """Function:  mongo_cleanup
 
@@ -137,20 +132,21 @@ def mongo_cleanup(mongo_cfg, db, **kwargs):
 
     Arguments:
         (input) mongo_cfg -> Mongo server configuration.
-        (input) db -> Name of the database in Mongo.
+        (input) dbn -> Name of the database in Mongo.
 
     """
 
-    mongo = mongo_class.DB(mongo_cfg.name, mongo_cfg.user, mongo_cfg.passwd,
-                           mongo_cfg.host, mongo_cfg.port, db, mongo_cfg.auth,
-                           mongo_cfg.conf_file)
+    mongo = mongo_class.DB(
+        mongo_cfg.name, mongo_cfg.user, mongo_cfg.japd, host=mongo_cfg.host,
+        port=mongo_cfg.port, db=dbn, auth=mongo_cfg.auth,
+        conf_file=mongo_cfg.conf_file)
 
-    mongo.db_connect(db)
+    mongo.db_connect(dbn)
     mongo.db_cmd("dropDatabase")
-    cmds_gen.Disconnect([mongo])
+    mongo_libs.disconnect([mongo])
 
 
-def _check_status(status, status_1, status_2, **kwargs):
+def _check_status(status, status_1, status_2):
 
     """Function:  _check_status
 
@@ -178,7 +174,7 @@ def main():
 
     Variables:
         base_dir -> Directory path to blackbox testing directory.
-        out_path -> Current base_dir plus out directory.
+        tmp_path -> Current base_dir plus tmp directory.
         out_file -> Path and file name of output file.
         ext -> Extension to be added to output file that contains errors.
         hold_file -> Name of file if file checks fail.
@@ -193,31 +189,31 @@ def main():
     base_dir = "test/blackbox/package_admin"
     test_path = os.path.join(os.getcwd(), base_dir)
     config_path = os.path.join(test_path, "config")
-    out_path = os.path.join(base_dir, "out")
-    out_file = os.path.join(out_path, "package_out.txt")
+    tmp_path = os.path.join(test_path, "tmp")
+    out_file = os.path.join(tmp_path, "package_out.txt")
     ext = datetime.datetime.strftime(datetime.datetime.now(),
                                      "%Y-%m-%d_%H:%M:%S")
     hold_file = out_file + "." + ext + ".HOLD"
-    search_list = ["asOf", "server"]
+    search_list = ["AsOf", "Server"]
     status = True
     mongo_cfg = gen_libs.load_module("mongo", config_path)
     hostname = socket.gethostname()
-    db = "test_sysmon"
+    dbn = "test_sysmon"
     tbl = "test_server_pkgs"
 
     if "-L" in cmdline.argv:
-        search_list.append("installedPackages")
+        search_list.append("InstalledPackages")
 
     elif "-U" in cmdline.argv:
-        search_list.append("updatePackages")
+        search_list.append("UpdatePackages")
 
     elif "-R" in cmdline.argv:
-        search_list.append("repos")
+        search_list.append("Repos")
 
     if "-j" in cmdline.argv and "-o" in cmdline.argv and "-i" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list, json_fmt=True)
-        status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
-        mongo_cleanup(mongo_cfg, db)
+        status_2 = mongo_check(mongo_cfg, hostname, dbn, tbl)
+        mongo_cleanup(mongo_cfg, dbn)
         status = _check_status(status, status_1, status_2)
 
     elif "-j" in cmdline.argv and "-o" in cmdline.argv:
@@ -225,13 +221,13 @@ def main():
 
     elif "-i" in cmdline.argv and "-o" in cmdline.argv:
         status_1 = file_check(out_file, hold_file, search_list)
-        status_2 = mongo_check(mongo_cfg, hostname, db, tbl)
-        mongo_cleanup(mongo_cfg, db)
+        status_2 = mongo_check(mongo_cfg, hostname, dbn, tbl)
+        mongo_cleanup(mongo_cfg, dbn)
         status = _check_status(status, status_1, status_2)
 
     elif "-i" in cmdline.argv:
-        status = mongo_check(mongo_cfg, hostname, db, tbl)
-        mongo_cleanup(mongo_cfg, db)
+        status = mongo_check(mongo_cfg, hostname, dbn, tbl)
+        mongo_cleanup(mongo_cfg, dbn)
 
     elif "-o" in cmdline.argv:
         status = file_check(out_file, hold_file, search_list)
