@@ -174,7 +174,7 @@ def main():
 
     Variables:
         base_dir -> Directory path to blackbox testing directory.
-        out_path -> Current base_dir plus out directory.
+        tmp_path -> Current base_dir plus tmp directory.
         out_file -> Path and file name of output file.
         ext -> Extension to be added to output file that contains errors.
         hold_file -> Name of file if file checks fail.
@@ -189,7 +189,6 @@ def main():
     base_dir = "test/blackbox/package_admin"
     test_path = os.path.join(os.getcwd(), base_dir)
     config_path = os.path.join(test_path, "config")
-    out_path = os.path.join(base_dir, "out")
     tmp_path = os.path.join(test_path, "tmp")
     out_file = os.path.join(tmp_path, "package_out.txt")
     ext = datetime.datetime.strftime(datetime.datetime.now(),
