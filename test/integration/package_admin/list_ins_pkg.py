@@ -189,7 +189,7 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        self.args_array2["-j"] = True
+        self.args_array2["-f"] = True
 
         package_admin.list_ins_pkg(self.args_array2, self.yum,
                                    class_cfg=self.mongo_cfg)
