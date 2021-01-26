@@ -141,18 +141,19 @@ class UnitTest(unittest.TestCase):
         self.config_path = os.path.join(self.test_path, "config")
         self.mongo_cfg = gen_libs.load_module("mongo", self.config_path)
         self.out_path = os.path.join(self.test_path, "out")
-        self.out_file = os.path.join(self.out_path, "package_upd_list.txt")
+        self.tmp_path = os.path.join(self.test_path, "tmp")
+        self.out_file = os.path.join(self.tmp_path, "package_upd_list.txt")
         self.non_json_file = os.path.join(self.out_path,
                                           "package_upd_list_non_json")
         self.json_file = os.path.join(self.out_path, "package_upd_list_json")
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.args_array = {"-i": "test_sysmon:test_server_pkgs",
-                           "-o": self.out_file, "-n": True}
-        self.args_array2 = {"-o": self.out_file, "-n": True}
-        self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-n": True}
-        self.args_array4 = {"-n": True}
-        self.args_array5 = {"-n": False}
+                           "-o": self.out_file, "-z": True}
+        self.args_array2 = {"-o": self.out_file, "-z": True}
+        self.args_array3 = {"-i": "test_sysmon:test_server_pkgs", "-z": True}
+        self.args_array4 = {"-z": True}
+        self.args_array5 = {"-z": False}
         self.time_str = "2018-01-01 01:00:00"
 
     @mock.patch("package_admin.datetime")
@@ -210,9 +211,13 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        self.assertFalse(package_admin.list_upd_pkg(self.args_array4, self.yum,
-                                                    class_cfg=self.mongo_cfg))
+        self.assertEqual(
+            package_admin.list_upd_pkg(
+                self.args_array4, self.yum, class_cfg=self.mongo_cfg),
+            (True, None))
 
+    @mock.patch("package_admin.gen_libs.display_data",
+                mock.Mock(return_value=True))
     @mock.patch("package_admin.datetime")
     def test_list_upd_pkg_out_std(self, mock_date):
 
@@ -226,11 +231,11 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.list_upd_pkg(
-                self.args_array5, self.yum, class_cfg=self.mongo_cfg))
+        self.assertEqual(
+            package_admin.list_upd_pkg(
+                self.args_array5, self.yum, class_cfg=self.mongo_cfg),
+            (True, None))
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_list_upd_pkg_mongo(self, mock_date):
 
@@ -258,7 +263,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(status)
 
-    @unittest.skip("Error: RepSetColl class requires coll_find1 method.")
     @mock.patch("package_admin.datetime")
     def test_list_upd_pkg_mongo_file(self, mock_date):
 
@@ -299,7 +303,7 @@ class UnitTest(unittest.TestCase):
         """
 
         mongo = mongo_class.DB(
-            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.passwd,
+            self.mongo_cfg.name, self.mongo_cfg.user, self.mongo_cfg.japd,
             self.mongo_cfg.host, self.mongo_cfg.port, db=self.dbn,
             auth=self.mongo_cfg.auth, conf_file=self.mongo_cfg.conf_file)
 
@@ -309,6 +313,7 @@ class UnitTest(unittest.TestCase):
 
         if os.path.isfile(self.out_file):
             os.remove(self.out_file)
+            #pass
 
 
 if __name__ == "__main__":
