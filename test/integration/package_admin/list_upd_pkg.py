@@ -189,7 +189,7 @@ class UnitTest(unittest.TestCase):
 
         mock_date.datetime.strftime.return_value = self.time_str
 
-        self.args_array2["-j"] = True
+        self.args_array2["-f"] = True
 
         package_admin.list_upd_pkg(self.args_array2, self.yum,
                                    class_cfg=self.mongo_cfg)
@@ -313,7 +313,6 @@ class UnitTest(unittest.TestCase):
 
         if os.path.isfile(self.out_file):
             os.remove(self.out_file)
-            #pass
 
 
 if __name__ == "__main__":
