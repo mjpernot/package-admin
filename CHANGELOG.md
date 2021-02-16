@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.3.1] - 2020-02-16
+
+
 ## [2.3.0] - 2021-01-22
 - Changed -n with -z option to standardize among the other programs.
 - Added -a option to append to a file.
