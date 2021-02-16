@@ -5,8 +5,13 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.3.1] - 2020-02-16
+
+### Fixed
+- Allow to override the default sendmail (postfix) and use mailx command.
+
 ### Changed
--  Removed \*\*kwargs from function argument lists that do not require it.
+- main:  Added -u option to allow override of sendmail and use mailx.
+- Removed \*\*kwargs from function argument lists that do not require it.
 - Documentation update.
 
 

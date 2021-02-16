@@ -10,12 +10,12 @@
 
     Usage:
         package_admin.py
-            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                 [-o dir_path/file [-a]] |
-             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
-                 [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]]}
             [-y flavor_id] [-v | -h]
 
@@ -27,6 +27,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -41,6 +42,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -51,6 +53,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -331,7 +334,7 @@ def main():
     file_crt_list = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
+    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
     opt_multi_list = ["-e", "-s"]
     opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
