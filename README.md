@@ -2,7 +2,7 @@
 # Classification (U)
 
 # Description:
-  Linux Package administration program for handling packages on a Linux server.  This program is used to adminstrate packages on a Linux server.  This will include detecting packages requiring to be updated and reporting on these packages via JSON and/or Mongo database entries.
+  Linux Package administration program for handling packages on a Linux server that uses yum.  This program is used to adminstrate packages on a Linux server.  This will include detecting packages requiring to be updated and reporting on these packages via JSON and/or Mongo database entries.
 
 
 #####  This README file is broken down into the following sections:

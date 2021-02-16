@@ -74,17 +74,23 @@ class Mail(object):
 
         return True
 
-    def send_mail(self):
+    def send_mail(self, use_mailx=False):
 
         """Method:  get_name
 
         Description:  Stub method holder for Mail.send_mail.
 
         Arguments:
+            (input) use_mailx -> True|False - To use mailx command.
 
         """
 
-        return True
+        status = True
+
+        if use_mailx:
+            status = True
+
+        return status
 
 
 class UnitTest(unittest.TestCase):
@@ -99,7 +105,9 @@ class UnitTest(unittest.TestCase):
         test_append_file -> Test with append to file is set to True.
         test_mongo_conn_fail -> Test with failed Mongo connection.
         test_mongo_conn_success -> Test with successful Mongo connection.
+        test_mailx_json -> Test with mailx in json format.
         test_email_json -> Test with email in json format.
+        test_mailx_std -> Test with mailx in standard format.
         test_email_std -> Test with email in standard format.
         test_mongo_insert -> Test with sending data to Mongo database.
         test_write_file_json -> Test with write to file as formatted JSON.
@@ -194,8 +202,12 @@ class UnitTest(unittest.TestCase):
         self.func_name = self.yum.fetch_update_pkgs
         self.mail = Mail()
         self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
+        self.args_array2a = {"-z": True, "-e": "email", "-s": "subj",
+                             "-u": True}
         self.args_array3 = {"-z": True, "-e": "email", "-s": "subj",
                             "-f": True}
+        self.args_array3a = {"-z": True, "-e": "email", "-s": "subj",
+                             "-f": True, "-u": True}
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
         self.results = (False, "Mongo_Insert: Error_Message")
@@ -286,6 +298,24 @@ class UnitTest(unittest.TestCase):
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
+    def test_mailx_json(self, mock_mail):
+
+        """Function:  test_mailx_json
+
+        Description:  Test with mailx in json format.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array3a, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
+
+    @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_json(self, mock_mail):
 
         """Function:  test_email_json
@@ -301,6 +331,24 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(
             package_admin.process_yum(
                 self.args_array3, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.status)
+
+    @mock.patch("package_admin.gen_class.setup_mail")
+    def test_mailx_std(self, mock_mail):
+
+        """Function:  test_mailx_std
+
+        Description:  Test with mailx in standard format.
+
+        Arguments:
+
+        """
+
+        mock_mail.return_value = self.mail
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args_array2a, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")

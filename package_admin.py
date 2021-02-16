@@ -4,18 +4,18 @@
 """Program:      package_admin.py
 
     Description:  Linux Package administration program for handling packages on
-        a Linux server.  This program has a number of functions to include
-        listing current packages, listing any new package updates, installing
-        package updates, and listing current repositories.
+        a Linux server using yum.  This program has a number of functions to
+        include listing current packages, listing any new package updates,
+        installing package updates, and listing current repositories.
 
     Usage:
         package_admin.py
-            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                 [-o dir_path/file [-a]] |
-             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line]]
+             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
-                 [-e to_email [to_email2 ...] [-s subject_line]]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]]}
             [-y flavor_id] [-v | -h]
 
@@ -27,6 +27,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -41,6 +42,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -51,6 +53,7 @@
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
 
@@ -115,7 +118,7 @@ import version
 __version__ = version.__version__
 
 
-def help_message(**kwargs):
+def help_message():
 
     """Function:  help_message
 
@@ -190,7 +193,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
                                     subj=args_array.get("-s", None))
 
         mail.add_2_msg(data)
-        mail.send_mail()
+        use_mailx = args_array.get("-u", False)
+        mail.send_mail(use_mailx=use_mailx)
 
     return status
 
@@ -275,7 +279,7 @@ def list_repo(args_array, yum, **kwargs):
     return status
 
 
-def run_program(args_array, func_dict, **kwargs):
+def run_program(args_array, func_dict):
 
     """Function:  run_program
 
@@ -331,7 +335,7 @@ def main():
     file_crt_list = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"]}
+    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
     opt_multi_list = ["-e", "-s"]
     opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
