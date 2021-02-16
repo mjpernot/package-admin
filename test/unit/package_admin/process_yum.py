@@ -85,10 +85,12 @@ class Mail(object):
 
         """
 
-        if use_mailx:
-            return True
+        status = True
 
-        return True
+        if use_mailx:
+            status = True
+
+        return status
 
 
 class UnitTest(unittest.TestCase):
