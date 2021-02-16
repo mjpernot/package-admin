@@ -193,7 +193,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
                                     subj=args_array.get("-s", None))
 
         mail.add_2_msg(data)
-        mail.send_mail()
+        use_mailx = args_array.get("-u", False)
+        mail.send_mail(use_mailx=use_mailx)
 
     return status
 
