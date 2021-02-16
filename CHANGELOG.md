@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.3.1] - 2020-02-16
+
+### Fixed
+- Allow to override the default sendmail (postfix) and use mailx command.
+
+### Changed
+- process_yum:  Determine whether to use sendmail or mailx when using the mail option.
+- main:  Added -u option to allow override of sendmail and use mailx.
+- Removed \*\*kwargs from function argument lists that do not require it.
+- Documentation update.
+
+
 ## [2.3.0] - 2021-01-22
 - Changed -n with -z option to standardize among the other programs.
 - Added -a option to append to a file.
