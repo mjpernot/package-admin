@@ -4,9 +4,9 @@
 """Program:      package_admin.py
 
     Description:  Linux Package administration program for handling packages on
-        a Linux server.  This program has a number of functions to include
-        listing current packages, listing any new package updates, installing
-        package updates, and listing current repositories.
+        a Linux server using yum.  This program has a number of functions to
+        include listing current packages, listing any new package updates,
+        installing package updates, and listing current repositories.
 
     Usage:
         package_admin.py
