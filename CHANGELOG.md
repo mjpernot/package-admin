@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.3.2]
+### Changed
+- config/mongo.py.TEMPLATE: Added SSL configuration entries.
 
 
 ## [2.3.1] - 2020-02-16
