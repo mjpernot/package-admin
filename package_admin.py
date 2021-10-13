@@ -183,8 +183,6 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     """
 
     status = (True, None)
-    indent = 4
-    mode = "w"
     args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
@@ -192,16 +190,11 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
             "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
-
     ofile = args_array.get("-o", False)
     db_tbl = args_array.get("-i", False)
     class_cfg = kwargs.get("class_cfg", False)
-
-    if args_array.get("-a", False):
-        mode = "a"
-
-    if args_array.get("-f", False):
-        indent = None
+    mode = "a" if args_array.get("-a", False) else "w"
+    indent = None if args_array.get("-f", False) else 4
 
     if db_tbl and class_cfg:
         dbn, tbl = db_tbl.split(":")
@@ -219,9 +212,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         gen_libs.display_data(data)
 
     if args_array.get("-e", False):
-        mail = gen_class.setup_mail(args_array.get("-e"),
-                                    subj=args_array.get("-s", None))
-
+        mail = gen_class.setup_mail(
+            args_array.get("-e"), subj=args_array.get("-s", None))
         mail.add_2_msg(data)
         use_mailx = args_array.get("-u", False)
         mail.send_mail(use_mailx=use_mailx)
@@ -376,12 +368,12 @@ def main():
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                       file_crt_list):
+       and not arg_parser.arg_file_chk(
+           args_array, file_chk_list, file_crt_list):
 
         try:
-            proglock = gen_class.ProgramLock(cmdline.argv,
-                                             args_array.get("-y", ""))
+            proglock = gen_class.ProgramLock(
+                cmdline.argv, args_array.get("-y", ""))
             run_program(args_array, func_dict)
             del proglock
 

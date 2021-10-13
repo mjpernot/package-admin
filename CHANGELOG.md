@@ -6,6 +6,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.3.2]
 ### Changed
+- process_yum:  Refactored function to reduce number of assignment statements.
 - config/mongo.py.TEMPLATE: Added SSL configuration entries.
 - Documentation update.
 
