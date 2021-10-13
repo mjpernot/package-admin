@@ -41,9 +41,9 @@ class Mail(object):
     Description:  Class stub holder for gen_class.Mail class.
 
     Methods:
-        __init__ -> Class initialization.
-        add_2_msg -> add_2_msg method.
-        send_mail -> send_mail method.
+        __init__
+        add_2_msg
+        send_mail
 
     """
 
@@ -81,7 +81,7 @@ class Mail(object):
         Description:  Stub method holder for Mail.send_mail.
 
         Arguments:
-            (input) use_mailx -> True|False - To use mailx command.
+            (input) use_mailx
 
         """
 
@@ -100,21 +100,21 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_append_file_json -> Test with append to file as formatted JSON.
-        test_append_file -> Test with append to file is set to True.
-        test_mongo_conn_fail -> Test with failed Mongo connection.
-        test_mongo_conn_success -> Test with successful Mongo connection.
-        test_mailx_json -> Test with mailx in json format.
-        test_email_json -> Test with email in json format.
-        test_mailx_std -> Test with mailx in standard format.
-        test_email_std -> Test with email in standard format.
-        test_mongo_insert -> Test with sending data to Mongo database.
-        test_write_file_json -> Test with write to file as formatted JSON.
-        test_write_file_true -> Test with write to file is set to True.
-        test_suppress_false_json -> Test standard suppression in JSON format.
-        test_suppression_false -> Test with standard suppression set to false.
-        test_suppression_true -> Test with standard suppression set to true.
+        setUp
+        test_append_file_json
+        test_append_file
+        test_mongo_conn_fail
+        test_mongo_conn_success
+        test_mailx_json
+        test_email_json
+        test_mailx_std
+        test_email_std
+        test_mongo_insert
+        test_write_file_json
+        test_write_file_true
+        test_suppress_false_json
+        test_suppression_false
+        test_suppression_true
 
     """
 
@@ -135,10 +135,10 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of the Yum class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                get_hostname -> Return Server's hostname.
-                get_distro -> Reuturn class' linux_distribution.
-                fetch_update_pkgs -> Return Server's update package data.
+                __init__
+                get_hostname
+                get_distro
+                fetch_update_pkgs
 
             """
 
@@ -163,7 +163,7 @@ class UnitTest(unittest.TestCase):
                 Description:  Return self.distro attribute.
 
                 Arguments:
-                    (output) self.distro -> Linux distribution tuple value.
+                    (output) self.distro
 
                 """
 
@@ -176,7 +176,7 @@ class UnitTest(unittest.TestCase):
                 Description:  Set self.hostname attribute.
 
                 Arguments:
-                    (output) self.hostname -> Server's hostname.
+                    (output) self.hostname
 
                 """
 
@@ -189,7 +189,7 @@ class UnitTest(unittest.TestCase):
                 Description:  Set self.data attribute.
 
                 Arguments:
-                    (output) self.data -> Server's update package data.
+                    (output) self.data
 
                 """
 
