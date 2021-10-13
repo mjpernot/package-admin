@@ -47,42 +47,29 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_main_upd_file -> Test writing to file for update option.
-        test_main_upd_file_json -> Test writing to file in JSON format for
-            update option.
-        test_main_upd_sup_std -> Test suppressing standard out for update
-            option.
-        test_main_upd_out_std -> Test writing to standard out for update
-            option.
-        test_main_upd_mongo -> Test writing to Mongo database for update
-            option.
-        test_main_upd_mongo_file -> Test writing to Mongo database and to a
-            file for update option.
-        test_main_ins_file -> Test writing to file for install option.
-        test_main_ins_file_json -> Test writing to file in JSON format for
-            install option.
-        test_main_ins_sup_std -> Test suppressing standard out for install
-            option.
-        test_main_ins_out_std -> Test writing to standard out for install
-            option.
-        test_main_ins_mongo -> Test writing to Mongo database for install
-            option.
-        test_main_ins_mongo_file -> Test writing to Mongo database and to a
-            file for install option.
-        test_main_repo_file -> Test writing to file for repo option.
-        test_main_repo_file_json -> Test writing to file in JSON format for
-            repo option.
-        test_main_repo_sup_std -> Test suppressing standard out for repo
-            option.
-        test_main_repo_out_std -> Test writing to standard out for repo option.
-        test_main_repo_mongo -> Test writing to Mongo database for repo option.
-        test_main_repo_mongo_file -> Test writing to Mongo database and to a
-            file for repo option.
-        test_main_arg_dir_chk_crt_false -> Test for a false directory check.
-        test_main_arg_cond_rep_false -> Test for a false directory check.
-        test_main_help_func_true -> Test for a true help message check.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_main_upd_file
+        test_main_upd_file_json
+        test_main_upd_sup_std
+        test_main_upd_out_std
+        test_main_upd_mongo
+        test_main_upd_mongo_file
+        test_main_ins_file
+        test_main_ins_file_json
+        test_main_ins_sup_std
+        test_main_ins_out_std
+        test_main_ins_mongo
+        test_main_ins_mongo_file
+        test_main_repo_file
+        test_main_repo_file_json
+        test_main_repo_sup_std
+        test_main_repo_out_std
+        test_main_repo_mongo
+        test_main_repo_mongo_file
+        test_main_arg_dir_chk_crt_false
+        test_main_arg_cond_rep_false
+        test_main_help_func_true
+        tearDown
 
     """
 
