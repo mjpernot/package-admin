@@ -41,10 +41,10 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_mongo_failure -> Test with failed Mongo connection.
-        test_mongo_successful -> Test with successful Mongo connection.
-        test_list_repo -> Test call to list_repo function.
+        setUp
+        test_mongo_failure
+        test_mongo_successful
+        test_list_repo
 
     """
 
@@ -65,8 +65,8 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of the Yum class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                fetch_repos -> Set self.data attribute.
+                __init__
+                fetch_repos
 
             """
 
