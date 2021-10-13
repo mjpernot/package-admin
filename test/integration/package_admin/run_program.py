@@ -47,41 +47,26 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_run_program_upd_file -> Test writing to file for update option.
-        test_run_program_upd_file_json -> Test writing to file in JSON format
-            for update option.
-        test_run_program_upd_sup_std -> Test suppressing standard out for
-            update option.
-        test_run_program_upd_out_std -> Test writing to standard out for update
-            option.
-        test_run_program_upd_mongo -> Test writing to Mongo database for update
-            option.
-        test_run_program_upd_mongo_file -> Test writing to Mongo database and
-            to a file for update option.
-        test_run_program_ins_file -> Test writing to file for install option.
-        test_run_program_ins_file_json -> Test writing to file in JSON format
-            for install option.
-        test_run_program_ins_sup_std -> Test suppressing standard out for
-            install option.
-        test_run_program_ins_out_std -> Test writing to standard out for
-            install option.
-        test_run_program_ins_mongo -> Test writing to Mongo database for
-            install option.
-        test_run_program_ins_mongo_file -> Test writing to Mongo database and
-            to a file for install option.
-        test_run_program_repo_file -> Test writing to file for repo option.
-        test_run_program_repo_file_json -> Test writing to file in JSON format
-            for repo option.
-        test_run_program_repo_sup_std -> Test suppressing standard out for repo
-            option.
-        test_run_program_repo_out_std -> Test writing to standard out for repo
-            option.
-        test_run_program_repo_mongo -> Test writing to Mongo database for repo
-            option.
-        test_run_program_repo_mongo_file -> Test writing to Mongo database and
-            to a file for repo option.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_run_program_upd_file
+        test_run_program_upd_file_json
+        test_run_program_upd_sup_std
+        test_run_program_upd_out_std
+        test_run_program_upd_mongo
+        test_run_program_upd_mongo_file
+        test_run_program_ins_file
+        test_run_program_ins_file_json
+        test_run_program_ins_sup_std
+        test_run_program_ins_out_std
+        test_run_program_ins_mongo
+        test_run_program_ins_mongo_file
+        test_run_program_repo_file
+        test_run_program_repo_file_json
+        test_run_program_repo_sup_std
+        test_run_program_repo_out_std
+        test_run_program_repo_mongo
+        test_run_program_repo_mongo_file
+        tearDown
 
     """
 
