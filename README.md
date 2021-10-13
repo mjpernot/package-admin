@@ -80,6 +80,8 @@ Create Mongo configuration file.  Make the appropriate change to the environment
     - japd = "PSWORD"
     - host = "HOST_IP"
     - name = "HOSTNAME"
+
+  * Change these entries only if required:
     - port = 27017
     - conf_file = None
     - auth = True
@@ -88,15 +90,21 @@ Create Mongo configuration file.  Make the appropriate change to the environment
     - use_arg = True
     - use_uri = False
 
+  * Notes for auth_mech configuration entry:
+    - NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
+    - NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
+    - NOTE 3:  MONGODB-CR is not supported in Mongodb 4.0 and better.
+
   * If connecting to a Mongo replica set, otherwise set to None.
     - repset = "REPLICA_SET_NAME"
     - repset_hosts = "HOST_1:PORT, HOST_2:PORT, ..."
     - db_auth = "AUTHENTICATION_DATABASE"
 
-  * Notes for auth_mech configuration entry:
-    - NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
-    - NOTE 2:  FIPS 140-2 environment requires SCRAM-SHA-1 or SCRAM-SHA-256.
-    - NOTE 3:  MONGODB-CR is not supported in Mongodb 4.0 and better.
+  * If using SSL connections then set one or more of the following entries.  This will automatically enable SSL connections. Below are the configuration settings for SSL connections.  See configuration file for details on each entry:
+    - ssl_client_ca = None
+    - ssl_client_key = None
+    - ssl_client_cert = None
+    - ssl_client_phrase = None
 
 ```
 cd config
