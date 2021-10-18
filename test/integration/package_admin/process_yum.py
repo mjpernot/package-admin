@@ -46,14 +46,14 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Integration testing initilization.
-        test_process_yum_file -> Test writing to file.
-        test_process_yum_file_json -> Test writing to file in JSON format.
-        test_process_yum_sup_std -> Test suppressing standard out.
-        test_process_yum_out_std -> Test writing to standard out.
-        test_process_yum_mongo -> Test writing to Mongo database.
-        test_process_yum_mongo_file -> Test writing to Mongo database and file.
-        tearDown -> Clean up of integration testing.
+        setUp
+        test_process_yum_file
+        test_process_yum_file_json
+        test_process_yum_sup_std
+        test_process_yum_out_std
+        test_process_yum_mongo
+        test_process_yum_mongo_file
+        tearDown
 
     """
 
@@ -74,10 +74,10 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of the Yum class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                get_hostname -> Return Server's hostname.
-                get_distro -> Reuturn class' linux_distribution.
-                fetch_update_pkgs -> Return Server's update package data.
+                __init__
+                get_hostname
+                get_distro
+                fetch_update_pkgs
 
             """
 
@@ -103,7 +103,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Return self.distro attribute.
 
                 Arguments:
-                    (output) self.distro -> Linux distribution tuple value.
 
                 """
 
@@ -116,7 +115,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Set self.hostname attribute.
 
                 Arguments:
-                    (output) self.hostname -> Server's hostname.
 
                 """
 
@@ -129,7 +127,6 @@ class UnitTest(unittest.TestCase):
                 Description:  Set self.data attribute.
 
                 Arguments:
-                    (output) self.data -> Server's update package data.
 
                 """
 

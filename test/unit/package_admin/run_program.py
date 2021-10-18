@@ -42,8 +42,8 @@ def list_upd_pkg(args_array, yum, **kwargs):
     Description:  This is a function stub for package_admin.list_upd_pkg.
 
     Arguments:
-        args_array -> Stub argument holder.
-        yum -> Stub argument holder.
+        args_array
+        yum
 
     """
 
@@ -63,8 +63,8 @@ def list_ins_pkg(args_array, yum, **kwargs):
     Description:  This is a function stub for package_admin.list_ins_pkg.
 
     Arguments:
-        args_array -> Stub argument holder.
-        yum -> Stub argument holder.
+        args_array
+        yum
 
     """
 
@@ -84,13 +84,13 @@ class UnitTest(unittest.TestCase):
     Description:  Class which is a representation of a unit testing.
 
     Methods:
-        setUp -> Unit testing initilization.
-        test_func_failed -> Test with failed function run.
-        test_func_successful -> Test with successful function run.
-        test_args_array_true -> Test args_array if statement for true.
-        test_args_array_false -> Test args_array if statement for false.
-        test_loop_zero -> Test loop with zero loops.
-        test_loop_one -> Test loop with one loop.
+        setUp
+        test_func_failed
+        test_func_successful
+        test_args_array_true
+        test_args_array_false
+        test_loop_zero
+        test_loop_one
 
     """
 
@@ -111,8 +111,8 @@ class UnitTest(unittest.TestCase):
             Description:  Class which is a representation of the Yum class.
 
             Methods:
-                __init__ -> Initialize configuration environment.
-                fetch_repos -> Set self.data attribute.
+                __init__
+                fetch_repos
 
             """
 
