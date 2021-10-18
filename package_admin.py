@@ -368,8 +368,8 @@ def main():
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
        and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(
-           args_array, file_chk_list, file_crt_list):
+       and not arg_parser.arg_file_chk(args_array, file_chk_list,
+                                       file_crt_list):
 
         try:
             proglock = gen_class.ProgramLock(
