@@ -67,11 +67,11 @@
         Mongo configuration file format (config/mongo.py.TEMPLATE).
         The configuration file format for the Mongo connection used for
         inserting data into a database.
-        There are two ways to connect:  single or replica set.
 
-            1.)  Single database connection:
+        There are two ways to connect methods:  single Mongo database or a
+        Mongo replica set.
 
-            # Single Configuration file for Mongo Database Server.
+            Single Configuration file for Mongo Database Server.
             user = "USER"
             japd = "PSWORD"
             host = "HOST_IP"
@@ -84,12 +84,42 @@
             use_arg = True
             use_uri = False
 
-            2.)  Replica Set connection:  Same format as above, but with these
-                additional entries at the end of the configuration file:
+            Replica set connection:  Same format as above, but with these
+                additional entries at the end of the configuration file.  By
+                default all these entries are set to None to represent not
+                connecting to a replica set.
 
             repset = "REPLICA_SET_NAME"
             repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
             db_auth = "AUTHENTICATION_DATABASE"
+
+            Note:  If using SSL connections then set one or more of the
+                following entries.  This will automatically enable SSL
+                connections. Below are the configuration settings for SSL
+                connections.  See configuration file for details on each entry:
+
+            ssl_client_ca = None
+            ssl_client_key = None
+            ssl_client_cert = None
+            ssl_client_phrase = None
+
+            FIPS Environment for Mongo:  If operating in a FIPS 104-2
+                environment, this package will require at least a minimum of
+                pymongo==3.8.0 or better.  It will also require a manual change
+                to the auth.py module in the pymongo package.  See below for
+                changes to auth.py.  In addition, other modules may require to
+                have the same modification as the auth.py module.  If a
+                stacktrace occurs and it states "= hashlib.md5()" is the
+                problem, then note the module name "= hashlib.md5()" is in and
+                make the same change as in auth.py:  "usedforsecurity=False".
+            - Locate the auth.py file python installed packages on the system
+                in the pymongo package directory.
+            - Edit the file and locate the "_password_digest" function.
+            - In the "_password_digest" function there is an line that should
+                match: "md5hash = hashlib.md5()".  Change it to
+                "md5hash = hashlib.md5(usedforsecurity=False)".
+            - Lastly, it will require the Mongo configuration file entry
+                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
@@ -153,8 +183,6 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     """
 
     status = (True, None)
-    indent = 4
-    mode = "w"
     args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
@@ -162,16 +190,11 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
             "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
                                                "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
-
     ofile = args_array.get("-o", False)
     db_tbl = args_array.get("-i", False)
     class_cfg = kwargs.get("class_cfg", False)
-
-    if args_array.get("-a", False):
-        mode = "a"
-
-    if args_array.get("-f", False):
-        indent = None
+    mode = "a" if args_array.get("-a", False) else "w"
+    indent = None if args_array.get("-f", False) else 4
 
     if db_tbl and class_cfg:
         dbn, tbl = db_tbl.split(":")
@@ -189,9 +212,8 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         gen_libs.display_data(data)
 
     if args_array.get("-e", False):
-        mail = gen_class.setup_mail(args_array.get("-e"),
-                                    subj=args_array.get("-s", None))
-
+        mail = gen_class.setup_mail(
+            args_array.get("-e"), subj=args_array.get("-s", None))
         mail.add_2_msg(data)
         use_mailx = args_array.get("-u", False)
         mail.send_mail(use_mailx=use_mailx)
@@ -350,8 +372,8 @@ def main():
                                        file_crt_list):
 
         try:
-            proglock = gen_class.ProgramLock(cmdline.argv,
-                                             args_array.get("-y", ""))
+            proglock = gen_class.ProgramLock(
+                cmdline.argv, args_array.get("-y", ""))
             run_program(args_array, func_dict)
             del proglock
 

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.3.2]
+### Changed
+- process_yum:  Refactored function to reduce number of assignment statements.
+- config/mongo.py.TEMPLATE: Added SSL configuration entries.
+- Documentation update.
+
+
 ## [2.3.1] - 2020-02-16
 
 ### Fixed
@@ -64,7 +71,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.1.5] - 2019-03-06
 ### Changed
-- list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Changed output to camelCase.
+- list_upd_pkg, list_ins_pkg, list_repo, process_yum:  Changed output to PascalCase.
 - main: Refactored code to bring into standard convention.
 
 
