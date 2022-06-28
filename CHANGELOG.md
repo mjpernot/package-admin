@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [2.3.2]
+## [2.3.3] - 2022-06-28
+- Upgrade mongo-libs to v4.2.1
+- Upgrade python-lib to v2.9.2
+
+### Changed
+- config/mongo.py.TEMPLATE: Removed old entries.
+- Documentation updates.
+
+
+## [2.3.2] - ???
 ### Changed
 - process_yum:  Refactored function to reduce number of assignment statements.
 - config/mongo.py.TEMPLATE: Added SSL configuration entries.

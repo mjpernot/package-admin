@@ -68,7 +68,7 @@ Install supporting classes and libraries.
 ```
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
-pip install -r requirements-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Configuration (optional):
@@ -87,8 +87,6 @@ Create Mongo configuration file.  Make the appropriate change to the environment
     - auth = True
     - auth_db = "admin"
     - auth_mech = "SCRAM-SHA-1"
-    - use_arg = True
-    - use_uri = False
 
   * Notes for auth_mech configuration entry:
     - NOTE 1:  SCRAM-SHA-256 only works for Mongodb 4.0 and better.
