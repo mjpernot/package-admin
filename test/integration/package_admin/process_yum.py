@@ -129,7 +129,7 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.dict_key = "Update_Packages"
-        self.func_name = self.yum.fetch_update_pkgs
+        self.func_names = self.yum.fetch_update_pkgs
         self.base_dir = "test/integration/package_admin"
         self.test_path = os.path.join(os.getcwd(), self.base_dir)
         self.config_path = os.path.join(self.test_path, "config")
@@ -166,7 +166,7 @@ class UnitTest(unittest.TestCase):
         mock_date.datetime.strftime.return_value = self.time_str
 
         package_admin.process_yum(self.args_array2, self.yum, self.dict_key,
-                                  self.func_name, class_cfg=self.mongo_cfg)
+                                  self.func_names, class_cfg=self.mongo_cfg)
 
         status = filecmp.cmp(self.out_file, self.non_json_file)
 
@@ -186,7 +186,7 @@ class UnitTest(unittest.TestCase):
         mock_date.datetime.strftime.return_value = self.time_str
 
         package_admin.process_yum(self.args_array6, self.yum, self.dict_key,
-                                  self.func_name, class_cfg=self.mongo_cfg)
+                                  self.func_names, class_cfg=self.mongo_cfg)
 
         status = filecmp.cmp(self.out_file, self.json_file)
 
@@ -209,7 +209,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array4, self.yum, self.dict_key, self.func_name,
+                self.args_array4, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.mongo_cfg), self.results)
 
     @mock.patch("package_admin.gen_libs.display_data",
@@ -229,7 +229,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array5, self.yum, self.dict_key, self.func_name,
+                self.args_array5, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.mongo_cfg), self.results)
 
     @mock.patch("package_admin.datetime")
@@ -246,7 +246,7 @@ class UnitTest(unittest.TestCase):
         mock_date.datetime.strftime.return_value = self.time_str
 
         package_admin.process_yum(self.args_array3, self.yum, self.dict_key,
-                                  self.func_name, class_cfg=self.mongo_cfg)
+                                  self.func_names, class_cfg=self.mongo_cfg)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -273,7 +273,7 @@ class UnitTest(unittest.TestCase):
         mock_date.datetime.strftime.return_value = self.time_str
 
         package_admin.process_yum(self.args_array, self.yum, self.dict_key,
-                                  self.func_name, class_cfg=self.mongo_cfg)
+                                  self.func_names, class_cfg=self.mongo_cfg)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()

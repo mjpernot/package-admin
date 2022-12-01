@@ -93,7 +93,7 @@ class UnitTest(unittest.TestCase):
         self.yum = Yum()
 
         self.args_array = {"-i": "Database_Name:Table_Name"}
-        self.func_name = self.yum.fetch_install_pkgs
+        self.func_names = self.yum.fetch_install_pkgs
         self.status = (True, None)
         self.status2 = (False, "Error Message")
         self.results = (False, "list_ins_pkg: Error Message")
