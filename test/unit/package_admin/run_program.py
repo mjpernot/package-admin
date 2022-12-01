@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Classification (U)
 
 """Program:  run_program.py
@@ -17,11 +16,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 # Third-party
 import mock
@@ -134,8 +129,8 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-c": "mongo", "-d": "config"}
         self.args_array2 = {"-c": "mongo", "-d": "config", "-L": True}
         self.args_array3 = {"-c": "mongo", "-d": "config", "-U": True}
-        self.func_dict = {"-L": list_ins_pkg}
-        self.func_dict2 = {"-U": list_upd_pkg}
+        self.func_names = {"-L": list_ins_pkg}
+        self.func_names2 = {"-U": list_upd_pkg}
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -154,7 +149,7 @@ class UnitTest(unittest.TestCase):
 
         with gen_libs.no_std_out():
             self.assertFalse(package_admin.run_program(self.args_array3,
-                                                       self.func_dict2))
+                                                       self.func_names2))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -172,7 +167,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args_array2,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -190,7 +185,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -208,7 +203,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -226,7 +221,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+                                                   self.func_names))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -245,7 +240,7 @@ class UnitTest(unittest.TestCase):
         mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args_array2,
-                                                   self.func_dict))
+                                                   self.func_names))
 
 
 if __name__ == "__main__":
