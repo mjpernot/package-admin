@@ -17,10 +17,7 @@
 import sys
 import os
 import unittest
-
 import filecmp
-
-# Third-party
 import mock
 
 # Local

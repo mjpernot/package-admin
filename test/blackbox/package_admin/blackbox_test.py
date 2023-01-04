@@ -21,8 +21,6 @@ import sys
 import datetime
 import shutil
 import socket
-
-# Third-party
 import json
 
 # Local
