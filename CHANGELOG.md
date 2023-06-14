@@ -5,8 +5,10 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.4.0] - 2023-06-14
+- Replace arg_parser.arg_parse2 with gen_class.ArgParser.
+
 ### Changed
-- main: Refactored function.
+- main: Replaced the arg_parser code with gen_class.ArgParser code.
 
 
 ## [2.3.4] - 2022-12-01
