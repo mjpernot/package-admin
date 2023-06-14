@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
-## [2.3.5] - 2023-06-14
+## [2.4.0] - 2023-06-14
 
 
 ## [2.3.4] - 2022-12-01
