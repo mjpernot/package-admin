@@ -349,7 +349,6 @@ def main():
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
     dir_chk_list = ["-d"]
     file_chk_list = ["-o"]
     file_crt_list = ["-o"]
@@ -361,7 +360,7 @@ def main():
 
     # Process argument list from command line.
     args_array = arg_parser.arg_parse2(
-        cmdline.argv, opt_val_list, opt_def_dict, multi_val=opt_multi_list)
+        sys.argv, opt_val_list, opt_def_dict, multi_val=opt_multi_list)
 
     if not gen_libs.help_func(args_array, __version__, help_message) \
        and arg_parser.arg_cond_req(args_array, opt_con_req_list) \

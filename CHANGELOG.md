@@ -5,6 +5,8 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.4.0] - 2023-06-14
+### Changed
+- main: Refactored function.
 
 
 ## [2.3.4] - 2022-12-01
