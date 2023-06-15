@@ -168,15 +168,15 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         func_name.  Send dictionary to output.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
-        (input) dict_key -> Dictionary key value.
-        (input) func_name -> Name of class method to call.
+        (input) args_array -> Array of command line options and values
+        (input) yum -> Yum class instance
+        (input) dict_key -> Dictionary key value
+        (input) func_name -> Name of class method to call
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
@@ -226,13 +226,13 @@ def list_upd_pkg(args_array, yum, **kwargs):
     Description:  List any packages available for updates on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args_array -> Array of command line options and values
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
@@ -253,13 +253,13 @@ def list_ins_pkg(args_array, yum, **kwargs):
     Description:  List all currently installed packages on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args_array -> Array of command line options and values
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
@@ -280,13 +280,13 @@ def list_repo(args_array, yum, **kwargs):
     Description:  List the current list of repositories.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args_array -> Array of command line options and values
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
@@ -299,15 +299,15 @@ def list_repo(args_array, yum, **kwargs):
     return status
 
 
-def run_program(args_array, func_dict):
+def run_program(args, func_dict):
 
     """Function:  run_program
 
     Description:  Creates class instance(s) and controls flow of the program.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dictionary list of functions and options
 
     """
 
@@ -337,15 +337,15 @@ def main():
     Variables:
         dir_perms_chk -> contains directories and their octal permissions
         file_perms_chk -> contains file names and their octal permissions
-        file_crt -> contains options which require files to be created.
-        func_dict -> dictionary list for the function calls or other options.
-        opt_def_dict -> contains options with their default values.
-        opt_con_req_dict -> contains the options that require other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_val_list -> contains options which require values.
+        file_crt -> contains options which require files to be created
+        func_dict -> dictionary list for the function calls or other options
+        opt_def_dict -> contains options with their default values
+        opt_con_req_dict -> contains the options that require other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_val_list -> contains options which require values
 
     Arguments:
-        (input) argv -> Arguments from the command line.
+        (input) argv -> Arguments from the command line
 
     """
 

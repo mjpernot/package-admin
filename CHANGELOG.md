@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ### Changed
 - main: Replaced the arg_parser code with gen_class.ArgParser code.
+- Documentation updates.
 
 
 ## [2.3.4] - 2022-12-01
