@@ -9,7 +9,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Replace arg_parser.arg_parse2 with gen_class.ArgParser.
 
 ### Changed
-- main: Replaced the arg_parser code with gen_class.ArgParser code.
+- main, run_program: Replaced the arg_parser code with gen_class.ArgParser code.
 - Documentation updates.
 
 

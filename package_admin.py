@@ -311,17 +311,17 @@ def run_program(args, func_dict):
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
     yum = gen_class.Yum()
     mongo_cfg = None
 
-    if args_array.get("-c", False):
-        mongo_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    if args.get_val("-c", def_val=False):
+        mongo_cfg = gen_libs.load_module(
+            args.get_val("-c"), args.get_val("-d"))
 
     # Intersect args_array & func_dict to find which functions to call.
-    for item in set(args_array.keys()) & set(func_dict.keys()):
-        status = func_dict[item](args_array, yum, class_cfg=mongo_cfg)
+    for item in set(args.get_args_keys()) & set(func_dict.keys()):
+        status = func_dict[item](args, yum, class_cfg=mongo_cfg)
 
         if not status[0]:
             print("Error Detected: %s" % (status[1]))
