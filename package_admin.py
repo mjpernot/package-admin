@@ -273,14 +273,14 @@ def list_ins_pkg(args_array, yum, **kwargs):
     return status
 
 
-def list_repo(args_array, yum, **kwargs):
+def list_repo(args, yum, **kwargs):
 
     """Function:  list_repo
 
     Description:  List the current list of repositories.
 
     Arguments:
-        (input) args_array -> Array of command line options and values
+        (input) args -> ArgParser class instance
         (input) yum -> Yum class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
@@ -290,8 +290,7 @@ def list_repo(args_array, yum, **kwargs):
 
     """
 
-    args_array = dict(args_array)
-    status = process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args, yum, "Repos", yum.fetch_repos, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
