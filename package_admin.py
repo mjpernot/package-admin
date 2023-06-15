@@ -335,12 +335,12 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        file_chk_list -> contains the options which will have files included.
-        file_crt_list -> contains options which require files to be created.
+        dir_perms_chk -> contains directories and their octal permissions
+        file_perms_chk -> contains file names and their octal permissions
+        file_crt -> contains options which require files to be created.
         func_dict -> dictionary list for the function calls or other options.
         opt_def_dict -> contains options with their default values.
-        opt_con_req_list -> contains the options that require other options.
+        opt_con_req_dict -> contains the options that require other options.
         opt_multi_list -> contains the options that will have multiple values.
         opt_val_list -> contains options which require values.
 
@@ -349,53 +349,34 @@ def main():
 
     """
 
-#    dir_chk_list = ["-d"]
     dir_perms_chk = {"-d": 5}
-
-#    file_chk_list = ["-o"]
     file_perms_chk = {"-o": 6}
-
-#    file_crt_list = ["-o"]
     file_crt = ["-o"]
-
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
+    opt_con_req_dict = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
     opt_multi_list = ["-e", "-s"]
     opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
-#    args_array = arg_parser.arg_parse2(
-#        sys.argv, opt_val_list, opt_def_dict, multi_val=opt_multi_list)
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, opt_def=opt_def_dict,
         multi_val=opt_multi_list, do_parse=True)
 
-#    if not gen_libs.help_func(args_array, __version__, help_message) \
-#       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-#       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-#       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-#                                       file_crt_list):
     if not gen_libs.help_func(args, __version__, help_message)              \
        and args.arg_cond_req_or(opt_con_or=opt_con_req_dict)                \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                    \
        and args.arg_file_chk(file_perm_chk=file_perms_chk, file_crt=file_crt):
 
         try:
-#            proglock = gen_class.ProgramLock(
-#                sys.argv, args_array.get("-y", ""))
-            prog_lock = gen_class.ProgramLock(
+            proglock = gen_class.ProgramLock(
                 sys.argv, args.get_val("-y", def_val=""))
-#            run_program(args_array, func_dict)
             run_program(args, func_dict)
             del proglock
 
         except gen_class.SingleInstanceException:
-#            print("WARNING:  Lock in place for package_admin with id of: %s"
-#                  % (args_array.get("-y", "")))
             print("WARNING:  Lock in place for package_admin with id of: %s"
                   % (args.get_val("-y", def_val="")))
-### STOPPED HERE - Need to update testing (unit, integration, blackbox).
 
 
 if __name__ == "__main__":

@@ -35,6 +35,98 @@ import version
 __version__ = version.__version__
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        arg_cond_req_or
+        arg_dir_chk
+        arg_file_chk
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+        self.dir_perms_chk = None
+        self.dir_perms_chk2 = True
+        self.file_perm_chk = None
+        self.file_perm_chk2 = True
+        self.file_crt = None
+        self.opt_con_or = None
+        self.opt_con_or2 = True
+
+    def arg_cond_req_or(self, opt_con_or):
+
+        """Method:  arg_cond_req_or
+
+        Description:  Method stub holder for
+            gen_class.ArgParser.arg_cond_req_or.
+
+        Arguments:
+
+        """
+
+        self.opt_con_or = opt_con_or
+
+        return self.opt_con_or2
+
+    def arg_dir_chk(self, dir_perms_chk):
+
+        """Method:  arg_dir_chk
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_dir_chk.
+
+        Arguments:
+
+        """
+
+        self.dir_perms_chk = dir_perms_chk
+
+        return self.dir_perms_chk2
+
+    def arg_file_chk(self, file_perm_chk, file_crt):
+
+        """Method:  arg_file_chk
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_file_chk.
+
+        Arguments:
+
+        """
+
+        self.file_perm_chk = file_perm_chk
+        self.file_crt = file_crt
+
+        return self.file_perm_chk2
+
+    def get_val(self, skey, def_val):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class ProgramLock(object):
 
     """Class:  ProgramLock
@@ -74,10 +166,10 @@ class UnitTest(unittest.TestCase):
         test_help_false
         test_cond_req_false
         test_cond_req_true
-        test_dir_chk_true
         test_dir_chk_false
-        test_file_chk_true
+        test_dir_chk_true
         test_file_chk_false
+        test_file_chk_true
         test_run_program
         test_programlock_true
         test_programlock_false
@@ -95,13 +187,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args = ArgParser()
         self.args_array = {"-c": "TEST_FILE", "-d": "TEST_DIR", "-I": True}
         self.args_array2 = {"-c": "TEST_FILE", "-d": "TEST_DIR", "-I": True,
                             "-y": "Flavor"}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
 
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
+    @mock.patch("package_admin.gen_class.ArgParser")
     def test_help_true(self, mock_arg, mock_help):
 
         """Function:  test_help_true
@@ -117,10 +210,9 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_help_false(self, mock_arg, mock_help, mock_cond):
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_help_false(self, mock_arg, mock_help):
 
         """Function:  test_help_false
 
@@ -130,16 +222,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        self.args.opt_con_or2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_cond.return_value = False
 
         self.assertFalse(package_admin.main())
 
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_cond_req_false(self, mock_arg, mock_help, mock_cond):
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_cond_req_false(self, mock_arg, mock_help):
 
         """Function:  test_cond_req_false
 
@@ -149,17 +241,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        self.args.opt_con_or2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_cond.return_value = False
 
         self.assertFalse(package_admin.main())
 
-    @mock.patch("package_admin.arg_parser.arg_dir_chk_crt")
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_cond_req_true(self, mock_arg, mock_help, mock_cond, mock_dir_chk):
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_cond_req_true(self, mock_arg, mock_help):
 
         """Function:  test_cond_req_true
 
@@ -169,41 +260,16 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_cond.return_value = True
-        mock_dir_chk.return_value = True
 
         self.assertFalse(package_admin.main())
 
-    @mock.patch("package_admin.arg_parser.arg_dir_chk_crt")
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_dir_chk_true(self, mock_arg, mock_help, mock_cond, mock_dir_chk):
-
-        """Function:  test_dir_chk_true
-
-        Description:  Test arg_dir_chk_crt if returns true.
-
-        Arguments:
-
-        """
-
-        mock_arg.return_value = self.args_array
-        mock_help.return_value = False
-        mock_cond.return_value = True
-        mock_dir_chk.return_value = True
-
-        self.assertFalse(package_admin.main())
-
-    @mock.patch("package_admin.arg_parser.arg_file_chk")
-    @mock.patch("package_admin.arg_parser.arg_dir_chk_crt")
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
-    @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_dir_chk_false(self, mock_arg, mock_help, mock_cond, mock_dir_chk,
-                           mock_file_chk):
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_dir_chk_false(self, mock_arg, mock_help):
 
         """Function:  test_dir_chk_false
 
@@ -213,21 +279,56 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        self.args.dir_perms_chk2 = False
+
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_cond.return_value = True
-        mock_dir_chk.return_value = False
-        mock_file_chk.return_value = True
 
         self.assertFalse(package_admin.main())
 
-    @mock.patch("package_admin.arg_parser.arg_file_chk")
-    @mock.patch("package_admin.arg_parser.arg_dir_chk_crt")
-    @mock.patch("package_admin.arg_parser.arg_cond_req")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser.arg_parse2")
-    def test_file_chk_true(self, mock_arg, mock_help, mock_cond, mock_dir_chk,
-                           mock_file_chk):
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_dir_chk_true(self, mock_arg, mock_help):
+
+        """Function:  test_dir_chk_true
+
+        Description:  Test arg_dir_chk_crt if returns true.
+
+        Arguments:
+
+        """
+
+        self.args.file_perm_chk2 = False
+
+        mock_arg.return_value = self.args
+        mock_help.return_value = False
+
+        self.assertFalse(package_admin.main())
+
+    @mock.patch("package_admin.gen_libs.help_func")
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_file_chk_false(self, mock_arg, mock_help):
+
+        """Function:  test_file_chk_false
+
+        Description:  Test arg_file_chk_crt if returns false.
+
+        Arguments:
+
+        """
+
+        self.args.file_perm_chk2 = False
+
+        mock_arg.return_value = self.args
+        mock_help.return_value = False
+
+        self.assertFalse(package_admin.main())
+
+    @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
+    @mock.patch("package_admin.gen_class.ProgramLock")
+    @mock.patch("package_admin.gen_libs.help_func")
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_file_chk_true(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_file_chk_true
 
@@ -237,33 +338,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_cond.return_value = True
-        mock_dir_chk.return_value = False
-        mock_file_chk.return_value = True
-
-        self.assertFalse(package_admin.main())
-
-    @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
-    @mock.patch("package_admin.gen_class.ProgramLock")
-    @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser")
-    def test_file_chk_false(self, mock_arg, mock_help, mock_lock):
-
-        """Function:  test_file_chk_false
-
-        Description:  Test arg_file_chk if returns false.
-
-        Arguments:
-
-        """
-
-        mock_arg.arg_parse2.return_value = self.args_array
-        mock_help.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
         mock_lock.return_value = self.proglock
 
         self.assertFalse(package_admin.main())
@@ -271,7 +347,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.ProgramLock")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser")
+    @mock.patch("package_admin.gen_class.ArgParser")
     def test_run_program(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_run_program
@@ -282,11 +358,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
         mock_lock.return_value = self.proglock
 
         self.assertFalse(package_admin.main())
@@ -294,7 +367,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.ProgramLock")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser")
+    @mock.patch("package_admin.gen_class.ArgParser")
     def test_programlock_true(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_true
@@ -305,11 +378,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
         mock_lock.return_value = self.proglock
 
         self.assertFalse(package_admin.main())
@@ -317,7 +387,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.ProgramLock")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser")
+    @mock.patch("package_admin.gen_class.ArgParser")
     def test_programlock_false(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_false
@@ -328,11 +398,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
         mock_lock.side_effect = \
             package_admin.gen_class.SingleInstanceException
 
@@ -342,7 +409,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.run_program", mock.Mock(return_value=True))
     @mock.patch("package_admin.gen_class.ProgramLock")
     @mock.patch("package_admin.gen_libs.help_func")
-    @mock.patch("package_admin.arg_parser")
+    @mock.patch("package_admin.gen_class.ArgParser")
     def test_programlock_id(self, mock_arg, mock_help, mock_lock):
 
         """Function:  test_programlock_id
@@ -353,11 +420,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.arg_parse2.return_value = self.args_array2
+        mock_arg.return_value = self.args
         mock_help.return_value = False
-        mock_arg.arg_cond_req.return_value = True
-        mock_arg.arg_dir_chk_crt.return_value = False
-        mock_arg.arg_file_chk.return_value = False
         mock_lock.return_value = self.proglock
 
         self.assertFalse(package_admin.main())
