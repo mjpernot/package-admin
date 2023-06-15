@@ -246,14 +246,14 @@ def list_upd_pkg(args_array, yum, **kwargs):
     return status
 
 
-def list_ins_pkg(args_array, yum, **kwargs):
+def list_ins_pkg(args, yum, **kwargs):
 
     """Function:  list_ins_pkg
 
     Description:  List all currently installed packages on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values
+        (input) args -> ArgParser class instance
         (input) yum -> Yum class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
@@ -263,9 +263,8 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     """
 
-    args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
+        args, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_ins_pkg: " + status[1])
