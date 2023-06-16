@@ -57,7 +57,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {"-i": "Database_Name:Table_Name"}
 
 
 class Yum(object):
@@ -124,7 +124,6 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.args_array = {"-i": "Database_Name:Table_Name"}
         self.func_name = self.yum.fetch_install_pkgs
         self.status = (True, None)
         self.status2 = (False, "Error Message")

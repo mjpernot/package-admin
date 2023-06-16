@@ -219,14 +219,14 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     return status
 
 
-def list_upd_pkg(args_array, yum, **kwargs):
+def list_upd_pkg(args, yum, **kwargs):
 
     """Function:  list_upd_pkg
 
     Description:  List any packages available for updates on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values
+        (input) args -> ArgParser class instance
         (input) yum -> Yum class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
@@ -236,9 +236,8 @@ def list_upd_pkg(args_array, yum, **kwargs):
 
     """
 
-    args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_upd_pkg: " + status[1])
