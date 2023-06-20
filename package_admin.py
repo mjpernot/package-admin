@@ -128,6 +128,45 @@
             - Lastly, it will require the Mongo configuration file entry
                 auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
+
+            RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
+            The configuration file format is for connecting and publishing to a
+            RabbitMQ.
+
+            # Login information.
+            user = "USER"
+            japd = "PSWORD"
+            # Address to single RabbitMQ node.
+            host = "HOSTNAME"
+            # List of hosts along with their ports to a multiple node RabbitMQ
+            #   cluster.
+            # Format of each entry is: "IP:PORT".
+            # Example: host_list = ["hostname:5672", "hostname2:5672"]
+            # Note:  If host_list is set, it will take precedence over the host
+            #   entry.
+            host_list = []
+            # RabbitMQ Queue name.
+            queue = "QUEUENAME"
+            # RabbitMQ R-Key name (normally same as queue name).
+            r_key = "RKEYNAME"
+            # RabbitMQ Exchange name for each instance run.
+            exchange_name = "EXCHANGE_NAME"
+
+            # These options will not need to be updated normally.
+            # RabbitMQ listening port
+            # Default is 5672
+            port = 5672
+            # Type of exchange
+            # Names allowed:  direct, topic, fanout, headers
+            exchange_type = "direct"
+            # Is exchange durable: True|False
+            x_durable = True
+            # Are queues durable: True|False
+            q_durable = True
+            # Do queues automatically delete once message is processed:
+            #   True|False
+            auto_delete = False
+
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
 
@@ -150,6 +189,7 @@ import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import mongo_lib.mongo_libs as mongo_libs
+import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__
@@ -208,6 +248,16 @@ def process_yum(args, yum, dict_key, func_name, **kwargs):
 
         if not status[0]:
             status = (status[0], "Mongo_Insert: " + status[1])
+
+    if args.get_val("-r", def_val=False):
+        cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
+        t_status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
+
+        if not t_status:
+            status = (
+                status[0] & t_status[0],
+                status[1] + " RabbitMQ: " + t_status[1]) 
+        ### STOPPED HERE
 
     data = json.dumps(data, indent=indent)
 
