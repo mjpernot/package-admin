@@ -160,7 +160,7 @@ def help_message():
     print(__doc__)
 
 
-def process_yum(args_array, yum, dict_key, func_name, **kwargs):
+def process_yum(args, yum, dict_key, func_name, **kwargs):
 
     """Function:  process_yum
 
@@ -168,7 +168,7 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         func_name.  Send dictionary to output.
 
     Arguments:
-        (input) args_array -> Array of command line options and values
+        (input) args -> ArgParser class instance
         (input) yum -> Yum class instance
         (input) dict_key -> Dictionary key value
         (input) func_name -> Name of class method to call
@@ -181,18 +181,17 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     """
 
     status = (True, None)
-    args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
             "OsRelease": os_distro[0] + " " + os_distro[1],
-            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
-                                               "%Y-%m-%d %H:%M:%S"),
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
-    ofile = args_array.get("-o", False)
-    db_tbl = args_array.get("-i", False)
+    ofile = args.get_val("-o", def_val=False)
+    db_tbl = args.get_val("-i", def_val=False)
     class_cfg = kwargs.get("class_cfg", False)
-    mode = "a" if args_array.get("-a", False) else "w"
-    indent = None if args_array.get("-f", False) else 4
+    mode = "a" if args.get_val("-a", def_val=False) else "w"
+    indent = None if args.get_val("-f", def_val=False) else 4
 
     if db_tbl and class_cfg:
         dbn, tbl = db_tbl.split(":")
@@ -206,14 +205,14 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
     if ofile:
         gen_libs.write_file(ofile, mode, data)
 
-    if not args_array.get("-z", False):
+    if not args.get_val("-z", def_val=False):
         gen_libs.display_data(data)
 
-    if args_array.get("-e", False):
+    if args.get_val("-e", def_val=False):
         mail = gen_class.setup_mail(
-            args_array.get("-e"), subj=args_array.get("-s", None))
+            args.get_val("-e"), subj=args.get_val("-s", def_val=None))
         mail.add_2_msg(data)
-        use_mailx = args_array.get("-u", False)
+        use_mailx = args.get_val("-u", def_val=False)
         mail.send_mail(use_mailx=use_mailx)
 
     return status
@@ -316,7 +315,7 @@ def run_program(args, func_dict):
         mongo_cfg = gen_libs.load_module(
             args.get_val("-c"), args.get_val("-d"))
 
-    # Intersect args_array & func_dict to find which functions to call.
+    # Intersect args.args_array & func_dict to find which functions to call.
     for item in set(args.get_args_keys()) & set(func_dict.keys()):
         status = func_dict[item](args, yum, class_cfg=mongo_cfg)
 
