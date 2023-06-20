@@ -1,0 +1,34 @@
+# RabbitMQ Configuration file
+# Classification (U)
+# Unclassified until filled.
+# Login information.
+user = "USER"
+japd = "PSWORD"
+# Address to single RabbitMQ node.
+host = "HOSTNAME"
+# List of hosts along with their ports to a multiple node RabbitMQ cluster.
+# Format of each entry is: "IP:PORT".
+# Example: host_list = ["hostname:5672", "hostname2:5672", "hostname:5673"]
+# Note:  If host_list is set, it will take precedence over the host entry.
+host_list = []
+# RabbitMQ Queue name.
+queue = "QUEUENAME"
+# RabbitMQ R-Key name (normally same as queue name).
+r_key = "RKEYNAME"
+# RabbitMQ Exchange name for each instance run.
+exchange_name = "EXCHANGE_NAME"
+
+# These options will not need to be updated normally.
+# RabbitMQ listening port
+# Default is 5672
+port = 5672
+# Type of exchange
+# Names allowed:  direct, topic, fanout, headers
+exchange_type = "direct"
+# Is exchange durable: True|False
+x_durable = True
+# Are queues durable: True|False
+q_durable = True
+# Do queues automatically delete once message is processed:  True|False
+auto_delete = False
+

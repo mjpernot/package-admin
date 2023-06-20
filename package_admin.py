@@ -11,12 +11,12 @@
     Usage:
         package_admin.py
             {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                [-o dir_path/file [-a]] |
+                [-o dir_path/file [-a]] [-r -b file -d path] |
              -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                 [-o dir_path/file [-a]] |
+                 [-o dir_path/file [-a]] [-r -b file -d path] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                 [-o dir_path/file [-a]]}
+                 [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
 
     Arguments:
@@ -30,6 +30,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
@@ -45,6 +48,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -R => List current repositories.
             -f => Flatten the JSON data structure.
@@ -56,6 +62,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
@@ -350,7 +359,8 @@ def main():
     file_crt = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_dict = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
+    opt_con_req_dict = {
+        "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
     opt_multi_list = ["-e", "-s"]
     opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 

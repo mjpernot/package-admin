@@ -8,6 +8,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Upgrade python-lib to v2.10.1
 - Replace arg_parser.arg_parse2 with gen_class.ArgParser.
 
+### Added
+- config/rabbitmq.py.TEMPLATE: RabbitMQ configuration file.
+
 ### Changed
 - Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
 - Documentation updates.
