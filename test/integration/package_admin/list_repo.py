@@ -17,15 +17,8 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
+import unittest
 import filecmp
-
-# Third-party
 import mock
 
 # Local

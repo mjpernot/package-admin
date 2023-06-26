@@ -17,13 +17,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -32,6 +26,71 @@ import package_admin
 import version
 
 __version__ = version.__version__
+
+
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = {"-i": "Database_Name:Table_Name"}
+
+
+class Yum(object):
+
+    """Class:  Yum
+
+    Description:  Class which is a representation of the Yum class.
+
+    Methods:
+        __init__
+        fetch_install_pkgs
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Mail class.
+
+        Arguments:
+
+        """
+
+        self.hostname = ""
+        self.data = ""
+
+    def fetch_install_pkgs(self):
+
+        """Method:  fetch_install_pkgs
+
+        Description:  Set self.data attribute.
+
+        Arguments:
+
+        """
+
+        self.data = "Installed_Packages_List"
 
 
 class UnitTest(unittest.TestCase):
@@ -58,46 +117,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class Yum(object):
-
-            """Class:  Yum
-
-            Description:  Class which is a representation of the Yum class.
-
-            Methods:
-                __init__
-                fetch_install_pkgs
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the Mail class.
-
-                Arguments:
-
-                """
-
-                self.hostname = ""
-                self.data = ""
-
-            def fetch_install_pkgs(self):
-
-                """Method:  fetch_install_pkgs
-
-                Description:  Set self.data attribute.
-
-                Arguments:
-
-                """
-
-                self.data = "Installed_Packages_List"
-
         self.yum = Yum()
-
-        self.args_array = {"-i": "Database_Name:Table_Name"}
+        self.args = ArgParser()
         self.func_name = self.yum.fetch_install_pkgs
         self.status = (True, None)
         self.status2 = (False, "Error Message")
@@ -116,8 +137,8 @@ class UnitTest(unittest.TestCase):
 
         mock_yum.return_value = self.status2
 
-        self.assertEqual(package_admin.list_ins_pkg(self.args_array, self.yum),
-                         self.results)
+        self.assertEqual(
+            package_admin.list_ins_pkg(self.args, self.yum), self.results)
 
     @mock.patch("package_admin.process_yum")
     def test_mongo_successful(self, mock_yum):
@@ -132,8 +153,8 @@ class UnitTest(unittest.TestCase):
 
         mock_yum.return_value = self.status
 
-        self.assertEqual(package_admin.list_ins_pkg(self.args_array, self.yum),
-                         self.status)
+        self.assertEqual(
+            package_admin.list_ins_pkg(self.args, self.yum), self.status)
 
     @mock.patch("package_admin.process_yum")
     def test_list_ins_pkg(self, mock_yum):
@@ -148,8 +169,8 @@ class UnitTest(unittest.TestCase):
 
         mock_yum.return_value = self.status
 
-        self.assertEqual(package_admin.list_ins_pkg(self.args_array, self.yum),
-                         self.status)
+        self.assertEqual(
+            package_admin.list_ins_pkg(self.args, self.yum), self.status)
 
 
 if __name__ == "__main__":

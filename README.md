@@ -69,10 +69,11 @@ Install supporting classes and libraries.
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
-# Configuration (optional):
-  * Configuration file is only required if you want to insert the output of package_admin.py into a Mongo database.
+# Mongo Configuration (optional):
+  * Mongo configuration file is only required if you want to insert the output of package_admin.py into a Mongo database.
 
 Create Mongo configuration file.  Make the appropriate change to the environment.
   * Make the appropriate changes to connect to a Mongo database.
@@ -109,6 +110,33 @@ cd config
 cp mongo.py.TEMPLATE mongo.py
 vim mongo.py
 chmod 600 mongo.py
+```
+
+
+# RabbitMQ Configuration (optional):
+  * RabbitMQ configuration file is only required if you want to publish the output of package_admin.py into RabbitMQ.
+
+Create RabbitMQ configuration file.  Make the appropriate change to the environment.
+  * Make the appropriate changes to connect to a RabbitMQ database.
+    - user = "USER"
+    - japd = "PSWORD"
+    - host = "HOSTNAME"
+    - host_list = []
+    - queue = "QUEUENAME"
+    - r_key = "ROUTING_KEY"
+    - exchange_name = "EXCHANGE_NAME"
+  * Do not change this section unless you have knowledge with RabbitMQ.
+    - port = 5672
+    - exchange_type = "direct"
+    - x_durable = True
+    - q_durable = True
+    - auto_delete = False
+
+```
+cd config
+cp rabbitmq.py.TEMPLATE rabbitmq.py
+vim rabbitmq.py
+chmod 600 rabbitmq.py
 ```
 
 

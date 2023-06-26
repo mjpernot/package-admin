@@ -17,13 +17,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -77,6 +71,82 @@ def list_ins_pkg(args_array, yum, **kwargs):
     return status
 
 
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+        get_args_keys
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+    def get_args_keys(self):
+
+        """Method:  get_args_keys
+
+        Description:  Method stub holder for gen_class.ArgParser.get_args_keys.
+
+        Arguments:
+
+        """
+
+        return list(self.args_array.keys())
+
+
+class Yum(object):
+
+    """Class:  Yum
+
+    Description:  Class which is a representation of the Yum class.
+
+    Methods:
+        __init__
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Mail class.
+
+        Arguments:
+
+        """
+
+        self.hostname = ""
+        self.data = ""
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -104,33 +174,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class Yum(object):
-
-            """Class:  Yum
-
-            Description:  Class which is a representation of the Yum class.
-
-            Methods:
-                __init__
-                fetch_repos
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the Mail class.
-
-                Arguments:
-
-                """
-
-                self.hostname = ""
-                self.data = ""
-
         self.yum = Yum()
-
+        self.args = ArgParser()
         self.args_array = {"-c": "mongo", "-d": "config"}
         self.args_array2 = {"-c": "mongo", "-d": "config", "-L": True}
         self.args_array3 = {"-c": "mongo", "-d": "config", "-U": True}
@@ -149,12 +194,14 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array3
+
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
         with gen_libs.no_std_out():
-            self.assertFalse(package_admin.run_program(self.args_array3,
-                                                       self.func_dict2))
+            self.assertFalse(
+                package_admin.run_program(self.args, self.func_dict2))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -168,11 +215,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array2
+
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array2,
-                                                   self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -186,11 +234,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -204,11 +253,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -222,11 +272,12 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array,
-                                                   self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
 
     @mock.patch("package_admin.gen_libs.load_module")
     @mock.patch("package_admin.gen_class.Yum")
@@ -240,12 +291,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array2
+
         mock_yum.return_value = self.yum
         mock_yum.list_ins_pkg.return_Value = True
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args_array2,
-                                                   self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
 
 
 if __name__ == "__main__":
