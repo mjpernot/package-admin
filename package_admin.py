@@ -180,12 +180,9 @@
 # Standard
 import sys
 import datetime
-
-# Third-Party
 import json
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import mongo_lib.mongo_libs as mongo_libs
@@ -253,11 +250,11 @@ def process_yum(args, yum, dict_key, func_name, **kwargs):
         cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
         t_status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
 
-        if not t_status:
-            status = (
-                status[0] & t_status[0],
-                status[1] + " RabbitMQ: " + t_status[1]) 
-        ### STOPPED HERE
+        if not t_status[0] and status[0]:
+            status = (t_status[0], "RabbitMQ: " + t_status[1])
+
+        elif not t_status[0]:
+            status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
 
     data = json.dumps(data, indent=indent)
 

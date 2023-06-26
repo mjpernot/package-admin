@@ -12,8 +12,6 @@
 import os
 import setuptools
 
-# Third-party
-
 # Local
 import version
 
@@ -44,12 +42,13 @@ setuptools.setup(
         "Development Status :: 5 - Production/Stable",
         "Operating System :: Linux",
         "Operating System :: Linux :: Centos",
+        "Operating System :: Linux :: Centos :: 7",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Topic :: Database",
+        "Topic :: Database :: RabbitMQ",
+        "Topic :: Database :: RabbitMQ :: 3.8",
         "Topic :: Database :: Mongo",
-        "Topic :: Database :: Mongo :: 3.4.2",
-        "Topic :: Database :: Mongo :: 4.2.14",
+        "Topic :: Database :: Mongo :: 3.4",
+        "Topic :: Database :: Mongo :: 4.2",
         "Topic :: Administration",
         "Topic :: Administration :: Packages"])

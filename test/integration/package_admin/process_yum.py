@@ -17,15 +17,8 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
+import unittest
 import filecmp
-
-# Third-party
 import mock
 
 # Local
@@ -37,6 +30,72 @@ import mongo_lib.mongo_class as mongo_class
 import version
 
 __version__ = version.__version__
+
+
+class Yum(object):
+
+    """Class:  Yum
+
+    Description:  Class which is a representation of the Yum class.
+
+    Methods:
+        __init__
+        get_hostname
+        get_distro
+        fetch_update_pkgs
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Mail class.
+
+        Arguments:
+
+        """
+
+        self.hostname = "Server_Host_Name"
+        self.data = {"Package": "PACKAGE_NAME", "Ver": "0.0.0",
+                     "Arch": "LINUX", "Repo": "REPO_NAME"}
+        self.distro = ("OS_Name", "Version_Release", "Type_Release")
+
+    def get_distro(self):
+
+        """Method:  get_distro
+
+        Description:  Return self.distro attribute.
+
+        Arguments:
+
+        """
+
+        return self.distro
+
+    def get_hostname(self):
+
+        """Method:  get_hostname
+
+        Description:  Set self.hostname attribute.
+
+        Arguments:
+
+        """
+
+        return self.hostname
+
+    def fetch_update_pkgs(self):
+
+        """Method:  fetch_update_pkgs
+
+        Description:  Set self.data attribute.
+
+        Arguments:
+
+        """
+
+        return self.data
 
 
 class UnitTest(unittest.TestCase):
@@ -66,71 +125,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class Yum(object):
-
-            """Class:  Yum
-
-            Description:  Class which is a representation of the Yum class.
-
-            Methods:
-                __init__
-                get_hostname
-                get_distro
-                fetch_update_pkgs
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the Mail class.
-
-                Arguments:
-
-                """
-
-                self.hostname = "Server_Host_Name"
-                self.data = {"Package": "PACKAGE_NAME", "Ver": "0.0.0",
-                             "Arch": "LINUX", "Repo": "REPO_NAME"}
-                self.distro = ("OS_Name", "Version_Release", "Type_Release")
-
-            def get_distro(self):
-
-                """Method:  get_distro
-
-                Description:  Return self.distro attribute.
-
-                Arguments:
-
-                """
-
-                return self.distro
-
-            def get_hostname(self):
-
-                """Method:  get_hostname
-
-                Description:  Set self.hostname attribute.
-
-                Arguments:
-
-                """
-
-                return self.hostname
-
-            def fetch_update_pkgs(self):
-
-                """Method:  fetch_update_pkgs
-
-                Description:  Set self.data attribute.
-
-                Arguments:
-
-                """
-
-                return self.data
 
         self.yum = Yum()
         self.dict_key = "Update_Packages"
