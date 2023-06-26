@@ -1,3 +1,0 @@
-version
-rabbitmq_class
-__init__
