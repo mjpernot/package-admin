@@ -5,4 +5,5 @@
 coverage.xml
 lib
 mongo_lib
+rabbit_lib
 .scannerwork
