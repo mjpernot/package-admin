@@ -17,13 +17,7 @@
 # Standard
 import sys
 import os
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
-# Third-party
+import unittest
 import mock
 
 # Local
@@ -93,6 +87,112 @@ class Mail(object):
         return status
 
 
+class Yum(object):
+
+    """Class:  Yum
+
+    Description:  Class which is a representation of the Yum class.
+
+    Methods:
+        __init__
+        get_hostname
+        get_distro
+        fetch_update_pkgs
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Mail class.
+
+        Arguments:
+
+        """
+
+        self.hostname = "Server_Host_Name"
+        self.data = "Update_Package_List"
+        self.distro = ("OS_Name", "Version_Release", "Type_Release")
+
+    def get_distro(self):
+
+        """Method:  get_distro
+
+        Description:  Return self.distro attribute.
+
+        Arguments:
+            (output) self.distro
+
+        """
+
+        return self.distro
+
+    def get_hostname(self):
+
+        """Method:  get_hostname
+
+        Description:  Set self.hostname attribute.
+
+        Arguments:
+            (output) self.hostname
+
+        """
+
+        return self.hostname
+
+    def fetch_update_pkgs(self):
+
+        """Method:  fetch_update_pkgs
+
+        Description:  Set self.data attribute.
+
+        Arguments:
+            (output) self.data
+
+        """
+
+        return self.data
+
+
+class ArgParser(object):
+
+    """Class:  ArgParser
+
+    Description:  Class stub holder for gen_class.ArgParser class.
+
+    Methods:
+        __init__
+        get_val
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Class initialization.
+
+        Arguments:
+
+        """
+
+        self.cmdline = None
+        self.args_array = dict()
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest
@@ -101,6 +201,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_rabbitmq_fail
+        test_rabbitmq_success
         test_append_file_json
         test_append_file
         test_mongo_conn_fail
@@ -128,89 +230,113 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        class Yum(object):
-
-            """Class:  Yum
-
-            Description:  Class which is a representation of the Yum class.
-
-            Methods:
-                __init__
-                get_hostname
-                get_distro
-                fetch_update_pkgs
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the Mail class.
-
-                Arguments:
-
-                """
-
-                self.hostname = "Server_Host_Name"
-                self.data = "Update_Package_List"
-                self.distro = ("OS_Name", "Version_Release", "Type_Release")
-
-            def get_distro(self):
-
-                """Method:  get_distro
-
-                Description:  Return self.distro attribute.
-
-                Arguments:
-                    (output) self.distro
-
-                """
-
-                return self.distro
-
-            def get_hostname(self):
-
-                """Method:  get_hostname
-
-                Description:  Set self.hostname attribute.
-
-                Arguments:
-                    (output) self.hostname
-
-                """
-
-                return self.hostname
-
-            def fetch_update_pkgs(self):
-
-                """Method:  fetch_update_pkgs
-
-                Description:  Set self.data attribute.
-
-                Arguments:
-                    (output) self.data
-
-                """
-
-                return self.data
-
         self.yum = Yum()
-        self.args_array = {"-i": "Database_Name:Table_Name"}
+        self.args = ArgParser()
         self.class_cfg = "class_cfg_listing"
         self.dict_key = "Update_Packages"
         self.func_name = self.yum.fetch_update_pkgs
         self.mail = Mail()
+
+        db_tbl = "Database_Name:Table_Name"
+        self.args_array = {"-i": db_tbl}
         self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
-        self.args_array2a = {"-z": True, "-e": "email", "-s": "subj",
-                             "-u": True}
-        self.args_array3 = {"-z": True, "-e": "email", "-s": "subj",
-                            "-f": True}
-        self.args_array3a = {"-z": True, "-e": "email", "-s": "subj",
-                             "-f": True, "-u": True}
+        self.args_array2a = {
+            "-z": True, "-e": "email", "-s": "subj", "-u": True}
+        self.args_array3 = {
+            "-z": True, "-e": "email", "-s": "subj", "-f": True}
+        self.args_array3a = {
+            "-z": True, "-e": "email", "-s": "subj", "-f": True, "-u": True}
+        self.args_array4 = {
+            "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True,
+            "-a": True}
+        self.args_array5 = {
+            "-i": db_tbl, "-z": True, "-o": "File_Name","-a": True}
+        self.args_array6 = {"-i": db_tbl, "-z": True}
+        self.args_array7 = {
+            "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True}
+        self.args_array8 = {"-i": db_tbl, "-z": True, "-o": "File_Name"}
+        self.args_array9 = {"-i": db_tbl, "-f": True}
+        self.args_array10 = {
+            "-r": True, "-b": "rmq_config", "-d": "/path/config", "-z": True}
+        self.args_array11 = {
+            "-r": True, "-b": "rmq_config", "-d": "/path/config", "-z": True,
+            "-i": db_tbl}
+
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
         self.results = (False, "Mongo_Insert: Error_Message")
+        self.results2 = (False, "RabbitMQ: Error_Message")
+        self.results3 = (
+            False, "Mongo_Insert: Error_Message RabbitMQ: Error_Message")
+
+    @mock.patch(
+        "package_admin.gen_libs.load_module", mock.Mock(return_value=True))
+    @mock.patch("package_admin.mongo_libs.ins_doc")
+    @mock.patch("package_admin.rabbitmq_class.pub_2_rmq")
+    def test_rabbitmq_mongo_fail(self, mock_rmq, mock_mongo):
+
+        """Function:  test_rabbitmq_mongo_fail
+
+        Description:  Test with failed publish to RabbitMQ and failed to
+            insert into Mongodb.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array11
+
+        mock_rmq.return_value = self.status2
+        mock_mongo.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args, self.yum, self.dict_key, self.func_name,
+                class_cfg=self.class_cfg), self.results3)
+
+    @mock.patch(
+        "package_admin.gen_libs.load_module", mock.Mock(return_value=True))
+    @mock.patch("package_admin.rabbitmq_class.pub_2_rmq")
+    def test_rabbitmq_fail(self, mock_rmq):
+
+        """Function:  test_rabbitmq_fail
+
+        Description:  Test with failed to publish to RabbitMQ.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array10
+
+        mock_rmq.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args, self.yum, self.dict_key, self.func_name),
+            self.results2)
+
+    @mock.patch(
+        "package_admin.gen_libs.load_module", mock.Mock(return_value=True))
+    @mock.patch("package_admin.rabbitmq_class.pub_2_rmq")
+    def test_rabbitmq_success(self, mock_rmq):
+
+        """Function:  test_rabbitmq_success
+
+        Description:  Test with successful publish to RabbitMQ.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = self.args_array10
+
+        mock_rmq.return_value = self.status
+
+        self.assertEqual(
+            package_admin.process_yum(
+                self.args, self.yum, self.dict_key, self.func_name),
+            self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
     def test_append_file_json(self, mock_write):
@@ -223,16 +349,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_write.return_value = True
+        self.args.args_array = self.args_array4
 
-        self.args_array["-o"] = "File_Name"
-        self.args_array["-z"] = True
-        self.args_array["-f"] = True
-        self.args_array["-a"] = True
+        mock_write.return_value = True
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -246,15 +369,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_write.return_value = True
+        self.args.args_array = self.args_array5
 
-        self.args_array["-o"] = "File_Name"
-        self.args_array["-z"] = True
-        self.args_array["-a"] = True
+        mock_write.return_value = True
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -268,13 +389,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_insert.return_value = self.status2
+        self.args.args_array = self.args_array6
 
-        self.args_array["-z"] = True
+        mock_insert.return_value = self.status2
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.results)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -288,13 +409,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_insert.return_value = self.status
+        self.args.args_array = self.args_array6
 
-        self.args_array["-z"] = True
+        mock_insert.return_value = self.status
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -308,11 +429,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array3a
+
         mock_mail.return_value = self.mail
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array3a, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -326,11 +449,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array3
+
         mock_mail.return_value = self.mail
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array3, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -344,11 +469,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array2a
+
         mock_mail.return_value = self.mail
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array2a, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -362,11 +489,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array2
+
         mock_mail.return_value = self.mail
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array2, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -380,13 +509,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_insert.return_value = self.status
+        self.args.args_array = self.args_array6
 
-        self.args_array["-z"] = True
+        mock_insert.return_value = self.status
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_name,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -400,15 +529,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_write.return_value = True
+        self.args.args_array = self.args_array7
 
-        self.args_array["-o"] = "File_Name"
-        self.args_array["-z"] = True
-        self.args_array["-f"] = True
+        mock_write.return_value = True
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -422,14 +549,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_write.return_value = True
+        self.args.args_array = self.args_array8
 
-        self.args_array["-o"] = "File_Name"
-        self.args_array["-z"] = True
+        mock_write.return_value = True
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     @mock.patch("package_admin.gen_libs.display_data",
@@ -444,11 +570,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-f"] = True
+        self.args.args_array = self.args_array9
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     @mock.patch("package_admin.gen_libs.display_data",
@@ -463,9 +589,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.args.args_array = self.args_array
+
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
     def test_suppression_true(self):
@@ -478,11 +606,11 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args_array["-z"] = True
+        self.args.args_array = self.args_array6
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args_array, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_name),
             self.status)
 
 

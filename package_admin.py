@@ -11,12 +11,12 @@
     Usage:
         package_admin.py
             {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                [-o dir_path/file [-a]] |
+                [-o dir_path/file [-a]] [-r -b file -d path] |
              -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                 [-o dir_path/file [-a]] |
+                 [-o dir_path/file [-a]] [-r -b file -d path] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                 [-o dir_path/file [-a]]}
+                 [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
 
     Arguments:
@@ -30,6 +30,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
@@ -45,6 +48,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -R => List current repositories.
             -f => Flatten the JSON data structure.
@@ -56,6 +62,9 @@
                 -u => Override the default mail command and use mailx.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
 
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
@@ -119,6 +128,45 @@
             - Lastly, it will require the Mongo configuration file entry
                 auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
+
+            RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
+            The configuration file format is for connecting and publishing to a
+            RabbitMQ.
+
+            # Login information.
+            user = "USER"
+            japd = "PSWORD"
+            # Address to single RabbitMQ node.
+            host = "HOSTNAME"
+            # List of hosts along with their ports to a multiple node RabbitMQ
+            #   cluster.
+            # Format of each entry is: "IP:PORT".
+            # Example: host_list = ["hostname:5672", "hostname2:5672"]
+            # Note:  If host_list is set, it will take precedence over the host
+            #   entry.
+            host_list = []
+            # RabbitMQ Queue name.
+            queue = "QUEUENAME"
+            # RabbitMQ R-Key name (normally same as queue name).
+            r_key = "RKEYNAME"
+            # RabbitMQ Exchange name for each instance run.
+            exchange_name = "EXCHANGE_NAME"
+
+            # These options will not need to be updated normally.
+            # RabbitMQ listening port
+            # Default is 5672
+            port = 5672
+            # Type of exchange
+            # Names allowed:  direct, topic, fanout, headers
+            exchange_type = "direct"
+            # Is exchange durable: True|False
+            x_durable = True
+            # Are queues durable: True|False
+            q_durable = True
+            # Do queues automatically delete once message is processed:
+            #   True|False
+            auto_delete = False
+
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
 
@@ -132,15 +180,13 @@
 # Standard
 import sys
 import datetime
-
-# Third-Party
 import json
 
 # Local
-import lib.arg_parser as arg_parser
 import lib.gen_libs as gen_libs
 import lib.gen_class as gen_class
 import mongo_lib.mongo_libs as mongo_libs
+import rabbit_lib.rabbitmq_class as rabbitmq_class
 import version
 
 __version__ = version.__version__
@@ -160,7 +206,7 @@ def help_message():
     print(__doc__)
 
 
-def process_yum(args_array, yum, dict_key, func_name, **kwargs):
+def process_yum(args, yum, dict_key, func_name, **kwargs):
 
     """Function:  process_yum
 
@@ -168,31 +214,30 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         func_name.  Send dictionary to output.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
-        (input) dict_key -> Dictionary key value.
-        (input) func_name -> Name of class method to call.
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
+        (input) dict_key -> Dictionary key value
+        (input) func_name -> Name of class method to call
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
     status = (True, None)
-    args_array = dict(args_array)
     os_distro = yum.get_distro()
     data = {"Server": yum.get_hostname(),
             "OsRelease": os_distro[0] + " " + os_distro[1],
-            "AsOf": datetime.datetime.strftime(datetime.datetime.now(),
-                                               "%Y-%m-%d %H:%M:%S"),
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
-    ofile = args_array.get("-o", False)
-    db_tbl = args_array.get("-i", False)
+    ofile = args.get_val("-o", def_val=False)
+    db_tbl = args.get_val("-i", def_val=False)
     class_cfg = kwargs.get("class_cfg", False)
-    mode = "a" if args_array.get("-a", False) else "w"
-    indent = None if args_array.get("-f", False) else 4
+    mode = "a" if args.get_val("-a", def_val=False) else "w"
+    indent = None if args.get_val("-f", def_val=False) else 4
 
     if db_tbl and class_cfg:
         dbn, tbl = db_tbl.split(":")
@@ -201,44 +246,53 @@ def process_yum(args_array, yum, dict_key, func_name, **kwargs):
         if not status[0]:
             status = (status[0], "Mongo_Insert: " + status[1])
 
+    if args.get_val("-r", def_val=False):
+        cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
+        t_status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
+
+        if not t_status[0] and status[0]:
+            status = (t_status[0], "RabbitMQ: " + t_status[1])
+
+        elif not t_status[0]:
+            status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
+
     data = json.dumps(data, indent=indent)
 
     if ofile:
         gen_libs.write_file(ofile, mode, data)
 
-    if not args_array.get("-z", False):
+    if not args.get_val("-z", def_val=False):
         gen_libs.display_data(data)
 
-    if args_array.get("-e", False):
+    if args.get_val("-e", def_val=False):
         mail = gen_class.setup_mail(
-            args_array.get("-e"), subj=args_array.get("-s", None))
+            args.get_val("-e"), subj=args.get_val("-s", def_val=None))
         mail.add_2_msg(data)
-        use_mailx = args_array.get("-u", False)
+        use_mailx = args.get_val("-u", def_val=False)
         mail.send_mail(use_mailx=use_mailx)
 
     return status
 
 
-def list_upd_pkg(args_array, yum, **kwargs):
+def list_upd_pkg(args, yum, **kwargs):
 
     """Function:  list_upd_pkg
 
     Description:  List any packages available for updates on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
-    args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_upd_pkg: " + status[1])
@@ -246,26 +300,25 @@ def list_upd_pkg(args_array, yum, **kwargs):
     return status
 
 
-def list_ins_pkg(args_array, yum, **kwargs):
+def list_ins_pkg(args, yum, **kwargs):
 
     """Function:  list_ins_pkg
 
     Description:  List all currently installed packages on the server.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
-    args_array = dict(args_array)
     status = process_yum(
-        args_array, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
+        args, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_ins_pkg: " + status[1])
@@ -273,25 +326,24 @@ def list_ins_pkg(args_array, yum, **kwargs):
     return status
 
 
-def list_repo(args_array, yum, **kwargs):
+def list_repo(args, yum, **kwargs):
 
     """Function:  list_repo
 
     Description:  List the current list of repositories.
 
     Arguments:
-        (input) args_array -> Array of command line options and values.
-        (input) yum -> Yum class instance.
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
         (input) **kwargs:
-            class_cfg -> Mongo server configuration.
-        (output) status -> Tuple on connection status.
-            status[0] - True|False - Mongo connection successful.
-            status[1] - Error message if Mongo connection failed.
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on connection status
+            status[0] - True|False - Mongo connection successful
+            status[1] - Error message if Mongo connection failed
 
     """
 
-    args_array = dict(args_array)
-    status = process_yum(args_array, yum, "Repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args, yum, "Repos", yum.fetch_repos, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
@@ -299,29 +351,29 @@ def list_repo(args_array, yum, **kwargs):
     return status
 
 
-def run_program(args_array, func_dict):
+def run_program(args, func_dict):
 
     """Function:  run_program
 
     Description:  Creates class instance(s) and controls flow of the program.
 
     Arguments:
-        (input) args_array -> Dict of command line options and values.
-        (input) func_dict -> Dictionary list of functions and options.
+        (input) args -> ArgParser class instance
+        (input) func_dict -> Dictionary list of functions and options
 
     """
 
-    args_array = dict(args_array)
     func_dict = dict(func_dict)
     yum = gen_class.Yum()
     mongo_cfg = None
 
-    if args_array.get("-c", False):
-        mongo_cfg = gen_libs.load_module(args_array["-c"], args_array["-d"])
+    if args.get_val("-c", def_val=False):
+        mongo_cfg = gen_libs.load_module(
+            args.get_val("-c"), args.get_val("-d"))
 
-    # Intersect args_array & func_dict to find which functions to call.
-    for item in set(args_array.keys()) & set(func_dict.keys()):
-        status = func_dict[item](args_array, yum, class_cfg=mongo_cfg)
+    # Intersect args.args_array & func_dict to find which functions to call.
+    for item in set(args.get_args_keys()) & set(func_dict.keys()):
+        status = func_dict[item](args, yum, class_cfg=mongo_cfg)
 
         if not status[0]:
             print("Error Detected: %s" % (status[1]))
@@ -335,49 +387,49 @@ def main():
         line arguments and values.
 
     Variables:
-        dir_chk_list -> contains options which will be directories.
-        file_chk_list -> contains the options which will have files included.
-        file_crt_list -> contains options which require files to be created.
-        func_dict -> dictionary list for the function calls or other options.
-        opt_def_dict -> contains options with their default values.
-        opt_con_req_list -> contains the options that require other options.
-        opt_multi_list -> contains the options that will have multiple values.
-        opt_val_list -> contains options which require values.
+        dir_perms_chk -> contains directories and their octal permissions
+        file_perms_chk -> contains file names and their octal permissions
+        file_crt -> contains options which require files to be created
+        func_dict -> dictionary list for the function calls or other options
+        opt_def_dict -> contains options with their default values
+        opt_con_req_dict -> contains the options that require other options
+        opt_multi_list -> contains the options that will have multiple values
+        opt_val_list -> contains options which require values
 
     Arguments:
-        (input) argv -> Arguments from the command line.
+        (input) argv -> Arguments from the command line
 
     """
 
-    cmdline = gen_libs.get_inst(sys)
-    dir_chk_list = ["-d"]
-    file_chk_list = ["-o"]
-    file_crt_list = ["-o"]
+    dir_perms_chk = {"-d": 5}
+    file_perms_chk = {"-o": 6}
+    file_crt = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_list = {"-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"]}
+    opt_con_req_dict = {
+        "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
     opt_multi_list = ["-e", "-s"]
     opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
-    args_array = arg_parser.arg_parse2(
-        cmdline.argv, opt_val_list, opt_def_dict, multi_val=opt_multi_list)
+    args = gen_class.ArgParser(
+        sys.argv, opt_val=opt_val_list, opt_def=opt_def_dict,
+        multi_val=opt_multi_list, do_parse=True)
 
-    if not gen_libs.help_func(args_array, __version__, help_message) \
-       and arg_parser.arg_cond_req(args_array, opt_con_req_list) \
-       and not arg_parser.arg_dir_chk_crt(args_array, dir_chk_list) \
-       and not arg_parser.arg_file_chk(args_array, file_chk_list,
-                                       file_crt_list):
+    if not gen_libs.help_func(args, __version__, help_message)              \
+       and args.arg_cond_req_or(opt_con_or=opt_con_req_dict)                \
+       and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                    \
+       and args.arg_file_chk(file_perm_chk=file_perms_chk, file_crt=file_crt):
 
         try:
             proglock = gen_class.ProgramLock(
-                cmdline.argv, args_array.get("-y", ""))
-            run_program(args_array, func_dict)
+                sys.argv, args.get_val("-y", def_val=""))
+            run_program(args, func_dict)
             del proglock
 
         except gen_class.SingleInstanceException:
             print("WARNING:  Lock in place for package_admin with id of: %s"
-                  % (args_array.get("-y", "")))
+                  % (args.get_val("-y", def_val="")))
 
 
 if __name__ == "__main__":

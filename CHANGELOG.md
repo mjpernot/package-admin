@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.4.0] - 2023-06-14
+- Upgrade python-lib to v2.10.1
+- Replace arg_parser.arg_parse2 with gen_class.ArgParser.
+- Added ability (-r option) to publish to RabbitMQ.
+- No longer support Python 2.6
+
+### Added
+- config/rabbitmq.py.TEMPLATE: RabbitMQ configuration file.
+
+### Changed
+- process_yum: Added check for -r option to publish to RabbitMQ. 
+- Multiple functions: Replaced the arg_parser code with gen_class.ArgParser code.
+- Documentation updates.
+
+
+## [2.3.4] - 2022-12-01
+- Released pulled.
+
+
 ## [2.3.3] - 2022-06-28
 - Upgrade mongo-libs to v4.2.1
 - Upgrade python-lib to v2.9.2
