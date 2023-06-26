@@ -237,7 +237,8 @@ class UnitTest(unittest.TestCase):
         self.func_name = self.yum.fetch_update_pkgs
         self.mail = Mail()
 
-        self.args_array = {"-i": "Database_Name:Table_Name"}
+        db_tbl = "Database_Name:Table_Name"
+        self.args_array = {"-i": db_tbl}
         self.args_array2 = {"-z": True, "-e": "email", "-s": "subj"}
         self.args_array2a = {
             "-z": True, "-e": "email", "-s": "subj", "-u": True}
@@ -246,23 +247,20 @@ class UnitTest(unittest.TestCase):
         self.args_array3a = {
             "-z": True, "-e": "email", "-s": "subj", "-f": True, "-u": True}
         self.args_array4 = {
-            "-i": "Database_Name:Table_Name", "-z": True, "-o": "File_Name",
-            "-f": True, "-a": True}
-        self.args_array5 = {
-            "-i": "Database_Name:Table_Name", "-z": True, "-o": "File_Name",
+            "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True,
             "-a": True}
-        self.args_array6 = {"-i": "Database_Name:Table_Name", "-z": True}
+        self.args_array5 = {
+            "-i": db_tbl, "-z": True, "-o": "File_Name","-a": True}
+        self.args_array6 = {"-i": db_tbl, "-z": True}
         self.args_array7 = {
-            "-i": "Database_Name:Table_Name", "-z": True, "-o": "File_Name",
-            "-f": True}
-        self.args_array8 = {
-            "-i": "Database_Name:Table_Name", "-z": True, "-o": "File_Name"}
-        self.args_array9 = {"-i": "Database_Name:Table_Name", "-f": True}
+            "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True}
+        self.args_array8 = {"-i": db_tbl, "-z": True, "-o": "File_Name"}
+        self.args_array9 = {"-i": db_tbl, "-f": True}
         self.args_array10 = {
             "-r": True, "-b": "rmq_config", "-d": "/path/config", "-z": True}
         self.args_array11 = {
             "-r": True, "-b": "rmq_config", "-d": "/path/config", "-z": True,
-            "-i": "Database_Name:Table_Name"}
+            "-i": db_tbl}
 
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
