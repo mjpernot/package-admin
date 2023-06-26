@@ -1,7 +1,0 @@
-__init__.py
-rabbitmq_class.py
-version.py
-RabbitMQ_Lib.egg-info/PKG-INFO
-RabbitMQ_Lib.egg-info/SOURCES.txt
-RabbitMQ_Lib.egg-info/dependency_links.txt
-RabbitMQ_Lib.egg-info/top_level.txt
