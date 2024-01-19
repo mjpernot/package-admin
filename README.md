@@ -41,6 +41,8 @@
     - In the \_password_digest function there is an line that should match: "md5hash = hashlib.md5()".  Change it to "md5hash = hashlib.md5(usedforsecurity=False)".
     - Lastly, it will require the configuration file entry auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
 
+  *  If the platform is Redhat 8 and above, list of Linux packages that need to be installed on the server.
+    - dnf==4.7.0
 
 # Installation:
 
@@ -55,21 +57,37 @@ git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/package-admin.git
 
 Install/upgrade system modules.
 
+Centos 7 (Running Python 2.7):
+
 ```
-cd package-admin
-sudo bash
-umask 022
-pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
-exit
+sudo pip install -r requirements.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
+Redhat 8 (Running Python 3.6):
+NOTE: Install as the user that will run the program.
+
+```
+python -m pip install --user -r requirements3.txt --upgrade --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 Install supporting classes and libraries.
+
+Centos 7 (Running Python 2.7):
 
 ```
 pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
 pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+```
+
+Redhat 8 (Running Python 3.6):
+
+```
+python -m pip install -r requirements-python-lib.txt --target lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-lib.txt --target mongo_lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-mongo-python-lib.txt --target mongo_lib/lib --trusted-host pypi.appdev.proj.coe.ic.gov
+python -m pip install -r requirements-rabbitmq-lib.txt --target rabbit_lib --trusted-host pypi.appdev.proj.coe.ic.gov
 ```
 
 # Mongo Configuration (optional):
