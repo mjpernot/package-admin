@@ -29,7 +29,10 @@
   * List of Linux packages that need to be installed on the serveri via git.
     - git
     - python-pip
-    - python-devel
+    - Centos 7 (Running Python 2.7):
+      -> python-devel
+    Redhat 8 (Running Python 3.6):
+      -> python3-devel
 
   * Local class/library dependencies within the program structure.
     - python-lib
@@ -44,14 +47,13 @@
   *  If the platform is Redhat 8 and above, list of Linux packages that need to be installed on the server.
     - dnf==4.7.0
 
+
 # Installation:
 
 Install these programs using git.
   * From here on out, any reference to **{Python_Project}** or **PYTHON_PROJECT** replace with the baseline path of the python program.
 
 ```
-umask 022
-cd {Python_Project}
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/package-admin.git
 ```
 
