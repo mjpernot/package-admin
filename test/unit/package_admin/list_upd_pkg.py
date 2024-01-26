@@ -119,7 +119,7 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.func_name = self.yum.fetch_update_pkgs
+        self.func_names = self.yum.fetch_update_pkgs
         self.status = (True, None)
         self.status2 = (False, "Error Message")
         self.results = (False, "list_upd_pkg: Error Message")

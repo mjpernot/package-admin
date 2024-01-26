@@ -234,7 +234,7 @@ class UnitTest(unittest.TestCase):
         self.args = ArgParser()
         self.class_cfg = "class_cfg_listing"
         self.dict_key = "Update_Packages"
-        self.func_name = self.yum.fetch_update_pkgs
+        self.func_names = self.yum.fetch_update_pkgs
         self.mail = Mail()
 
         db_tbl = "Database_Name:Table_Name"
@@ -250,7 +250,7 @@ class UnitTest(unittest.TestCase):
             "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True,
             "-a": True}
         self.args_array5 = {
-            "-i": db_tbl, "-z": True, "-o": "File_Name","-a": True}
+            "-i": db_tbl, "-z": True, "-o": "File_Name", "-a": True}
         self.args_array6 = {"-i": db_tbl, "-z": True}
         self.args_array7 = {
             "-i": db_tbl, "-z": True, "-o": "File_Name", "-f": True}
@@ -291,7 +291,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.results3)
 
     @mock.patch(
@@ -313,7 +313,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.results2)
 
     @mock.patch(
@@ -335,7 +335,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -355,7 +355,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -375,7 +375,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -395,7 +395,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.results)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -415,7 +415,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -435,7 +435,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -455,7 +455,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -475,7 +475,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
@@ -495,7 +495,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.mongo_libs.ins_doc")
@@ -515,7 +515,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name,
+                self.args, self.yum, self.dict_key, self.func_names,
                 class_cfg=self.class_cfg), self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -535,7 +535,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
@@ -555,7 +555,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.gen_libs.display_data",
@@ -574,7 +574,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     @mock.patch("package_admin.gen_libs.display_data",
@@ -593,7 +593,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
     def test_suppression_true(self):
@@ -610,7 +610,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_name),
+                self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
 

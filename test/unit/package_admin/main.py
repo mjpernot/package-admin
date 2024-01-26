@@ -199,7 +199,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_arg.return_value = self.args_array
+        mock_arg.return_value = self.args
         mock_help.return_value = True
 
         self.assertFalse(package_admin.main())
