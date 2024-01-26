@@ -176,6 +176,7 @@
 """
 
 # Libraries and Global Variables
+from __future__ import print_function
 
 # Standard
 import sys
@@ -183,11 +184,19 @@ import datetime
 import json
 
 # Local
-import lib.gen_libs as gen_libs
-import lib.gen_class as gen_class
-import mongo_lib.mongo_libs as mongo_libs
-import rabbit_lib.rabbitmq_class as rabbitmq_class
-import version
+try:
+    from .lib import gen_libs
+    from .lib import gen_class
+    from .mongo_lib import mongo_libs
+    from .rabbit_lib import rabbitmq_class
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import lib.gen_libs as gen_libs
+    import lib.gen_class as gen_class
+    import mongo_lib.mongo_libs as mongo_libs
+    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import version
 
 __version__ = version.__version__
 
@@ -364,8 +373,13 @@ def run_program(args, func_dict):
     """
 
     func_dict = dict(func_dict)
-    yum = gen_class.Yum()
     mongo_cfg = None
+
+    if sys.version_info < (3, 0):
+        yum = gen_class.Yum()
+
+    else:
+        yum = gen_class.Dnf()
 
     if args.get_val("-c", def_val=False):
         mongo_cfg = gen_libs.load_module(

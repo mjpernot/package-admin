@@ -5,9 +5,16 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 
 ## [2.5.0] - 2024-01-18
+- Updated to work in Python 3 too
+- Added Dnf class to work on RedHat 8 servers
+- Updated to work in Red Hat 8
 - Updated python-lib to v3.0.1
 - Updated mongo-lib to v4.2.8
 - Updated rabbitmq-lib to v2.2.2
+
+### Changed
+- run_program: Determine whether to initialize a Yum class or Dnf class based on python version used.
+- Documentation updates.
 
 
 ## [2.4.0] - 2023-06-14

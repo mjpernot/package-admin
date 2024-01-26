@@ -120,7 +120,7 @@ class UnitTest(unittest.TestCase):
         self.yum = Yum()
         self.args = ArgParser()
         self.args_array = {"-i": "Database_Name:Table_Name"}
-        self.func_name = self.yum.fetch_repos
+        self.func_names = self.yum.fetch_repos
         self.status = (True, None)
         self.status2 = (False, "Error Message")
         self.results = (False, "list_repo: Error Message")

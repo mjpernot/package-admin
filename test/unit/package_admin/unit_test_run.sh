@@ -6,11 +6,11 @@
 
 echo ""
 echo "Unit test:  package_admin.py"
-test/unit/package_admin/help_message.py
-test/unit/package_admin/process_yum.py
-test/unit/package_admin/list_upd_pkg.py
-test/unit/package_admin/list_ins_pkg.py
-test/unit/package_admin/list_repo.py
-test/unit/package_admin/run_program.py
-test/unit/package_admin/main.py
+/usr/bin/python test/unit/package_admin/help_message.py
+/usr/bin/python test/unit/package_admin/process_yum.py
+/usr/bin/python test/unit/package_admin/list_upd_pkg.py
+/usr/bin/python test/unit/package_admin/list_ins_pkg.py
+/usr/bin/python test/unit/package_admin/list_repo.py
+/usr/bin/python test/unit/package_admin/run_program.py
+/usr/bin/python test/unit/package_admin/main.py
 
