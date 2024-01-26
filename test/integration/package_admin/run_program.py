@@ -95,9 +95,9 @@ class UnitTest(unittest.TestCase):
                                                "package_repo_non_json")
         self.repo_json_file = os.path.join(self.out_path,
                                            "package_repo_json")
-        self.func_dict = {"-L": package_admin.list_ins_pkg,
-                          "-U": package_admin.list_upd_pkg,
-                          "-R": package_admin.list_repo}
+        self.func_dict1 = {"-L": package_admin.list_ins_pkg,
+                           "-U": package_admin.list_upd_pkg,
+                           "-R": package_admin.list_repo}
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.hostname = "Server_Host_Name"
@@ -139,7 +139,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array2["-U"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.list_non_json_file)
 
@@ -168,7 +168,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2["-f"] = True
         self.args_array2["-U"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.list_json_file)
 
@@ -194,7 +194,7 @@ class UnitTest(unittest.TestCase):
         self.args_array4["-U"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array4,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.display_data",
                 mock.Mock(return_value=True))
@@ -218,7 +218,7 @@ class UnitTest(unittest.TestCase):
         self.args_array5["-U"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array5,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_class.Yum.fetch_update_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -239,7 +239,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array3["-U"] = True
 
-        package_admin.run_program(self.args_array3, self.func_dict)
+        package_admin.run_program(self.args_array3, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -274,7 +274,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array["-U"] = True
 
-        package_admin.run_program(self.args_array, self.func_dict)
+        package_admin.run_program(self.args_array, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -311,7 +311,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array2["-L"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.ins_non_json_file)
 
@@ -340,7 +340,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2["-f"] = True
         self.args_array2["-L"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.ins_json_file)
 
@@ -366,7 +366,7 @@ class UnitTest(unittest.TestCase):
         self.args_array4["-L"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array4,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.display_data",
                 mock.Mock(return_value=True))
@@ -390,7 +390,7 @@ class UnitTest(unittest.TestCase):
         self.args_array5["-L"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array5,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_class.Yum.fetch_install_pkgs")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -411,7 +411,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array3["-L"] = True
 
-        package_admin.run_program(self.args_array3, self.func_dict)
+        package_admin.run_program(self.args_array3, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -446,7 +446,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array["-L"] = True
 
-        package_admin.run_program(self.args_array, self.func_dict)
+        package_admin.run_program(self.args_array, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -483,7 +483,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array2["-R"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.repo_non_json_file)
 
@@ -512,7 +512,7 @@ class UnitTest(unittest.TestCase):
         self.args_array2["-f"] = True
         self.args_array2["-R"] = True
 
-        package_admin.run_program(self.args_array2, self.func_dict)
+        package_admin.run_program(self.args_array2, self.func_dict1)
 
         status = filecmp.cmp(self.out_file, self.repo_json_file)
 
@@ -538,7 +538,7 @@ class UnitTest(unittest.TestCase):
         self.args_array4["-R"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array4,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.display_data",
                 mock.Mock(return_value=True))
@@ -562,7 +562,7 @@ class UnitTest(unittest.TestCase):
         self.args_array5["-R"] = True
 
         self.assertFalse(package_admin.run_program(self.args_array5,
-                                                   self.func_dict))
+                                                   self.func_dict1))
 
     @mock.patch("package_admin.gen_class.Yum.fetch_repos")
     @mock.patch("package_admin.gen_class.Yum.get_hostname")
@@ -583,7 +583,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array3["-R"] = True
 
-        package_admin.run_program(self.args_array3, self.func_dict)
+        package_admin.run_program(self.args_array3, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()
@@ -618,7 +618,7 @@ class UnitTest(unittest.TestCase):
 
         self.args_array["-R"] = True
 
-        package_admin.run_program(self.args_array, self.func_dict)
+        package_admin.run_program(self.args_array, self.func_dict1)
 
         mongo = mongo_libs.crt_coll_inst(self.mongo_cfg, self.dbn, self.tbl)
         mongo.connect()

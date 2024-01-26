@@ -179,12 +179,11 @@ class UnitTest(unittest.TestCase):
         self.args_array = {"-c": "mongo", "-d": "config"}
         self.args_array2 = {"-c": "mongo", "-d": "config", "-L": True}
         self.args_array3 = {"-c": "mongo", "-d": "config", "-U": True}
-        self.func_dict = {"-L": list_ins_pkg}
+        self.func_dict1 = {"-L": list_ins_pkg}
         self.func_dict2 = {"-U": list_upd_pkg}
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_func_failed(self, mock_yum, mock_load):
+    def test_func_failed(self, mock_load):
 
         """Function:  test_func_failed
 
@@ -196,7 +195,6 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array3
 
-        mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
         with gen_libs.no_std_out():
@@ -204,8 +202,7 @@ class UnitTest(unittest.TestCase):
                 package_admin.run_program(self.args, self.func_dict2))
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_func_successful(self, mock_yum, mock_load):
+    def test_func_successful(self, mock_load):
 
         """Function:  test_func_successful
 
@@ -217,14 +214,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array2
 
-        mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_args_array_true(self, mock_yum, mock_load):
+    def test_args_array_true(self, mock_load):
 
         """Function:  test_args_array_true
 
@@ -236,14 +231,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_args_array_false(self, mock_yum, mock_load):
+    def test_args_array_false(self, mock_load):
 
         """Function:  test_args_array_false
 
@@ -255,14 +248,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_loop_zero(self, mock_yum, mock_load):
+    def test_loop_zero(self, mock_load):
 
         """Function:  test_loop_zero
 
@@ -274,14 +265,12 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_yum.return_value = self.yum
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
     @mock.patch("package_admin.gen_libs.load_module")
-    @mock.patch("package_admin.gen_class.Yum")
-    def test_loop_one(self, mock_yum, mock_load):
+    def test_loop_one(self, mock_load):
 
         """Function:  test_loop_one
 
@@ -293,11 +282,9 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array2
 
-        mock_yum.return_value = self.yum
-        mock_yum.list_ins_pkg.return_Value = True
         mock_load.return_value = "Config_File"
 
-        self.assertFalse(package_admin.run_program(self.args, self.func_dict))
+        self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
 
 if __name__ == "__main__":
