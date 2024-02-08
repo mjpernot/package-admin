@@ -389,6 +389,7 @@ def kernel_check(args, yum, **kwargs):
     if sys.version_info > (3, 0):
         pkgs_installed = yum.get_install_pkgs()
 
+### What about an internal class that contains the data being gathered?
 ##############################################################################
 ### Function - Get list of installed kernel versions.
         kernel_list = list()
