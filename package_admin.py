@@ -387,27 +387,35 @@ def kernel_check(args, yum, **kwargs):
     msg = ""
 
     if sys.version_info > (3, 0):
-        #yum.fill_sack()            # capture_pkgs -> get_install_pkgs
-        #query = yum.sack.query()   # get_update_pkgs -> get_install_pkgs
-        #pkgs_installed = query.installed() # get_install_pkgs
         pkgs_installed = yum.get_install_pkgs()
+
+##############################################################################
+### Function - Get list of installed kernel versions.
         kernel_list = list()
 
         for pkg in pkgs_installed.run():
 
             if KERNEL_NAME in str(pkg):
                 kernel_list.append(pkg)
+### Return kernel_list
+##############################################################################
 
+##############################################################################
+### Function - Get the current running kernel version.
         for pkg in kernel_list:
 
             if pkg.evr in platform.release():
                 running = pkg
                 print('Current running from platform.release %s' % running)
                 break
+### Return running (is a pkg class from dnf.Base()
+##############################################################################
 
         if len(kernel_list) > 1:
             latest = kernel_list[0]
 
+##############################################################################
+### Function - Get the latest kernel version from installed kernel packages.
             for pkg in kernel_list:
 
                 if pkg.evr_cmp(latest) == 1:
@@ -417,10 +425,14 @@ def kernel_check(args, yum, **kwargs):
                 else:
                     print('Same or Older version')
                     print('Current latest: %s, Older: %s' % (latest, pkg))
+### Return latest (latest installed kernel version
+##############################################################################
 
             print('Current running version %s' % running)
             print('Installed version %s' % latest)
 
+##############################################################################
+### Function - If installed version is the latest kernel installed version
             if latest.evr_cmp(running) == 1:
                 print('Reboot required')
 
@@ -430,6 +442,8 @@ def kernel_check(args, yum, **kwargs):
             else:
                 flag = False
                 msg = "Error: kernel_check: You got a problem with the program"
+### Return ??? (Is this the dictionary containing the info about the kernel?
+##############################################################################
 
         elif len(kernel_list) == 1:
             latest = kernel_list[0]
