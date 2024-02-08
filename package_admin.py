@@ -409,7 +409,7 @@ def kernel_check(args, yum, **kwargs):
 
                 if pkg.evr_cmp(latest) == 1:
                     print('Current latest: %s, New latest: %s' % (latest, pkg))
-                    latest = ker_pkg
+                    latest = pkg
 
                 else:
                     print('Same or Older version')
