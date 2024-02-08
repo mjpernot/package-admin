@@ -383,9 +383,10 @@ def kernel_check(args, yum, **kwargs):
     KERNEL_NAME = "kernel-core"
 
     if sys.version_info > (3, 0):
-        yum.fill_sack()            # capture_pkgs -> get_install_pkgs
-        query = yum.sack.query()   # get_update_pkgs -> get_install_pkgs
-        pkgs_installed = query.installed() # get_install_pkgs
+        #yum.fill_sack()            # capture_pkgs -> get_install_pkgs
+        #query = yum.sack.query()   # get_update_pkgs -> get_install_pkgs
+        #pkgs_installed = query.installed() # get_install_pkgs
+        pkgs_installed = yum.get_install_pkgs()
         kernel_list = list()
 
         for pkg in pkgs_installed.run():
