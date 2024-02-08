@@ -360,6 +360,88 @@ def list_repo(args, yum, **kwargs):
     return status
 
 
+def kernel_check(args, yum, **kwargs):
+
+    """Function:  kernel_check
+
+    Description:  Compares the current running kernel version to the latest
+        installed kernel version and determines if a reboot is required.
+
+    Note:  This is only available for the Dnf class use.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - successful operation
+            status[1] - Error message 
+
+    """
+
+    KERNEL_NAME = "kernel-core"
+
+    if sys.version_info > (3, 0):
+        yum.fill_sack()            # capture_pkgs -> get_install_pkgs
+        query = yum.sack.query()   # get_update_pkgs -> get_install_pkgs
+        pkgs_installed = query.installed() # get_install_pkgs
+        kernel_list = list()
+
+        for pkg in pkgs_installed.run():
+
+            if KERNEL_NAME in str(pkg):
+                kernel_list.append(pkg)
+
+        for pkg in kernel_list:
+
+            if pkg.evr in platform.release():
+                running = pkg
+                print('Current running from platform.release %s' % running)
+                break
+
+        if len(kernel_list) > 1:
+            latest = kernel_list[0]
+
+            for pkg in kernel_list:
+
+                if pkg.evr_cmp(latest) == 1:
+                    print('Current latest: %s, New latest: %s' % (latest, pkg))
+                    latest = ker_pkg
+
+                else:
+                    print('Same or Older version')
+                    print('Current latest: %s, Older: %s' % (latest, pkg))
+
+            print('Current running version %s' % running)
+            print('Installed version %s' % latest)
+
+            if latest.evr_cmp(running) == 1:
+                print('Reboot required')
+
+            elif latest.evr_cmp(running) == 0:
+                print('No reboot required')
+
+            else:
+                flag = False
+                msg = "Error: kernel_check: You got a problem with the program"
+
+        elif len(kernel_list) == 1:
+            latest = kernel_list[0]
+            flag = True
+            msg = "Note: kernel_check: Only one kernel version found"
+
+        else:
+            flag = False
+            msg = "Warning: kernel_check: You have a problem, no kernels found"
+
+    else:
+        flag = False
+        msg = "Warning: kernel_check: Only available for Dnf class use"
+
+    return (flag, msg)
+
+
 def run_program(args, func_dict):
 
     """Function:  run_program
@@ -418,7 +500,8 @@ def main():
     dir_perms_chk = {"-d": 5}
     file_perms_chk = {"-o": 6}
     file_crt = ["-o"]
-    func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
+    func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
+                 "-K": kernel_check}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
     opt_con_req_dict = {
         "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
