@@ -424,10 +424,10 @@ def kernel_check(args, yum, data=None, **kwargs):
 ### Return running (is a pkg class from dnf.Base()
 ##############################################################################
 
-    data["Kernel"]["Current"] = running
+    data["Kernel"]["Current"] = str(running)
 
     if len(kernel_list) > 1:
-        data["Kernel"]["Installed"] = kernel_list[0]
+        data["Kernel"]["Installed"] = str(kernel_list[0])
         latest = kernel_list[0]
 
 ##############################################################################
@@ -437,7 +437,7 @@ def kernel_check(args, yum, data=None, **kwargs):
             if pkg.evr_cmp(latest) == 1:
                 print('Current latest: %s, New latest: %s' % (latest, pkg))
                 latest = pkg
-                data["Kernel"]["Installed"] = pkg
+                data["Kernel"]["Installed"] = str(pkg)
 
             else:
                 print('Same or Older version')
