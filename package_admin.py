@@ -373,12 +373,13 @@ def kernel_check(args, yum, data=None, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) yum -> Yum class instance
-        (input) data -> Dictionary from calling function with current listing
+        (input) data -> Dictionary from package listing
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - successful operation
-            status[1] - Error message 
+            status[1] - Error message
+        (output) data -> Dictionary that has the kernel version status
 
     """
 
@@ -387,8 +388,19 @@ def kernel_check(args, yum, data=None, **kwargs):
     status = (True, None)
     pkgs_installed = yum.get_install_pkgs()
 
-
+    if data is None:
 ### What about an internal class that contains the data being gathered?
+### data assignment should be a seperate function for here and above.
+        data = {"Server": yum.get_hostname(),
+                "OsRelease": os_distro[0] + " " + os_distro[1],
+                "AsOf": datetime.datetime.strftime(
+                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
+
+        else:
+            data = dict(data)
+
+    data["Kernel"] = dict()
+
 ##############################################################################
 ### Function - Get list of installed kernel versions.
     kernel_list = list()
@@ -411,7 +423,10 @@ def kernel_check(args, yum, data=None, **kwargs):
 ### Return running (is a pkg class from dnf.Base()
 ##############################################################################
 
+    data["Kernel"]["Current"] = running
+
     if len(kernel_list) > 1:
+        data["Kernel"]["Installed"] = kernel_list[0]
         latest = kernel_list[0]
 
 ##############################################################################
@@ -421,6 +436,7 @@ def kernel_check(args, yum, data=None, **kwargs):
             if pkg.evr_cmp(latest) == 1:
                 print('Current latest: %s, New latest: %s' % (latest, pkg))
                 latest = pkg
+                data["Kernel"]["Installed"] = pkg
 
             else:
                 print('Same or Older version')
@@ -434,9 +450,11 @@ def kernel_check(args, yum, data=None, **kwargs):
 ##############################################################################
 ### Function - If installed version is the latest kernel installed version
         if latest.evr_cmp(running) == 1:
+            data["Kernel"]["RebootRequired"] = "Yes"
             print('Reboot required')
 
         elif latest.evr_cmp(running) == 0:
+            data["Kernel"]["RebootRequired"] = "No"
             print('No reboot required')
 
         else:
@@ -446,13 +464,13 @@ def kernel_check(args, yum, data=None, **kwargs):
 ##############################################################################
 
     elif len(kernel_list) == 1:
-        latest = kernel_list[0]
+        data["Kernel"]["Installed"] = kernel_list[0]
         status = (False, "Note: kernel_check: Only one kernel version found")
 
     else:
         stauts = (False, "Warning: kernel_check: No kernel versions found")
 
-    return status
+    return status, data
 
 
 def kernel_run(args, yum, **kwargs):
