@@ -396,8 +396,8 @@ def kernel_check(args, yum, data=None, **kwargs):
                 "AsOf": datetime.datetime.strftime(
                     datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
 
-        else:
-            data = dict(data)
+    else:
+        data = dict(data)
 
     data["Kernel"] = dict()
 
