@@ -385,6 +385,12 @@ def kernel_check(args, yum, data=None, **kwargs):
 
     KERNEL_NAME = "kernel-core"
 
+    data = {"Server": yum.get_hostname(),
+            "OsRelease": os_distro[0] + " " + os_distro[1],
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
+            "Test": "yes"}
+
     status = (True, None)
     pkgs_installed = yum.get_install_pkgs()
 
