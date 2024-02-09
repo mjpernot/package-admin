@@ -500,6 +500,7 @@ def kernel_run(args, yum, **kwargs):
     if sys.version_info > (3, 0):
         status, data = kernel_check(args, yum)
         print(data)
+### Still need to deal with output here.
 
     else:
         status = (
