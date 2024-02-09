@@ -361,12 +361,105 @@ def list_repo(args, yum, **kwargs):
     return status
 
 
-def kernel_check(args, yum, **kwargs):
+def kernel_check(args, yum, data=None, **kwargs):
 
     """Function:  kernel_check
 
     Description:  Compares the current running kernel version to the latest
         installed kernel version and determines if a reboot is required.
+
+    Note:  This is only available for the Dnf class use.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) yum -> Yum class instance
+        (input) data -> Dictionary from calling function with current listing
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - successful operation
+            status[1] - Error message 
+
+    """
+
+    KERNEL_NAME = "kernel-core"
+
+    status = (True, None)
+    pkgs_installed = yum.get_install_pkgs()
+
+
+### What about an internal class that contains the data being gathered?
+##############################################################################
+### Function - Get list of installed kernel versions.
+    kernel_list = list()
+
+    for pkg in pkgs_installed.run():
+
+        if KERNEL_NAME in str(pkg):
+            kernel_list.append(pkg)
+### Return kernel_list
+##############################################################################
+
+##############################################################################
+### Function - Get the current running kernel version.
+    for pkg in kernel_list:
+
+        if pkg.evr in platform.release():
+            running = pkg
+            print('Current running from platform.release %s' % running)
+            break
+### Return running (is a pkg class from dnf.Base()
+##############################################################################
+
+    if len(kernel_list) > 1:
+        latest = kernel_list[0]
+
+##############################################################################
+### Function - Get the latest kernel version from installed kernel packages.
+        for pkg in kernel_list:
+
+            if pkg.evr_cmp(latest) == 1:
+                print('Current latest: %s, New latest: %s' % (latest, pkg))
+                latest = pkg
+
+            else:
+                print('Same or Older version')
+                print('Current latest: %s, Older: %s' % (latest, pkg))
+### Return latest (latest installed kernel version
+##############################################################################
+
+        print('Current running version %s' % running)
+        print('Installed version %s' % latest)
+
+##############################################################################
+### Function - If installed version is the latest kernel installed version
+        if latest.evr_cmp(running) == 1:
+            print('Reboot required')
+
+        elif latest.evr_cmp(running) == 0:
+            print('No reboot required')
+
+        else:
+            status = (
+                False, "Error: kernel_check: Got a problem with the program")
+### Return ??? (Is this the dictionary containing the info about the kernel?
+##############################################################################
+
+    elif len(kernel_list) == 1:
+        latest = kernel_list[0]
+        status = (False, "Note: kernel_check: Only one kernel version found")
+
+    else:
+        stauts = (False, "Warning: kernel_check: No kernel versions found")
+
+    return status
+
+
+def kernel_run(args, yum, **kwargs):
+
+    """Function:  kernel_check
+
+    Description:  Checks to see if the kernel check can be done.
 
     Note:  This is only available for the Dnf class use.
 
@@ -381,85 +474,14 @@ def kernel_check(args, yum, **kwargs):
 
     """
 
-    KERNEL_NAME = "kernel-core"
-
-    flag = True
-    msg = ""
-
     if sys.version_info > (3, 0):
-        pkgs_installed = yum.get_install_pkgs()
-
-### What about an internal class that contains the data being gathered?
-##############################################################################
-### Function - Get list of installed kernel versions.
-        kernel_list = list()
-
-        for pkg in pkgs_installed.run():
-
-            if KERNEL_NAME in str(pkg):
-                kernel_list.append(pkg)
-### Return kernel_list
-##############################################################################
-
-##############################################################################
-### Function - Get the current running kernel version.
-        for pkg in kernel_list:
-
-            if pkg.evr in platform.release():
-                running = pkg
-                print('Current running from platform.release %s' % running)
-                break
-### Return running (is a pkg class from dnf.Base()
-##############################################################################
-
-        if len(kernel_list) > 1:
-            latest = kernel_list[0]
-
-##############################################################################
-### Function - Get the latest kernel version from installed kernel packages.
-            for pkg in kernel_list:
-
-                if pkg.evr_cmp(latest) == 1:
-                    print('Current latest: %s, New latest: %s' % (latest, pkg))
-                    latest = pkg
-
-                else:
-                    print('Same or Older version')
-                    print('Current latest: %s, Older: %s' % (latest, pkg))
-### Return latest (latest installed kernel version
-##############################################################################
-
-            print('Current running version %s' % running)
-            print('Installed version %s' % latest)
-
-##############################################################################
-### Function - If installed version is the latest kernel installed version
-            if latest.evr_cmp(running) == 1:
-                print('Reboot required')
-
-            elif latest.evr_cmp(running) == 0:
-                print('No reboot required')
-
-            else:
-                flag = False
-                msg = "Error: kernel_check: You got a problem with the program"
-### Return ??? (Is this the dictionary containing the info about the kernel?
-##############################################################################
-
-        elif len(kernel_list) == 1:
-            latest = kernel_list[0]
-            flag = True
-            msg = "Note: kernel_check: Only one kernel version found"
-
-        else:
-            flag = False
-            msg = "Warning: kernel_check: You have a problem, no kernels found"
+        status = kernel_check(args, yum)
 
     else:
-        flag = False
-        msg = "Warning: kernel_check: Only available for Dnf class use"
+        status = (
+            False, "Warning: kernel_run: Only available for Dnf class use")
 
-    return (flag, msg)
+    return status
 
 
 def run_program(args, func_dict):
@@ -521,7 +543,7 @@ def main():
     file_perms_chk = {"-o": 6}
     file_crt = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
-                 "-K": kernel_check}
+                 "-K": kernel_run}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
     opt_con_req_dict = {
         "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
