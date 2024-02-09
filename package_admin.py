@@ -494,7 +494,8 @@ def kernel_run(args, yum, **kwargs):
     """
 
     if sys.version_info > (3, 0):
-        status = kernel_check(args, yum)
+        status, data = kernel_check(args, yum)
+        print(data)
 
     else:
         status = (
