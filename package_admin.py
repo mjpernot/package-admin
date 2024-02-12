@@ -488,7 +488,8 @@ def kernel_check(args, yum, data=None, **kwargs):
 
     if len(kernel_list) > 1:
 #        data["Kernel"]["Installed"] = str(kernel_list[0])
-        data["Kernel"]["Installed"] = str(get_latest_kernel(kernel_list))
+        latest = get_latest_kernel(kernel_list)
+        data["Kernel"]["Installed"] = str(latest)
 ##############################################################################
 ### Function - Get the latest kernel version from installed kernel packages.
 #        latest = kernel_list[0]
