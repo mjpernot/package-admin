@@ -390,7 +390,7 @@ def get_installed_kernels(pkgs_installed):
 
     Arguments:
         (input) pkgs_installed -> Yum.get_install_pkgs class instance
-        (output) kernel_list -> List of installed kernel versions
+        (output) kernel_list -> List of installed kernel version instances
 
     """
 
@@ -403,6 +403,28 @@ def get_installed_kernels(pkgs_installed):
             kernel_list.append(pkg)
 
     return kernel_list
+
+
+def get_running_kernel(kernel_list):
+
+    """Function:  get_running_kernel
+
+    Description:  Return the running kernel version.
+
+    Arguments:
+        (input) kernel_list -> List of kernel versions instances
+        (output) running -> Current running kernel instance
+
+    """
+
+    for pkg in kernel_list:
+
+        if pkg.evr in platform.release():
+            running = pkg
+            print('Current running from platform.release %s' % running)
+            break
+
+    return running
 
 
 def kernel_check(args, yum, data=None, **kwargs):
@@ -432,25 +454,15 @@ def kernel_check(args, yum, data=None, **kwargs):
     data = create_template_dict(yum) if data is None else dict(data)
     data["Kernel"] = dict()
     kernel_list = get_installed_kernels(pkgs_installed)
-##############################################################################
-### Function - Get list of installed kernel versions.
-#    kernel_list = list()
-#
-#    for pkg in pkgs_installed.run():
-#
-#        if KERNEL_NAME in str(pkg):
-#            kernel_list.append(pkg)
-### Return kernel_list
-##############################################################################
-
+    running = get_running_kernel(kernel_list)
 ##############################################################################
 ### Function - Get the current running kernel version.
-    for pkg in kernel_list:
-
-        if pkg.evr in platform.release():
-            running = pkg
-            print('Current running from platform.release %s' % running)
-            break
+#    for pkg in kernel_list:
+#
+#        if pkg.evr in platform.release():
+#            running = pkg
+#            print('Current running from platform.release %s' % running)
+#            break
 ### Return running (is a pkg class from dnf.Base()
 ##############################################################################
 
