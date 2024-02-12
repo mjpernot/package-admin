@@ -372,13 +372,13 @@ def create_template_dict():
 
     """
 
-        os_distro = yum.get_distro()
-        data = {"Server": yum.get_hostname(),
-                "OsRelease": os_distro[0] + " " + os_distro[1],
-                "AsOf": datetime.datetime.strftime(
-                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
+    os_distro = yum.get_distro()
+    data = {"Server": yum.get_hostname(),
+            "OsRelease": os_distro[0] + " " + os_distro[1],
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
 
-        return data
+    return data
 
 
 def kernel_check(args, yum, data=None, **kwargs):
