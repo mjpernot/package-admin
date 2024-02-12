@@ -361,6 +361,26 @@ def list_repo(args, yum, **kwargs):
     return status
 
 
+def create_template_dict():
+
+    """Function:  create_template_dict
+
+    Description:  Set up dictionary with server-level details.
+
+    Arguments:
+        (output) data -> Dictionary containing server details
+
+    """
+
+        os_distro = yum.get_distro()
+        data = {"Server": yum.get_hostname(),
+                "OsRelease": os_distro[0] + " " + os_distro[1],
+                "AsOf": datetime.datetime.strftime(
+                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
+
+        return data
+
+
 def kernel_check(args, yum, data=None, **kwargs):
 
     """Function:  kernel_check
@@ -389,15 +409,16 @@ def kernel_check(args, yum, data=None, **kwargs):
     pkgs_installed = yum.get_install_pkgs()
 
     if data is None:
+        data = create_template_dict()
 ### What about an internal class that contains the data being gathered?
 ### data assignment should be a seperate function for here and above.
 ##############################################################################
 ### Function - Baseload the data dictionary
-        os_distro = yum.get_distro()
-        data = {"Server": yum.get_hostname(),
-                "OsRelease": os_distro[0] + " " + os_distro[1],
-                "AsOf": datetime.datetime.strftime(
-                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
+#        os_distro = yum.get_distro()
+#        data = {"Server": yum.get_hostname(),
+#                "OsRelease": os_distro[0] + " " + os_distro[1],
+#                "AsOf": datetime.datetime.strftime(
+#                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
 ### Return data
 ##############################################################################
 
