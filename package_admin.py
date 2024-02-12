@@ -361,13 +361,14 @@ def list_repo(args, yum, **kwargs):
     return status
 
 
-def create_template_dict():
+def create_template_dict(yum):
 
     """Function:  create_template_dict
 
     Description:  Set up dictionary with server-level details.
 
     Arguments:
+        (input) yum -> Yum class instance
         (output) data -> Dictionary containing server details
 
     """
@@ -409,7 +410,7 @@ def kernel_check(args, yum, data=None, **kwargs):
     pkgs_installed = yum.get_install_pkgs()
 
     if data is None:
-        data = create_template_dict()
+        data = create_template_dict(yum)
 ### What about an internal class that contains the data being gathered?
 ### data assignment should be a seperate function for here and above.
 ##############################################################################
