@@ -412,7 +412,7 @@ def get_running_kernel(kernel_list):
     Description:  Return the running kernel version.
 
     Arguments:
-        (input) kernel_list -> List of kernel versions instances
+        (input) kernel_list -> List of kernel version instances
         (output) running -> Current running kernel instance
 
     """
@@ -425,6 +425,35 @@ def get_running_kernel(kernel_list):
             break
 
     return running
+
+
+def get_latest_kernel(kernel_list):
+
+    """Function:  get_latest_kernel
+
+    Description:  Return the latest kernel version.
+
+    Arguments:
+        (input) kernel_list -> List of kernel version instances
+        (output) latest -> Latest kernel version instance
+
+    """
+
+    latest = kernel_list[0]
+
+    for pkg in kernel_list:
+
+        if pkg.evr_cmp(latest) == 1:
+            print('Current latest: %s, New latest: %s' % (latest, pkg))
+            latest = pkg
+            data["Kernel"]["Installed"] = str(pkg)
+
+        else:
+            print('Same or Older version')
+            print('Current latest: %s, Older: %s' % (latest, pkg))
+
+    return latest
+
 
 
 def kernel_check(args, yum, data=None, **kwargs):
@@ -455,35 +484,24 @@ def kernel_check(args, yum, data=None, **kwargs):
     data["Kernel"] = dict()
     kernel_list = get_installed_kernels(pkgs_installed)
     running = get_running_kernel(kernel_list)
-##############################################################################
-### Function - Get the current running kernel version.
-#    for pkg in kernel_list:
-#
-#        if pkg.evr in platform.release():
-#            running = pkg
-#            print('Current running from platform.release %s' % running)
-#            break
-### Return running (is a pkg class from dnf.Base()
-##############################################################################
-
     data["Kernel"]["Current"] = str(running)
 
     if len(kernel_list) > 1:
-        data["Kernel"]["Installed"] = str(kernel_list[0])
-        latest = kernel_list[0]
-
+#        data["Kernel"]["Installed"] = str(kernel_list[0])
+        data["Kernel"]["Installed"] = str(get_latest_kernel(kernel_list))
 ##############################################################################
 ### Function - Get the latest kernel version from installed kernel packages.
-        for pkg in kernel_list:
-
-            if pkg.evr_cmp(latest) == 1:
-                print('Current latest: %s, New latest: %s' % (latest, pkg))
-                latest = pkg
-                data["Kernel"]["Installed"] = str(pkg)
-
-            else:
-                print('Same or Older version')
-                print('Current latest: %s, Older: %s' % (latest, pkg))
+#        latest = kernel_list[0]
+#        for pkg in kernel_list:
+#
+#            if pkg.evr_cmp(latest) == 1:
+#                print('Current latest: %s, New latest: %s' % (latest, pkg))
+#                latest = pkg
+#                data["Kernel"]["Installed"] = str(pkg)
+#
+#            else:
+#                print('Same or Older version')
+#                print('Current latest: %s, Older: %s' % (latest, pkg))
 ### Return latest (latest installed kernel version
 ##############################################################################
 
