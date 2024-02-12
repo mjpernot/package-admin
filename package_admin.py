@@ -446,7 +446,7 @@ def get_latest_kernel(kernel_list):
         if pkg.evr_cmp(latest) == 1:
             print('Current latest: %s, New latest: %s' % (latest, pkg))
             latest = pkg
-            data["Kernel"]["Installed"] = str(pkg)
+#            data["Kernel"]["Installed"] = str(pkg)
 
         else:
             print('Same or Older version')
