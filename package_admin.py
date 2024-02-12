@@ -409,22 +409,13 @@ def kernel_check(args, yum, data=None, **kwargs):
     status = (True, None)
     pkgs_installed = yum.get_install_pkgs()
 
-    if data is None:
-        data = create_template_dict(yum)
 ### What about an internal class that contains the data being gathered?
-### data assignment should be a seperate function for here and above.
-##############################################################################
-### Function - Baseload the data dictionary
-#        os_distro = yum.get_distro()
-#        data = {"Server": yum.get_hostname(),
-#                "OsRelease": os_distro[0] + " " + os_distro[1],
-#                "AsOf": datetime.datetime.strftime(
-#                    datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
-### Return data
-##############################################################################
-
-    else:
-        data = dict(data)
+    data = data = create_template_dict(yum) if data is None else dict(data)
+#    if data is None:
+#        data = create_template_dict(yum)
+#
+#    else:
+#        data = dict(data)
 
     data["Kernel"] = dict()
 
