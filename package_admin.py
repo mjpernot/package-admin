@@ -382,6 +382,28 @@ def create_template_dict(yum):
     return data
 
 
+def get_installed_kernels(pkgs_installed):
+
+    """Function:  get_installed_kernels
+
+    Description:  Return the installed kernel versions on the server.
+
+    Arguments:
+        (input) pkgs_installed -> Yum.get_install_pkgs class instance
+        (output) kernel_list -> List of installed kernel versions
+
+    """
+
+    kernel_list = list()
+
+    for pkg in pkgs_installed.run():
+
+        if KERNEL_NAME in str(pkg):
+            kernel_list.append(pkg)
+
+    return kernel_list
+
+
 def kernel_check(args, yum, data=None, **kwargs):
 
     """Function:  kernel_check
@@ -408,25 +430,17 @@ def kernel_check(args, yum, data=None, **kwargs):
 
     status = (True, None)
     pkgs_installed = yum.get_install_pkgs()
-
-### What about an internal class that contains the data being gathered?
-    data = data = create_template_dict(yum) if data is None else dict(data)
-#    if data is None:
-#        data = create_template_dict(yum)
-#
-#    else:
-#        data = dict(data)
-
+    data = create_template_dict(yum) if data is None else dict(data)
     data["Kernel"] = dict()
-
+    kernel_list = get_installed_kernels(pkgs_installed)
 ##############################################################################
 ### Function - Get list of installed kernel versions.
-    kernel_list = list()
-
-    for pkg in pkgs_installed.run():
-
-        if KERNEL_NAME in str(pkg):
-            kernel_list.append(pkg)
+#    kernel_list = list()
+#
+#    for pkg in pkgs_installed.run():
+#
+#        if KERNEL_NAME in str(pkg):
+#            kernel_list.append(pkg)
 ### Return kernel_list
 ##############################################################################
 
