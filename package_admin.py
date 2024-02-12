@@ -394,6 +394,7 @@ def get_installed_kernels(pkgs_installed):
 
     """
 
+    KERNEL_NAME = "kernel-core"
     kernel_list = list()
 
     for pkg in pkgs_installed.run():
@@ -425,8 +426,6 @@ def kernel_check(args, yum, data=None, **kwargs):
         (output) data -> Dictionary that has the kernel version status
 
     """
-
-    KERNEL_NAME = "kernel-core"
 
     status = (True, None)
     pkgs_installed = yum.get_install_pkgs()
