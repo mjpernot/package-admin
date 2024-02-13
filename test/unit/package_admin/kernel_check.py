@@ -108,8 +108,9 @@ class UnitTest(unittest.TestCase):
         self.pkg1 = Package(1)
         self.pkg2 = Package(2)
         self.pkg3 = Package(3)
-        self.kernel_list = [self.pkg1, self.pkg2, self.pkg3]
-        self.kernel_list2 = [self.pkg1]
+        self.kernel_list = [
+            self.pkg1.version, self.pkg2.version, self.pkg3.version]
+        self.kernel_list2 = [self.pkg1.version]
 
         self.status = (True, None)
         self.status2 = (
