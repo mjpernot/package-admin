@@ -126,7 +126,7 @@ class UnitTest(unittest.TestCase):
         self.results["Kernel"]["Current"] = str(self.pkg1.version)
         self.results["Kernel"]["Installed"] = self.pkg1.version
 
-     @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
