@@ -140,7 +140,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(data, self.results)
+        self.assertEqual(status, self.status2)
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
