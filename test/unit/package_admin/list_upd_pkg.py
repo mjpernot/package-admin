@@ -71,7 +71,7 @@ class Yum(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the Mail class.
+        Description:  Initialization instance of the Yum class.
 
         Arguments:
 

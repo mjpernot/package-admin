@@ -361,20 +361,20 @@ def list_repo(args, yum, **kwargs):
     return status
 
 
-def create_template_dict(yum):
+def create_template_dict(dnf):
 
     """Function:  create_template_dict
 
     Description:  Set up dictionary with server-level details.
 
     Arguments:
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (output) data -> Dictionary containing server details
 
     """
 
-    os_distro = yum.get_distro()
-    data = {"Server": yum.get_hostname(),
+    os_distro = dnf.get_distro()
+    data = {"Server": dnf.get_hostname(),
             "OsRelease": os_distro[0] + " " + os_distro[1],
             "AsOf": datetime.datetime.strftime(
                 datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
@@ -421,7 +421,6 @@ def get_running_kernel(kernel_list):
 
         if pkg.evr in platform.release():
             running = pkg
-            print('Current running from platform.release %s' % running)
             break
 
     return running
@@ -444,18 +443,13 @@ def get_latest_kernel(kernel_list):
     for pkg in kernel_list:
 
         if pkg.evr_cmp(latest) == 1:
-            print('Current latest: %s, New latest: %s' % (latest, pkg))
             latest = pkg
-
-        else:
-            print('Same or Older version')
-            print('Current latest: %s, Older: %s' % (latest, pkg))
 
     return latest
 
 
 
-def kernel_check(args, yum, data=None, **kwargs):
+def kernel_check(args, dnf, data=None, **kwargs):
 
     """Function:  kernel_check
 
@@ -466,7 +460,7 @@ def kernel_check(args, yum, data=None, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (input) data -> Dictionary from package listing
         (input) **kwargs:
             class_cfg -> Mongo server configuration
@@ -478,8 +472,8 @@ def kernel_check(args, yum, data=None, **kwargs):
     """
 
     status = (True, None)
-    pkgs_installed = yum.get_install_pkgs()
-    data = create_template_dict(yum) if data is None else dict(data)
+    pkgs_installed = dnf.get_install_pkgs()
+    data = create_template_dict(dnf) if data is None else dict(data)
     data["Kernel"] = dict()
     kernel_list = get_installed_kernels(pkgs_installed)
     running = get_running_kernel(kernel_list)
@@ -489,16 +483,11 @@ def kernel_check(args, yum, data=None, **kwargs):
         latest = get_latest_kernel(kernel_list)
         data["Kernel"]["Installed"] = str(latest)
 
-        print('Current running version %s' % running)
-        print('Installed version %s' % latest)
-
         if latest.evr_cmp(running) == 1:
             data["Kernel"]["RebootRequired"] = True
-            print('Reboot required')
 
         elif latest.evr_cmp(running) == 0:
             data["Kernel"]["RebootRequired"] = False
-            print('No reboot required')
 
         else:
             status = (
@@ -515,7 +504,7 @@ def kernel_check(args, yum, data=None, **kwargs):
     return status, data
 
 
-def kernel_run(args, yum, **kwargs):
+def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
 
@@ -525,7 +514,7 @@ def kernel_run(args, yum, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
@@ -534,10 +523,10 @@ def kernel_run(args, yum, **kwargs):
 
     """
 
-    if sys.version_info > (3, 0):
-        status, data = kernel_check(args, yum)
-        print(data)
+    if sys.version_info >= (3, 0):
+        status, data = kernel_check(args, dnf)
 ### Still need to deal with output here.
+        print(data)
 
     else:
         status = (
