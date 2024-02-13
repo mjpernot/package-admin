@@ -145,7 +145,6 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
