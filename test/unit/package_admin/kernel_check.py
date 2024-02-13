@@ -28,6 +28,18 @@ import version
 __version__ = version.__version__
 
 
+class Package(object):
+
+    def __init__(self, version):
+        self.version = version
+
+    def evr_cmp(self, running):
+        if self.version > running.version:
+            return 1
+        else:
+            return 0
+
+
 class Dnf(object):
 
     """Class:  Dnf
@@ -73,8 +85,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_python_27
-        test_python_30
+        test_one_kernel_found2
+        test_one_kernel_found
 
     """
 
@@ -89,27 +101,64 @@ class UnitTest(unittest.TestCase):
         """
 
         self.dnf = Dnf()
+        self.data = {
+            "Server": "Server_Name", "OsRelease": "OS_Release",
+            "AsOf": "2024-02-14 14:15:45"}
+        self.data2 = dict()
+        self.pkg1 = Package(1)
+        self.pkg2 = Package(2)
+        self.pkg3 = Package(3)
+        self.kernel_list = [self.pkg1, self.pkg2, self.pkg3]
+        self.kernel_list2 = [self.pkg1]
 
         self.status = (True, None)
         self.status2 = (
             False, "Warning: kernel_run: Only available for Dnf class use")
 
+        self.results = dict(self.data)
+        self.results["Kernel"]["Installed"] = self.pkg1
 
-    @mock.patch("package_admin.kernel_check")
-    def test_python_30(self, mock_chk):
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_one_kernel_found2(self, mock_dict, mock_installed, mock_running):
 
-        """Function:  test_python_30
+        """Function:  test_one_kernel_found2
 
-        Description:  Test with python 3.0 environment.
+        Description:  Found one kernel version in the package installed list.
 
         Arguments:
 
         """
 
-        mock_chk.return_value = self.status, dict()
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list2
+        mock_running.return_value = self.pkg1
 
-        self.assertEqual(
-            package_admin.kernel_run(self.dnf), self.status)
+        status, data = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(data, self.results)
+
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_one_kernel_found(self, mock_dict, mock_installed, mock_running):
+
+        """Function:  test_one_kernel_found
+
+        Description:  Found one kernel version in the package installed list.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list2
+        mock_running.return_value = self.pkg1
+
+        status, data = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(data, self.results)
 
 
 if __name__ == "__main__":
