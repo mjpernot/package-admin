@@ -449,7 +449,7 @@ def get_latest_kernel(kernel_list):
 
 
 
-def kernel_check(args, dnf, data=None, **kwargs):
+def kernel_check(dnf, data=None, **kwargs):
 
     """Function:  kernel_check
 
@@ -459,7 +459,6 @@ def kernel_check(args, dnf, data=None, **kwargs):
     Note:  This is only available for the Dnf class use.
 
     Arguments:
-        (input) args -> ArgParser class instance
         (input) dnf -> Dnf class instance
         (input) data -> Dictionary from package listing
         (input) **kwargs:
@@ -473,7 +472,7 @@ def kernel_check(args, dnf, data=None, **kwargs):
 
     status = (True, None)
     pkgs_installed = dnf.get_install_pkgs()
-    data = create_template_dict(dnf) if data is None else dict(data)
+    data = dict(data) if data else create_template_dict(dnf)
     data["Kernel"] = dict()
     kernel_list = get_installed_kernels(pkgs_installed)
     running = get_running_kernel(kernel_list)
@@ -524,7 +523,7 @@ def kernel_run(args, dnf, **kwargs):
     """
 
     if sys.version_info >= (3, 0):
-        status, data = kernel_check(args, dnf)
+        status, data = kernel_check(dnf)
 ### Still need to deal with output here.
         print(data)
 

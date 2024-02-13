@@ -1,14 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  kernel_run3.py
+"""Program:  kernel_check.py
 
-    Description:  Unit testing of kernel_run in package_admin.py.
-
-    Note:  This is only for Python 3 testing.
+    Description:  Unit testing of kernel_check in package_admin.py.
 
     Usage:
-        test/unit/package_admin/kernel_run3.py
+        test/unit/package_admin/kernel_check.py
 
     Arguments:
 
@@ -28,31 +26,6 @@ import package_admin
 import version
 
 __version__ = version.__version__
-
-
-class ArgParser(object):
-
-    """Class:  ArgParser
-
-    Description:  Class stub holder for gen_class.ArgParser class.
-
-    Methods:
-        __init__
-
-    """
-
-    def __init__(self):
-
-        """Method:  __init__
-
-        Description:  Class initialization.
-
-        Arguments:
-
-        """
-
-        self.cmdline = None
-        self.args_array = {"-i": "Database_Name:Table_Name"}
 
 
 class Dnf(object):
@@ -77,6 +50,19 @@ class Dnf(object):
         """
 
         self.host_name = None
+        self.installed_pkgs = ['Pkg1', 'Pkg2']
+
+    def get_install_pkgs(self):
+
+        """Method:  get_install_pkgs
+
+        Description:  Stud holder for Dnf.get_install_pkgs method.
+
+        Arguments:
+
+        """
+
+        return self.installed_pkgs
 
 
 class UnitTest(unittest.TestCase):
@@ -87,6 +73,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_python_27
         test_python_30
 
     """
@@ -102,7 +89,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.dnf = Dnf()
-        self.args = ArgParser()
+
         self.status = (True, None)
         self.status2 = (
             False, "Warning: kernel_run: Only available for Dnf class use")
@@ -122,7 +109,7 @@ class UnitTest(unittest.TestCase):
         mock_chk.return_value = self.status, dict()
 
         self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.status)
+            package_admin.kernel_run(self.dnf), self.status)
 
 
 if __name__ == "__main__":

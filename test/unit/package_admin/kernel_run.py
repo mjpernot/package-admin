@@ -90,7 +90,6 @@ class UnitTest(unittest.TestCase):
     Methods:
         setUp
         test_python_27
-        test_python_30
 
     """
 
