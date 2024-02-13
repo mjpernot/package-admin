@@ -30,12 +30,41 @@ __version__ = version.__version__
 
 class Package(object):
 
+    """Class:  Package
+
+    Description:  Class which is a representation of the Dnf.Package class.
+
+    Methods:
+        __init__
+        evr_cmp
+
+    """
+
     def __init__(self, version):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Dnf.Package class.
+
+        Arguments:
+
+        """
+
         self.version = version
 
     def evr_cmp(self, running):
+
+        """Method:  evr_cmpget_install_pkgs
+
+        Description:  Stud holder for Dnf.Package.evr_cmp method.
+
+        Arguments:
+
+        """
+
         if self.version > running.version:
             return 1
+
         else:
             return 0
 
