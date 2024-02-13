@@ -85,6 +85,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_dict
+        test_no_dict
         test_reboot_false4
         test_reboot_false3
         test_reboot_false2
@@ -129,6 +131,52 @@ class UnitTest(unittest.TestCase):
         self.results["Kernel"] = dict()
         self.results["Kernel"]["Current"] = str(self.pkg1.version)
         self.results["Kernel"]["Installed"] = self.pkg1.version
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    def test_dict(self, mock_installed, mock_running, mock_latest):
+
+        """Function:  test_dict
+
+        Description:  Test with dictionary passed.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        status, data = package_admin.kernel_check(self.dnf, self.data)
+
+        self.assertEqual(status, self.status)
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_no_dict(self, mock_dict, mock_installed, mock_running,
+                     mock_latest):
+
+        """Function:  test_no_dict
+
+        Description:  Test with no dictionary passed.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        status, data = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(status, self.status)
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
