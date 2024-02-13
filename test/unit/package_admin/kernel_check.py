@@ -117,7 +117,7 @@ class UnitTest(unittest.TestCase):
 
         self.results = dict(self.data)
         self.results["Kernel"] = dict()
-        self.results["Kernel"]["Installed"] = self.pkg1
+        self.results["Kernel"]["Installed"] = str(self.pkg1.version)
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
@@ -155,7 +155,7 @@ class UnitTest(unittest.TestCase):
 
         mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list2
-        mock_running.return_value = self.pkg1
+        mock_running.return_value = self.pkg1.version
 
         status, data = package_admin.kernel_check(self.dnf)
 
