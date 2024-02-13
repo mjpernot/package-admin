@@ -85,6 +85,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_reboot_false4
+        test_reboot_false3
+        test_reboot_false2
+        test_reboot_false
         test_reboot_true4
         test_reboot_true3
         test_reboot_true2
@@ -148,7 +152,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(status, self.status)
+        self.assertFalse(status, self.status)
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
@@ -172,7 +176,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertTrue(data["Kernel"]["RebootRequired"])
+        self.assertFalse(data["Kernel"]["RebootRequired"])
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
@@ -196,7 +200,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(status, self.status)
+        self.assertFalse(status, self.status)
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
@@ -220,7 +224,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertTrue(data["Kernel"]["RebootRequired"])
+        self.assertFalse(data["Kernel"]["RebootRequired"])
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
