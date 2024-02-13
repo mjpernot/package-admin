@@ -446,7 +446,6 @@ def get_latest_kernel(kernel_list):
         if pkg.evr_cmp(latest) == 1:
             print('Current latest: %s, New latest: %s' % (latest, pkg))
             latest = pkg
-#            data["Kernel"]["Installed"] = str(pkg)
 
         else:
             print('Same or Older version')
@@ -487,43 +486,24 @@ def kernel_check(args, yum, data=None, **kwargs):
     data["Kernel"]["Current"] = str(running)
 
     if len(kernel_list) > 1:
-#        data["Kernel"]["Installed"] = str(kernel_list[0])
         latest = get_latest_kernel(kernel_list)
         data["Kernel"]["Installed"] = str(latest)
-##############################################################################
-### Function - Get the latest kernel version from installed kernel packages.
-#        latest = kernel_list[0]
-#        for pkg in kernel_list:
-#
-#            if pkg.evr_cmp(latest) == 1:
-#                print('Current latest: %s, New latest: %s' % (latest, pkg))
-#                latest = pkg
-#                data["Kernel"]["Installed"] = str(pkg)
-#
-#            else:
-#                print('Same or Older version')
-#                print('Current latest: %s, Older: %s' % (latest, pkg))
-### Return latest (latest installed kernel version
-##############################################################################
 
         print('Current running version %s' % running)
         print('Installed version %s' % latest)
 
-##############################################################################
-### Function - If installed version is the latest kernel installed version
         if latest.evr_cmp(running) == 1:
-            data["Kernel"]["RebootRequired"] = "Yes"
+            data["Kernel"]["RebootRequired"] = True
             print('Reboot required')
 
         elif latest.evr_cmp(running) == 0:
-            data["Kernel"]["RebootRequired"] = "No"
+            data["Kernel"]["RebootRequired"] = False
             print('No reboot required')
 
         else:
             status = (
-                False, "Error: kernel_check: Got a problem with the program")
-### Return ??? (Is this the dictionary containing the info about the kernel?
-##############################################################################
+                False,
+                "Error: kernel_check: Couldn't determine if reboot required")
 
     elif len(kernel_list) == 1:
         data["Kernel"]["Installed"] = kernel_list[0]
