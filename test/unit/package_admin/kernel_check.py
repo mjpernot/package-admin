@@ -85,6 +85,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_reboot_true2
         test_reboot_true
         test_one_kernel_found2
         test_one_kernel_found
@@ -127,6 +128,30 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
+    def test_reboot_true2(self, mock_dict, mock_installed, mock_running,
+                         mock_latest):
+
+        """Function:  test_reboot_true2
+
+        Description:  Reboot is required.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list3
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        status, data = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(status, self.status)
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
     def test_reboot_true(self, mock_dict, mock_installed, mock_running,
                          mock_latest):
 
@@ -145,7 +170,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(status, self.status)
+        self.assertTrue(data["Kernel"]["RebootRequired"])
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
