@@ -152,7 +152,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertFalse(status, self.status)
+        self.assertEqual(status, self.status)
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
@@ -200,7 +200,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertFalse(status, self.status)
+        self.assertEqual(status, self.status)
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
