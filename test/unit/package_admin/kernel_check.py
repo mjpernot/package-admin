@@ -140,8 +140,8 @@ class UnitTest(unittest.TestCase):
 
         mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list3
-        mock_running.return_value = self.pkg1.version
-        mock_latest.return_value = self.pkg2.version
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
 
         status, data = package_admin.kernel_check(self.dnf)
 
