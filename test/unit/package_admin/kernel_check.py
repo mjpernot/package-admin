@@ -54,7 +54,7 @@ class Package(object):
 
     def evr_cmp(self, running):
 
-        """Method:  evr_cmpget_install_pkgs
+        """Method:  evr_cmp
 
         Description:  Stud holder for Dnf.Package.evr_cmp method.
 
