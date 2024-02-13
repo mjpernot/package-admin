@@ -118,6 +118,7 @@ class UnitTest(unittest.TestCase):
 
         self.results = dict(self.data)
         self.results["Kernel"] = dict()
+        self.results["Kernel"]["Current"] = str(self.pkg1.version)
         self.results["Kernel"]["Installed"] = str(self.pkg1.version)
 
     @mock.patch("package_admin.get_running_kernel")
