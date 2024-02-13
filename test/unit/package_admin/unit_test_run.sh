@@ -7,6 +7,7 @@
 echo ""
 echo "Unit test:  package_admin.py"
 /usr/bin/python test/unit/package_admin/help_message.py
+/usr/bin/python test/unit/package_admin/kernel_check.py
 /usr/bin/python test/unit/package_admin/kernel_run.py
 /usr/bin/python test/unit/package_admin/process_yum.py
 /usr/bin/python test/unit/package_admin/list_upd_pkg.py
