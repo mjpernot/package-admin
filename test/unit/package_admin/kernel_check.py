@@ -114,7 +114,7 @@ class UnitTest(unittest.TestCase):
 
         self.status = (True, None)
         self.status2 = (
-            False, "Warning: kernel_run: Only available for Dnf class use")
+            False, "Note: kernel_check: Only one kernel version found")
 
         self.results = dict(self.data)
         self.results["Kernel"] = dict()
