@@ -222,7 +222,7 @@ class UnitTest(unittest.TestCase):
 
         self.assertTrue(data["Kernel"]["RebootRequired"])
 
-   @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
