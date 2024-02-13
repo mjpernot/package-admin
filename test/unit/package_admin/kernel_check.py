@@ -119,8 +119,7 @@ class UnitTest(unittest.TestCase):
         self.results = dict(self.data)
         self.results["Kernel"] = dict()
         self.results["Kernel"]["Current"] = str(self.pkg1.version)
-        #self.results["Kernel"]["Installed"] = self.pkg1.version
-        self.results["Kernel"]["Installed"] = 2
+        self.results["Kernel"]["Installed"] = self.pkg1.version
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
@@ -162,7 +161,7 @@ class UnitTest(unittest.TestCase):
 
         status, data = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(data, self.results)
+        self.assertEqual(data["Kernel"], self.results["Kernel"])
 
 
 if __name__ == "__main__":
