@@ -116,6 +116,7 @@ class UnitTest(unittest.TestCase):
             False, "Warning: kernel_run: Only available for Dnf class use")
 
         self.results = dict(self.data)
+        self.results["Kernel"] = dict()
         self.results["Kernel"]["Installed"] = self.pkg1
 
     @mock.patch("package_admin.get_running_kernel")
