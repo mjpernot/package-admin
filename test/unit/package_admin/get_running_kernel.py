@@ -36,7 +36,6 @@ class Package(object):
 
     Methods:
         __init__
-        evr
 
     """
 
@@ -51,18 +50,7 @@ class Package(object):
         """
 
         self.version = version
-
-    def evr(self):
-
-        """Method:  evr
-
-        Description:  Stud holder for Dnf.Package.evr_cmp method.
-
-        Arguments:
-
-        """
-
-        return self.version
+        self.evr = version
 
 
 class UnitTest(unittest.TestCase):

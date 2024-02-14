@@ -10,6 +10,7 @@ echo ""
 echo "Running unit test modules in conjunction with coverage"
 coverage run -a --source=package_admin test/unit/package_admin/help_message.py
 coverage run -a --source=package_admin test/unit/package_admin/get_latest_kernel.py
+coverage run -a --source=package_admin test/unit/package_admin/get_running_kernel.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_check.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_run.py
 coverage run -a --source=package_admin test/unit/package_admin/process_yum.py
