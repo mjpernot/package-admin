@@ -77,6 +77,7 @@ class Dnf(object):
 
     Methods:
         __init__
+        get_install_pkgs
 
     """
 
