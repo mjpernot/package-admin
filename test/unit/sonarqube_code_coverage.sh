@@ -9,6 +9,7 @@ coverage erase
 echo ""
 echo "Running unit test modules in conjunction with coverage"
 coverage run -a --source=package_admin test/unit/package_admin/help_message.py
+coverage run -a --source=package_admin test/unit/package_admin/get_installed_kernels.py
 coverage run -a --source=package_admin test/unit/package_admin/get_latest_kernel.py
 coverage run -a --source=package_admin test/unit/package_admin/get_running_kernel.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_check.py
