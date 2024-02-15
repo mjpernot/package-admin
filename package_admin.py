@@ -573,6 +573,24 @@ def write_file(args, data):
         gen_libs.write_file(ofile, mode, data)
 
 
+def display_data(args, data):
+
+    """Function:  display_data
+
+    Description:  Display data to terminal.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+
+    """
+
+    data = dict(data)
+
+    if not args.get_val("-z", def_val=False):
+        gen_libs.display_data(data)
+
+
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
@@ -612,6 +630,7 @@ def kernel_run(args, dnf, **kwargs):
             indent = None if args.get_val("-f", def_val=False) else 4
             data = json.dumps(data, indent=indent)
             write_file(args, data)
+            display_data(args, data)
 
 
             # Do your stuff here.

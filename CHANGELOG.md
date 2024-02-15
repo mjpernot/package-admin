@@ -18,6 +18,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - mongo_insert: Insert data into MongoDB.
 - rabbitmq_publish: Publish data to RabbitMQ.
 - write_file: Write data to a file.
+- display_data: Display data to terminal.
 
 ### Changed
 - Documentation updates.
