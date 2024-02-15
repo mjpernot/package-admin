@@ -565,7 +565,6 @@ def write_file(args, data):
 
     """
 
-    data = dict(data)
     ofile = args.get_val("-o", def_val=False)
     mode = "a" if args.get_val("-a", def_val=False) else "w"
 
@@ -647,10 +646,9 @@ def kernel_run(args, dnf, **kwargs):
 
             indent = None if args.get_val("-f", def_val=False) else 4
             data = json.dumps(data, indent=indent)
-            print(data)
-            print(type(data))
             write_file(args, data)
             display_data(args, data)
+            mail_data(args, data)
 
     else:
         status = (
