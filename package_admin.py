@@ -639,7 +639,7 @@ def kernel_run(args, dnf, **kwargs):
             status2 = rabbitmq_publish(args, data)
 
             if not status2[0] and status[0]:
-                status = (status2[0], "RabbitMQ: " + status2[1])
+                status = (status2[0], status2[1])
 
             elif not status2[0]:
                 status = (status[0], status[1] + " RabbitMQ: " + status2[1])
