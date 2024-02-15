@@ -639,7 +639,7 @@ def kernel_run(args, dnf, **kwargs):
         if status:
             status = mongo_insert(
                 args.get_val("-i", def_val=False),
-                kwargs.get("class_cfg", False))
+                kwargs.get("class_cfg", False, data))
 
             status2 = rabbitmq_publish(args, data)
 
@@ -653,11 +653,6 @@ def kernel_run(args, dnf, **kwargs):
             data = json.dumps(data, indent=indent)
             write_file(args, data)
             display_data(args, data)
-
-
-            # Do your stuff here.
-### Still need to deal with output here.
-#        print(data)
 
     else:
         status = (
