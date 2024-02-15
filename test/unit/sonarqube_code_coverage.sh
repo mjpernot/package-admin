@@ -15,6 +15,7 @@ coverage run -a --source=package_admin test/unit/package_admin/get_latest_kernel
 coverage run -a --source=package_admin test/unit/package_admin/get_running_kernel.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_check.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_run.py
+coverage run -a --source=package_admin test/unit/package_admin/mongo_insert.py
 coverage run -a --source=package_admin test/unit/package_admin/process_yum.py
 coverage run -a --source=package_admin test/unit/package_admin/list_upd_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/list_repo.py

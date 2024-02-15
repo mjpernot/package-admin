@@ -495,19 +495,46 @@ def kernel_check(dnf, data=None, **kwargs):
 
     elif len(kernel_list) == 1:
         data["Kernel"]["Installed"] = kernel_list[0]
-        status = (False, "Note: kernel_check: Only one kernel version found")
+        data["Kernel"]["RebootRequired"] = False
 
     else:
-        stauts = (False, "Warning: kernel_check: No kernel versions found")
+        stauts = (False, "Error: kernel_check: No kernel versions found")
 
     return status, data
+
+
+def mongo_insert(db_tbl, class_cfg, data):
+
+    """Function:  mongo_insert
+
+    Description:  Insert data into MongoDB.
+
+    Arguments:
+        (input) db_tbl -> Database and table name (e.g. db1:tbl1)
+        (input) class_cfg -> Mongo server configuration
+        (input) data -> Dictionary that has package data
+        (output) status -> Tuple on Mongodb insertion status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    status = (True, None)
+    data = dict(data)
+
+    if db_tbl and class_cfg:
+        dbn, tbl = db_tbl.split(":")
+        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
+
+    return status
 
 
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
 
-    Description:  Checks to see if the kernel check can be done.
+    Description:  Checks to see if the kernel check can be done and process
+        the output.
 
     Note:  This is only available for the Dnf class use.
 
@@ -524,6 +551,12 @@ def kernel_run(args, dnf, **kwargs):
 
     if sys.version_info >= (3, 0):
         status, data = kernel_check(dnf)
+
+        if status:
+            status = mongo_insert(
+                args.get_val("-i", def_val=False),
+                kwargs.get("class_cfg", False))
+            # Do your stuff here.
 ### Still need to deal with output here.
         print(data)
 
