@@ -646,7 +646,7 @@ def kernel_run(args, dnf, **kwargs):
             if not status2[0] and status[0]:
                 status = (status2[0], "RabbitMQ: " + status2[1])
 
-            elif not t_status[0]:
+            elif not status2[0]:
                 status = (status[0], status[1] + " RabbitMQ: " + status2[1])
 
             indent = None if args.get_val("-f", def_val=False) else 4
