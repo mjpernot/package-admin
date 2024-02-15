@@ -639,7 +639,7 @@ def kernel_run(args, dnf, **kwargs):
         if status:
             status = mongo_insert(
                 args.get_val("-i", def_val=False),
-                kwargs.get("class_cfg", False, data))
+                kwargs.get("class_cfg", False), data)
 
             status2 = rabbitmq_publish(args, data)
 
