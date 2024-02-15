@@ -581,11 +581,9 @@ def display_data(args, data):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) data -> Dictionary that has package data
+        (input) data -> String dictionary that has package data
 
     """
-
-    data = dict(data)
 
     if not args.get_val("-z", def_val=False):
         gen_libs.display_data(data)
@@ -599,11 +597,9 @@ def mail_data(args, data):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) data -> Dictionary that has package data
+        (input) data -> String dictionary that has package data
 
     """
-
-    data = dict(data)
 
     if args.get_val("-e", def_val=False):
         mail = gen_class.setup_mail(
