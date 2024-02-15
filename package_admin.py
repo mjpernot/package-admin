@@ -649,10 +649,10 @@ def kernel_run(args, dnf, **kwargs):
             elif not status2[0]:
                 status = (status[0], status[1] + " RabbitMQ: " + status2[1])
 
-            print(data)
-            sys.exit()
             indent = None if args.get_val("-f", def_val=False) else 4
             data = json.dumps(data, indent=indent)
+            print(data)
+            print(type(data))
             write_file(args, data)
             display_data(args, data)
 
