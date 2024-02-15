@@ -204,7 +204,7 @@ class UnitTest(unittest.TestCase):
         mock_chk.return_value = self.status2, self.data
 
         self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.results)
+            package_admin.kernel_run(self.args, self.dnf), self.results2)
 
     @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
@@ -250,7 +250,7 @@ class UnitTest(unittest.TestCase):
         mock_chk.return_value = self.status2, self.data
 
         self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.results)
+            package_admin.kernel_run(self.args, self.dnf), self.results2)
 
     @mock.patch("package_admin.kernel_check")
     def test_kernel_failure(self, mock_chk):
