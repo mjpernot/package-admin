@@ -631,9 +631,7 @@ def kernel_run(args, dnf, **kwargs):
     if sys.version_info >= (3, 0):
         status, data = kernel_check(dnf)
 
-        print(status)
-        if status:
-            print('HERE')
+        if status[0]:
             status = mongo_insert(
                 args.get_val("-i", def_val=False),
                 kwargs.get("class_cfg", False), data)
