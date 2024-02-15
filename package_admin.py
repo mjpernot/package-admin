@@ -16,6 +16,9 @@
                  [-o dir_path/file [-a]] [-r -b file -d path] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
+                 [-o dir_path/file [-a]] [-r -b file -d path] |
+             -K [-f] [-z] [-i db_name:table_name -c file -d path]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
 
@@ -55,6 +58,24 @@
         -R => List current repositories.
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
+            -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
+
+        -K => Kernel check to see current and installed versions match.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
+            -i { database:collection } => Name of database and collection to
+                    insert into Mongo database.  Default:  sysmon:server_pkgs
+                -c file => Mongo server configuration file.
+                -d dir path => Directory path to config file (-c).
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
