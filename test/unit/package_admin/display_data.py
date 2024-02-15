@@ -76,6 +76,7 @@ class UnitTest(unittest.TestCase):
         setUp
         test_display_data
         test_suppress_data
+        test_default
 
     """
 

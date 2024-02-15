@@ -591,6 +591,28 @@ def display_data(args, data):
         gen_libs.display_data(data)
 
 
+def mail_data(args, data):
+
+    """Function:  mail_data
+
+    Description:  Email data out.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+
+    """
+
+    data = dict(data)
+
+    if args.get_val("-e", def_val=False):
+        mail = gen_class.setup_mail(
+            args.get_val("-e"), subj=args.get_val("-s", def_val=None))
+        mail.add_2_msg(data)
+        use_mailx = args.get_val("-u", def_val=False)
+        mail.send_mail(use_mailx=use_mailx)
+
+
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check

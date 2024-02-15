@@ -21,6 +21,7 @@ echo "Unit test:  package_admin.py"
 /usr/bin/python3 ./test/unit/package_admin/list_repo.py
 /usr/bin/python3 ./test/unit/package_admin/rabbitmq_publish.py
 /usr/bin/python3 ./test/unit/package_admin/run_program.py
+/usr/bin/python3 ./test/unit/package_admin/mail_data.py
 /usr/bin/python3 ./test/unit/package_admin/main.py
 /usr/bin/python3 ./test/unit/package_admin/write_file.py
 

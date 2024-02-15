@@ -19,6 +19,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - rabbitmq_publish: Publish data to RabbitMQ.
 - write_file: Write data to a file.
 - display_data: Display data to terminal.
+- mail_data: Email data out.
 
 ### Changed
 - Documentation updates.

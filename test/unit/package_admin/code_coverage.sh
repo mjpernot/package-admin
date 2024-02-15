@@ -19,6 +19,7 @@ coverage run -a --source=package_admin test/unit/package_admin/kernel_run.py
 coverage run -a --source=package_admin test/unit/package_admin/list_ins_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/list_upd_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/list_repo.py
+coverage run -a --source=package_admin test/unit/package_admin/mail_data.py
 coverage run -a --source=package_admin test/unit/package_admin/main.py
 coverage run -a --source=package_admin test/unit/package_admin/mongo_insert.py
 coverage run -a --source=package_admin test/unit/package_admin/process_yum.py
