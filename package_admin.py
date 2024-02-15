@@ -631,6 +631,7 @@ def kernel_run(args, dnf, **kwargs):
     if sys.version_info >= (3, 0):
         status, data = kernel_check(dnf)
 
+        print(status)
         if status:
             status = mongo_insert(
                 args.get_val("-i", def_val=False),
@@ -642,7 +643,9 @@ def kernel_run(args, dnf, **kwargs):
                 status = (status2[0], status2[1])
 
             elif not status2[0]:
-                status = (status[0], status[1] + " RabbitMQ: " + status2[1])
+                status = (
+                    status[0],
+                    "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
 
             indent = None if args.get_val("-f", def_val=False) else 4
             data = json.dumps(data, indent=indent)
