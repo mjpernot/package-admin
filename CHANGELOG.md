@@ -17,6 +17,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - create_template_dict: Set up dictionary with server-level details.
 - mongo_insert: Insert data into MongoDB.
 - rabbitmq_publish: Publish data to RabbitMQ.
+- write_file: Write data to a file.
 
 ### Changed
 - Documentation updates.

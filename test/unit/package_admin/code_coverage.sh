@@ -15,14 +15,15 @@ coverage run -a --source=package_admin test/unit/package_admin/get_latest_kernel
 coverage run -a --source=package_admin test/unit/package_admin/get_running_kernel.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_check.py
 coverage run -a --source=package_admin test/unit/package_admin/kernel_run.py
+coverage run -a --source=package_admin test/unit/package_admin/list_ins_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/list_upd_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/list_repo.py
-coverage run -a --source=package_admin test/unit/package_admin/list_ins_pkg.py
 coverage run -a --source=package_admin test/unit/package_admin/main.py
 coverage run -a --source=package_admin test/unit/package_admin/mongo_insert.py
 coverage run -a --source=package_admin test/unit/package_admin/process_yum.py
 coverage run -a --source=package_admin test/unit/package_admin/rabbitmq_publish.py
 coverage run -a --source=package_admin test/unit/package_admin/run_program.py
+coverage run -a --source=package_admin test/unit/package_admin/write_file.py
 
 echo ""
 echo "Producing code coverage report"

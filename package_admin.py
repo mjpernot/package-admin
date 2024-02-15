@@ -553,6 +553,26 @@ def rabbitmq_publish(args, data):
 
     return status
 
+def write_file(args, data):
+
+    """Function:  write_file
+
+    Description:  Write data to a file.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+
+    """
+
+    data = dict(data)
+    ofile = args.get_val("-o", def_val=False)
+    mode = "a" if args.get_val("-a", def_val=False) else "w"
+
+    if ofile:
+        gen_libs.write_file(ofile, mode, data)
+
+
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
@@ -589,9 +609,14 @@ def kernel_run(args, dnf, **kwargs):
             elif not t_status[0]:
                 status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
 
+            indent = None if args.get_val("-f", def_val=False) else 4
+            data = json.dumps(data, indent=indent)
+            write_file(args, data)
+
+
             # Do your stuff here.
 ### Still need to deal with output here.
-        print(data)
+#        print(data)
 
     else:
         status = (
