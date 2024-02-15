@@ -647,7 +647,7 @@ def kernel_run(args, dnf, **kwargs):
                 status = (status2[0], "RabbitMQ: " + status2[1])
 
             elif not t_status[0]:
-                status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
+                status = (status[0], status[1] + " RabbitMQ: " + status2[1])
 
             indent = None if args.get_val("-f", def_val=False) else 4
             data = json.dumps(data, indent=indent)
