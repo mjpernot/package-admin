@@ -38,6 +38,7 @@ class ArgParser(object):
 
     Methods:
         __init__
+        get_val
 
     """
 
@@ -53,6 +54,18 @@ class ArgParser(object):
 
         self.cmdline = None
         self.args_array = {"-i": "Database_Name:Table_Name"}
+
+    def get_val(self, skey, def_val=None):
+
+        """Method:  get_val
+
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
+
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
 
 
 class Dnf(object):
