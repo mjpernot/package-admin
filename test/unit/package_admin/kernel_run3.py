@@ -135,7 +135,8 @@ class UnitTest(unittest.TestCase):
         self.results2 = (True, None)
         self.results3 = (False, "Mongo_Message")
         self.results4 = (False, "Rabbit_Message")
-        self.results5 = (False, "Mongo_Message RabbitMQ: Rabbit_Message")
+        self.results5 = (
+            False, "MongoDB: Mongo_Message RabbitMQ: Rabbit_Message")
 
     @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
@@ -305,7 +306,7 @@ class UnitTest(unittest.TestCase):
         mock_chk.return_value = self.status, dict()
 
         self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.results2)
+            package_admin.kernel_run(self.args, self.dnf), self.results)
 
 
 if __name__ == "__main__":
