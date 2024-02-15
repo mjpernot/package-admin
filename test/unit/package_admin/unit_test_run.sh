@@ -18,6 +18,7 @@ echo "Unit test:  package_admin.py"
 /usr/bin/python test/unit/package_admin/list_upd_pkg.py
 /usr/bin/python test/unit/package_admin/list_ins_pkg.py
 /usr/bin/python test/unit/package_admin/list_repo.py
+/usr/bin/python test/unit/package_admin/rabbitmq_publish.py
 /usr/bin/python test/unit/package_admin/run_program.py
 /usr/bin/python test/unit/package_admin/main.py
 

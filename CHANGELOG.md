@@ -16,6 +16,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - get_installed_kernels: Return the installed kernel versions on the server.
 - create_template_dict: Set up dictionary with server-level details.
 - mongo_insert: Insert data into MongoDB.
+- rabbitmq_publish: Publish data to RabbitMQ.
 
 ### Changed
 - Documentation updates.

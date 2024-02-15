@@ -529,6 +529,30 @@ def mongo_insert(db_tbl, class_cfg, data):
     return status
 
 
+def rabbitmq_publish(args, data):
+
+    """Function:  rabbitmq_publish
+
+    Description:  Insert data into MongoDB.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+        (output) status -> Tuple on RabbitMQ publication status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    status = (True, None)
+    data = dict(data)
+
+    if args.get_val("-r", def_val=False):
+        cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
+        status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
+
+    return status
+
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
@@ -544,7 +568,7 @@ def kernel_run(args, dnf, **kwargs):
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
-            status[0] - True|False - successful operation
+            status[0] - True|False - Successful operation
             status[1] - Error message 
 
     """
@@ -556,6 +580,15 @@ def kernel_run(args, dnf, **kwargs):
             status = mongo_insert(
                 args.get_val("-i", def_val=False),
                 kwargs.get("class_cfg", False))
+
+            status2 = rabbitmq_publish(args, data)
+
+            if not status2[0] and status[0]:
+                status = (status2[0], "RabbitMQ: " + status2[1])
+
+            elif not t_status[0]:
+                status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
+
             # Do your stuff here.
 ### Still need to deal with output here.
         print(data)
