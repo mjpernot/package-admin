@@ -23,6 +23,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - output_run: Directs where the data output will go.
 
 ### Changed
+- list_upd_pkg: Refactored the function to use the new functions added instead of process_yum.
 - Documentation updates.
 
 

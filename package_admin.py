@@ -40,6 +40,7 @@
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
+            -k => Include a kernel check with this option.
             -i { database:collection } => Name of database and collection to
                     insert into Mongo database.  Default:  sysmon:server_pkgs
                 -c file => Mongo server configuration file.
@@ -322,10 +323,18 @@ def list_upd_pkg(args, dnf, **kwargs):
 
     """
 
-    status = (True, None)
     data = dict(data) if data else create_template_dict(dnf)
     data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
+    if args.get_val("-k", def_val=False):
+        status, data = kernel_check(dnf, data)
+
+        if status[0]:
+            status = output_run(args, data, **kwargs)
+    else:
+        status = output_run(args, data, **kwargs)
+
+### STOPPED HERE - setting up unit testing.  Integration and Blackbox testing??
 #    status = process_yum(
 #        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
 #
@@ -698,25 +707,6 @@ def kernel_run(args, dnf, **kwargs):
 
         if status[0]:
             status = output_run(args, data, **kwargs)
-#            status = mongo_insert(
-#                args.get_val("-i", def_val=False),
-#                kwargs.get("class_cfg", False), data)
-#
-#            status2 = rabbitmq_publish(args, data)
-#
-#            if not status2[0] and status[0]:
-#                status = (status2[0], status2[1])
-#
-#            elif not status2[0]:
-#                status = (
-#                    status[0],
-#                    "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
-#
-#            indent = None if args.get_val("-f", def_val=False) else 4
-#            data = json.dumps(data, indent=indent)
-#            write_file(args, data)
-#            display_data(args, data)
-#            mail_data(args, data)
 
     else:
         status = (

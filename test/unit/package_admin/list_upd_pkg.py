@@ -101,8 +101,6 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_mongo_failure
-        test_mongo_successful
         test_list_upd_pkg
 
     """
@@ -119,43 +117,13 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.func_names = self.yum.fetch_update_pkgs
+        self.data = {"Server": "ServerName"}
+
         self.status = (True, None)
         self.status2 = (False, "Error Message")
-        self.results = (False, "list_upd_pkg: Error Message")
+        self.results = (True, None)
 
-    @mock.patch("package_admin.process_yum")
-    def test_mongo_failure(self, mock_yum):
-
-        """Function:  test_mongo_failure
-
-        Description:  Test with failed Mongo connection.
-
-        Arguments:
-
-        """
-
-        mock_yum.return_value = self.status2
-
-        self.assertEqual(
-            package_admin.list_upd_pkg(self.args, self.yum), self.results)
-
-    @mock.patch("package_admin.process_yum")
-    def test_mongo_successful(self, mock_yum):
-
-        """Function:  test_mongo_successful
-
-        Description:  Test with successful Mongo connection.
-
-        Arguments:
-
-        """
-
-        mock_yum.return_value = self.status
-
-        self.assertEqual(
-            package_admin.list_upd_pkg(self.args, self.yum), self.status)
-
+### STOPPED HERE
     @mock.patch("package_admin.process_yum")
     def test_list_upd_pkg(self, mock_yum):
 
@@ -170,7 +138,7 @@ class UnitTest(unittest.TestCase):
         mock_yum.return_value = self.status
 
         self.assertEqual(
-            package_admin.list_upd_pkg(self.args, self.yum), self.status)
+            package_admin.list_upd_pkg(self.args, self.yum), self.results)
 
 
 if __name__ == "__main__":
