@@ -15,6 +15,7 @@ echo "Unit test:  package_admin.py"
 /usr/bin/python3 ./test/unit/package_admin/kernel_check.py
 /usr/bin/python3 ./test/unit/package_admin/kernel_run3.py
 /usr/bin/python3 ./test/unit/package_admin/mongo_insert.py
+/usr/bin/python3 ./test/unit/package_admin/output_run.py
 /usr/bin/python3 ./test/unit/package_admin/process_yum.py
 /usr/bin/python3 ./test/unit/package_admin/list_upd_pkg.py
 /usr/bin/python3 ./test/unit/package_admin/list_ins_pkg.py

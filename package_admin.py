@@ -305,7 +305,7 @@ def process_yum(args, yum, dict_key, func_name, **kwargs):
     return status
 
 
-def list_upd_pkg(args, yum, **kwargs):
+def list_upd_pkg(args, dnf, **kwargs):
 
     """Function:  list_upd_pkg
 
@@ -313,7 +313,7 @@ def list_upd_pkg(args, yum, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Yum/Dnf class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
@@ -322,11 +322,15 @@ def list_upd_pkg(args, yum, **kwargs):
 
     """
 
-    status = process_yum(
-        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+    status = (True, None)
+    data = dict(data) if data else create_template_dict(dnf)
+    data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
-    if not status[0]:
-        status = (status[0], "list_upd_pkg: " + status[1])
+#    status = process_yum(
+#        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+#
+#    if not status[0]:
+#        status = (status[0], "list_upd_pkg: " + status[1])
 
     return status
 
@@ -629,6 +633,46 @@ def mail_data(args, data):
         mail.send_mail(use_mailx=use_mailx)
 
 
+def output_run(args, data, **kwargs):
+
+    """Function:  output_run
+
+    Description:  Directs where the data output will go.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - Successful operation
+            status[1] - Error message 
+
+    """
+
+    status = mongo_insert(
+        args.get_val("-i", def_val=False),
+        kwargs.get("class_cfg", False), data)
+
+    status2 = rabbitmq_publish(args, data)
+
+    if not status2[0] and status[0]:
+        status = (status2[0], status2[1])
+
+    elif not status2[0]:
+        status = (
+            status[0],
+            "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
+
+    indent = None if args.get_val("-f", def_val=False) else 4
+    data = json.dumps(data, indent=indent)
+    write_file(args, data)
+    display_data(args, data)
+    mail_data(args, data)
+
+    return status
+
+
 def kernel_run(args, dnf, **kwargs):
 
     """Function:  kernel_check
@@ -653,25 +697,26 @@ def kernel_run(args, dnf, **kwargs):
         status, data = kernel_check(dnf)
 
         if status[0]:
-            status = mongo_insert(
-                args.get_val("-i", def_val=False),
-                kwargs.get("class_cfg", False), data)
-
-            status2 = rabbitmq_publish(args, data)
-
-            if not status2[0] and status[0]:
-                status = (status2[0], status2[1])
-
-            elif not status2[0]:
-                status = (
-                    status[0],
-                    "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
-
-            indent = None if args.get_val("-f", def_val=False) else 4
-            data = json.dumps(data, indent=indent)
-            write_file(args, data)
-            display_data(args, data)
-            mail_data(args, data)
+            status = output_run(args, data, **kwargs)
+#            status = mongo_insert(
+#                args.get_val("-i", def_val=False),
+#                kwargs.get("class_cfg", False), data)
+#
+#            status2 = rabbitmq_publish(args, data)
+#
+#            if not status2[0] and status[0]:
+#                status = (status2[0], status2[1])
+#
+#            elif not status2[0]:
+#                status = (
+#                    status[0],
+#                    "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
+#
+#            indent = None if args.get_val("-f", def_val=False) else 4
+#            data = json.dumps(data, indent=indent)
+#            write_file(args, data)
+#            display_data(args, data)
+#            mail_data(args, data)
 
     else:
         status = (

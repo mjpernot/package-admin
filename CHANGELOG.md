@@ -20,6 +20,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - write_file: Write data to a file.
 - display_data: Display data to terminal.
 - mail_data: Email data out.
+- output_run: Directs where the data output will go.
 
 ### Changed
 - Documentation updates.
