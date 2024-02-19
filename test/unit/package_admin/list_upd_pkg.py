@@ -37,7 +37,6 @@ class ArgParser(object):
     Methods:
         __init__
         get_val
-        get_args_keys
 
     """
 
@@ -54,12 +53,24 @@ class ArgParser(object):
         self.cmdline = None
         self.args_array = {"-i": "Database_Name:Table_Name"}
 
+    def get_val(self, skey, def_val=None):
 
-class Yum(object):
+        """Method:  get_val
 
-    """Class:  Yum
+        Description:  Method stub holder for gen_class.ArgParser.get_val.
 
-    Description:  Class which is a representation of the Yum class.
+        Arguments:
+
+        """
+
+        return self.args_array.get(skey, def_val)
+
+
+class Dnf(object):
+
+    """Class:  Dnf
+
+    Description:  Class which is a representation of the Dnf class.
 
     Methods:
         __init__
@@ -71,7 +82,7 @@ class Yum(object):
 
         """Method:  __init__
 
-        Description:  Initialization instance of the Yum class.
+        Description:  Initialization instance of the Dnf class.
 
         Arguments:
 
@@ -101,7 +112,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_list_upd_pkg
+        test_k_kernel_success
+        test_k_kernel_failure
+        test_dict_no_k
+        test_template_no_k
 
     """
 
@@ -115,30 +129,91 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.yum = Yum()
+        self.dnf = Dnf()
         self.args = ArgParser()
         self.data = {"Server": "ServerName"}
 
         self.status = (True, None)
         self.status2 = (False, "Error Message")
         self.results = (True, None)
+        self.results2 = (False, "Error Message")
 
-### STOPPED HERE
-    @mock.patch("package_admin.process_yum")
-    def test_list_upd_pkg(self, mock_yum):
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    @mock.patch("package_admin.create_template_dict")
+    def test_k_kernel_success(self, mock_dict, mock_kernel, mock_run):
 
-        """Function:  test_list_upd_pkg
+        """Function:  test_k_kernel_success
 
-        Description:  Test call to test_list_upd_pkg function.
+        Description:  Test with -k option, but with kernel check success.
 
         Arguments:
 
         """
 
-        mock_yum.return_value = self.status
+        self.args.args_array = {"-i": "Database_Name:Table_Name",  "-k": True}
+
+        mock_dict.return_value = self.data
+        mock_kernel.return_value = (self.status, self.data)
+        mock_run.return_value = self.status
 
         self.assertEqual(
-            package_admin.list_upd_pkg(self.args, self.yum), self.results)
+            package_admin.list_upd_pkg(self.args, self.dnf), self.results)
+
+    @mock.patch("package_admin.kernel_check")
+    @mock.patch("package_admin.create_template_dict")
+    def test_k_kernel_failure(self, mock_dict, mock_kernel):
+
+        """Function:  test_k_kernel_failure
+
+        Description:  Test with -k option, but with kernel check failure.
+
+        Arguments:
+
+        """
+
+        self.args.args_array = {"-i": "Database_Name:Table_Name",  "-k": True}
+
+        mock_dict.return_value = self.data
+        mock_kernel.return_value = (self.status2, self.data)
+
+        self.assertEqual(
+            package_admin.list_upd_pkg(self.args, self.dnf), self.results2)
+
+    @mock.patch("package_admin.output_run")
+    def test_dict_no_k(self, mock_run):
+
+        """Function:  test_dict_no_k
+
+        Description:  Test with passed dictionary and no -k option.
+
+        Arguments:
+
+        """
+
+        mock_run.return_value = self.status
+
+        self.assertEqual(
+            package_admin.list_upd_pkg(
+                self.args, self.dnf, data=self.data), self.results)
+
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.create_template_dict")
+    def test_template_no_k(self, mock_dict, mock_run):
+
+        """Function:  test_template_no_k
+
+        Description:  Test with template dictionary and no -k option.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data
+        mock_run.return_value = self.status
+
+        self.assertEqual(
+            package_admin.list_upd_pkg(self.args, self.dnf), self.results)
 
 
 if __name__ == "__main__":

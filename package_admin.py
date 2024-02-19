@@ -316,6 +316,7 @@ def list_upd_pkg(args, dnf, **kwargs):
         (input) args -> ArgParser class instance
         (input) dnf -> Yum/Dnf class instance
         (input) **kwargs:
+            data -> Dictionary containing server details
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
             status[0] - True|False - Mongo connection successful
@@ -323,7 +324,8 @@ def list_upd_pkg(args, dnf, **kwargs):
 
     """
 
-    data = dict(data) if data else create_template_dict(dnf)
+    data = dict(kwargs.get("data")) \
+           if kwargs.get("data", None) else create_template_dict(dnf)
     data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
     if args.get_val("-k", def_val=False):
