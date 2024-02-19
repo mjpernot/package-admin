@@ -88,15 +88,17 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        list1 = ["python-1.1", "kernel-core-7.8"]
-        list2 = ["python-1.1", "kernel-core-7.8", "kernel-core-7.7"]
-        list3 = ["python-1.1"]
+        data = "python-1.1"
+        data2 = "kernel-core-7.8"
+        list1 = [data, data2]
+        list2 = [data, data2, "kernel-core-7.7"]
+        list3 = [data]
         self.pkgs1 = Package(list1)
         self.pkgs2 = Package(list2)
         self.pkgs3 = Package(list3)
 
-        self.results1 = ["kernel-core-7.8"]
-        self.results2 = ["kernel-core-7.8", "kernel-core-7.7"]
+        self.results1 = [data2]
+        self.results2 = [data2, "kernel-core-7.7"]
         self.results3 = list()
 
     def test_no_kernel(self):
