@@ -336,13 +336,6 @@ def list_upd_pkg(args, dnf, **kwargs):
     else:
         status = output_run(args, data, **kwargs)
 
-### STOPPED HERE - setting up unit testing.  Integration and Blackbox testing??
-#    status = process_yum(
-#        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
-#
-#    if not status[0]:
-#        status = (status[0], "list_upd_pkg: " + status[1])
-
     return status
 
 

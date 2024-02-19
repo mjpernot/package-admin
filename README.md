@@ -182,7 +182,6 @@ test/unit/package_admin/unit_test_run.sh
 ### Code coverage:
 
 ```
-cd {Python_Project}/package-admin
 test/unit/package_admin/code_coverage.sh
 ```
 
@@ -199,23 +198,21 @@ Configure the project using the procedures in the Configuration section.
   * Exception:  The location of the configuration file will be different, see below.
 
 ```
-cd test/integration/package_admin/config
-cp ../../../../config/mongo.py.TEMPLATE mongo.py
-vim mongo.py
-chmod 600 mongo.py
+cd {Python_Project}/package-admin
+cp config/mongo.py.TEMPLATE test/integration/package_admin/config
+vim test/integration/package_admin/config/mongo.py
+chmod 600 test/integration/package_admin/config/mongo.py
 ```
 
 ### Testing:
 
 ```
-cd {Python_Project}/package_admin
 test/integration/package_admin/integration_test_run.sh
 ```
 
 ### Code coverage:
 
 ```
-cd {Python_Project}/package_admin
 test/integration/package_admin/code_coverage.sh
 ```
 
@@ -232,16 +229,15 @@ Configure the project using the procedures in the Configuration section.
   * Exception:  The location of the configuration file will be different, see below.
 
 ```
-cd test/blackbox/package_admin/config
-cp ../../../../config/mongo.py.TEMPLATE mongo.py
-vim mongo.py
-chmod 600 mongo.py
+cd {Python_Project}/package-admin
+cp config/mongo.py.TEMPLATE test/integration/package_admin/config
+vim test/blackbox/package_admin/config/mongo.py
+chmod 600 test/blackbox/package_admin/config/mongo.py
 ```
 
 ### Testing:
 
 ```
-cd {Python_Project}/package_admin
 test/blackbox/package_admin/blackbox_test.sh
 ```
 
