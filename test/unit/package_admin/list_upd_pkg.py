@@ -151,7 +151,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = {"-i": "Database_Name:Table_Name",  "-k": True}
+        self.args.args_array = {"-i": "Database_Name:Table_Name", "-k": True}
 
         mock_dict.return_value = self.data
         mock_kernel.return_value = (self.status, self.data)
@@ -172,7 +172,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.args.args_array = {"-i": "Database_Name:Table_Name",  "-k": True}
+        self.args.args_array = {"-i": "Database_Name:Table_Name", "-k": True}
 
         mock_dict.return_value = self.data
         mock_kernel.return_value = (self.status2, self.data)

@@ -39,7 +39,7 @@ class Package(object):
 
     """
 
-    def __init__(self, version):
+    def __init__(self, kversion):
 
         """Method:  __init__
 
@@ -49,7 +49,7 @@ class Package(object):
 
         """
 
-        self.version = version
+        self.kversion = kversion
 
     def evr_cmp(self, running):
 
@@ -61,11 +61,10 @@ class Package(object):
 
         """
 
-        if self.version > running.version:
+        if self.kversion > running.kversion:
             return 1
 
-        else:
-            return 0
+        return 0
 
 
 class UnitTest(unittest.TestCase):

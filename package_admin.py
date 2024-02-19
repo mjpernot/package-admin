@@ -325,7 +325,7 @@ def list_upd_pkg(args, dnf, **kwargs):
     """
 
     data = dict(kwargs.get("data")) \
-           if kwargs.get("data", None) else create_template_dict(dnf)
+        if kwargs.get("data", None) else create_template_dict(dnf)
     data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
     if args.get_val("-k", def_val=False):
@@ -423,12 +423,12 @@ def get_installed_kernels(pkgs_installed):
 
     """
 
-    KERNEL_NAME = "kernel-core"
+    kernel_name = "kernel-core"
     kernel_list = list()
 
     for pkg in pkgs_installed.run():
 
-        if KERNEL_NAME in str(pkg):
+        if kernel_name in str(pkg):
             kernel_list.append(pkg)
 
     return kernel_list
@@ -477,8 +477,7 @@ def get_latest_kernel(kernel_list):
     return latest
 
 
-
-def kernel_check(dnf, data=None, **kwargs):
+def kernel_check(dnf, data=None):
 
     """Function:  kernel_check
 
@@ -527,7 +526,7 @@ def kernel_check(dnf, data=None, **kwargs):
         data["Kernel"]["RebootRequired"] = False
 
     else:
-        stauts = (False, "Error: kernel_check: No kernel versions found")
+        status = (False, "Error: kernel_check: No kernel versions found")
 
     return status, data
 
@@ -581,6 +580,7 @@ def rabbitmq_publish(args, data):
         status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
 
     return status
+
 
 def write_file(args, data):
 
@@ -650,7 +650,7 @@ def output_run(args, data, **kwargs):
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - Successful operation
-            status[1] - Error message 
+            status[1] - Error message
 
     """
 
@@ -693,7 +693,7 @@ def kernel_run(args, dnf, **kwargs):
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - Successful operation
-            status[1] - Error message 
+            status[1] - Error message
 
     """
 

@@ -40,7 +40,7 @@ class Package(object):
 
     """
 
-    def __init__(self, version):
+    def __init__(self, kversion):
 
         """Method:  __init__
 
@@ -50,7 +50,7 @@ class Package(object):
 
         """
 
-        self.version = version
+        self.kversion = kversion
 
     def evr_cmp(self, running):
 
@@ -62,11 +62,10 @@ class Package(object):
 
         """
 
-        if self.version > running.version:
+        if self.kversion > running.kversion:
             return 1
 
-        else:
-            return 0
+        return 0
 
 
 class Dnf(object):
@@ -149,18 +148,16 @@ class UnitTest(unittest.TestCase):
         self.pkg2 = Package(2)
         self.pkg3 = Package(3)
         self.kernel_list = [
-            self.pkg1.version, self.pkg2.version, self.pkg3.version]
-        self.kernel_list2 = [self.pkg1.version]
-        self.kernel_list3 = [self.pkg1.version, self.pkg2.version]
+            self.pkg1.kversion, self.pkg2.kversion, self.pkg3.kversion]
+        self.kernel_list2 = [self.pkg1.kversion]
+        self.kernel_list3 = [self.pkg1.kversion, self.pkg2.kversion]
 
         self.status = (True, None)
-        self.status2 = (
-            False, "Note: kernel_check: Only one kernel version found")
 
         self.results = dict(self.data)
         self.results["Kernel"] = dict()
-        self.results["Kernel"]["Current"] = str(self.pkg1.version)
-        self.results["Kernel"]["Installed"] = self.pkg1.version
+        self.results["Kernel"]["Current"] = str(self.pkg1.kversion)
+        self.results["Kernel"]["Installed"] = self.pkg1.kversion
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
@@ -179,7 +176,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf, self.data)
+        status, _ = package_admin.kernel_check(self.dnf, self.data)
 
         self.assertEqual(status, self.status)
 
@@ -203,7 +200,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(status, self.status)
 
@@ -227,7 +224,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg3
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(status, self.status)
 
@@ -251,7 +248,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg3
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        _, data = package_admin.kernel_check(self.dnf)
 
         self.assertFalse(data["Kernel"]["RebootRequired"])
 
@@ -275,7 +272,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg3
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(status, self.status)
 
@@ -299,7 +296,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg3
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        _, data = package_admin.kernel_check(self.dnf)
 
         self.assertFalse(data["Kernel"]["RebootRequired"])
 
@@ -308,7 +305,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
     def test_reboot_true4(self, mock_dict, mock_installed, mock_running,
-                         mock_latest):
+                          mock_latest):
 
         """Function:  test_reboot_true4
 
@@ -323,7 +320,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(status, self.status)
 
@@ -332,7 +329,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
     def test_reboot_true3(self, mock_dict, mock_installed, mock_running,
-                         mock_latest):
+                          mock_latest):
 
         """Function:  test_reboot_true3
 
@@ -347,7 +344,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        _, data = package_admin.kernel_check(self.dnf)
 
         self.assertTrue(data["Kernel"]["RebootRequired"])
 
@@ -356,7 +353,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
     def test_reboot_true2(self, mock_dict, mock_installed, mock_running,
-                         mock_latest):
+                          mock_latest):
 
         """Function:  test_reboot_true2
 
@@ -371,7 +368,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(status, self.status)
 
@@ -395,7 +392,7 @@ class UnitTest(unittest.TestCase):
         mock_running.return_value = self.pkg1
         mock_latest.return_value = self.pkg2
 
-        status, data = package_admin.kernel_check(self.dnf)
+        _, data = package_admin.kernel_check(self.dnf)
 
         self.assertTrue(data["Kernel"]["RebootRequired"])
 
@@ -414,11 +411,11 @@ class UnitTest(unittest.TestCase):
 
         mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list2
-        mock_running.return_value = self.pkg1.version
+        mock_running.return_value = self.pkg1.kversion
 
-        status, data = package_admin.kernel_check(self.dnf)
+        status, _ = package_admin.kernel_check(self.dnf)
 
-        self.assertEqual(status, self.status2)
+        self.assertEqual(status, self.status)
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
@@ -433,11 +430,13 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        self.results["Kernel"]["RebootRequired"] = False
+
         mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list2
-        mock_running.return_value = self.pkg1.version
+        mock_running.return_value = self.pkg1.kversion
 
-        status, data = package_admin.kernel_check(self.dnf)
+        _, data = package_admin.kernel_check(self.dnf)
 
         self.assertEqual(data["Kernel"], self.results["Kernel"])
 
