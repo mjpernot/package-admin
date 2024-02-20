@@ -16,6 +16,9 @@
                  [-o dir_path/file [-a]] [-r -b file -d path] |
              -U [-f] [-z] [-i db_name:table_name -c file -d path]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
+                 [-o dir_path/file [-a]] [-r -b file -d path] |
+             -K [-f] [-z] [-i db_name:table_name -c file -d path]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
 
@@ -37,6 +40,7 @@
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
+            -k => Include a kernel check with this option.
             -i { database:collection } => Name of database and collection to
                     insert into Mongo database.  Default:  sysmon:server_pkgs
                 -c file => Mongo server configuration file.
@@ -55,6 +59,24 @@
         -R => List current repositories.
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
+            -e to_email_address(es) => Sends output to one or more email
+                    addresses.  Email addresses are space delimited.
+                -s subject_line => Subject line of email.Will create own
+                    subject line if one is not provided.
+                -u => Override the default mail command and use mailx.
+            -o path/file => Directory path and file name for output.
+                -a => Append output to output file.
+            -r => Publish entry to RabbitMQ.
+                -b file => RabbitMQ configuration file.
+                -d dir path => Directory path to config file (-b).
+
+        -K => Kernel check to see current and installed versions match.
+            -f => Flatten the JSON data structure.
+            -z => Suppress standard out.
+            -i { database:collection } => Name of database and collection to
+                    insert into Mongo database.  Default:  sysmon:server_pkgs
+                -c file => Mongo server configuration file.
+                -d dir path => Directory path to config file (-c).
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
@@ -182,6 +204,7 @@ from __future__ import print_function
 import sys
 import datetime
 import json
+import platform
 
 # Local
 try:
@@ -283,7 +306,7 @@ def process_yum(args, yum, dict_key, func_name, **kwargs):
     return status
 
 
-def list_upd_pkg(args, yum, **kwargs):
+def list_upd_pkg(args, dnf, **kwargs):
 
     """Function:  list_upd_pkg
 
@@ -291,8 +314,9 @@ def list_upd_pkg(args, yum, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Yum/Dnf class instance
         (input) **kwargs:
+            data -> Dictionary containing server details
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
             status[0] - True|False - Mongo connection successful
@@ -300,11 +324,17 @@ def list_upd_pkg(args, yum, **kwargs):
 
     """
 
-    status = process_yum(
-        args, yum, "UpdatePackages", yum.fetch_update_pkgs, **kwargs)
+    data = dict(kwargs.get("data")) \
+        if kwargs.get("data", None) else create_template_dict(dnf)
+    data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
-    if not status[0]:
-        status = (status[0], "list_upd_pkg: " + status[1])
+    if args.get_val("-k", def_val=False):
+        status, data = kernel_check(dnf, data)
+
+        if status[0]:
+            status = output_run(args, data, **kwargs)
+    else:
+        status = output_run(args, data, **kwargs)
 
     return status
 
@@ -356,6 +386,326 @@ def list_repo(args, yum, **kwargs):
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
+
+    return status
+
+
+def create_template_dict(dnf):
+
+    """Function:  create_template_dict
+
+    Description:  Set up dictionary with server-level details.
+
+    Arguments:
+        (input) dnf -> Dnf class instance
+        (output) data -> Dictionary containing server details
+
+    """
+
+    os_distro = dnf.get_distro()
+    data = {"Server": dnf.get_hostname(),
+            "OsRelease": os_distro[0] + " " + os_distro[1],
+            "AsOf": datetime.datetime.strftime(
+                datetime.datetime.now(), "%Y-%m-%d %H:%M:%S")}
+
+    return data
+
+
+def get_installed_kernels(pkgs_installed):
+
+    """Function:  get_installed_kernels
+
+    Description:  Return the installed kernel versions on the server.
+
+    Arguments:
+        (input) pkgs_installed -> Yum.get_install_pkgs class instance
+        (output) kernel_list -> List of installed kernel version instances
+
+    """
+
+    kernel_name = "kernel-core"
+    kernel_list = list()
+
+    for pkg in pkgs_installed.run():
+
+        if kernel_name in str(pkg):
+            kernel_list.append(pkg)
+
+    return kernel_list
+
+
+def get_running_kernel(kernel_list):
+
+    """Function:  get_running_kernel
+
+    Description:  Return the running kernel version.
+
+    Arguments:
+        (input) kernel_list -> List of kernel version instances
+        (output) running -> Current running kernel instance
+
+    """
+
+    for pkg in kernel_list:
+
+        if pkg.evr in platform.release():
+            running = pkg
+            break
+
+    return running
+
+
+def get_latest_kernel(kernel_list):
+
+    """Function:  get_latest_kernel
+
+    Description:  Return the latest kernel version.
+
+    Arguments:
+        (input) kernel_list -> List of kernel version instances
+        (output) latest -> Latest kernel version instance
+
+    """
+
+    latest = kernel_list[0]
+
+    for pkg in kernel_list:
+
+        if pkg.evr_cmp(latest) == 1:
+            latest = pkg
+
+    return latest
+
+
+def kernel_check(dnf, data=None):
+
+    """Function:  kernel_check
+
+    Description:  Compares the current running kernel version to the latest
+        installed kernel version and determines if a reboot is required.
+
+    Note:  This is only available for the Dnf class use.
+
+    Arguments:
+        (input) dnf -> Dnf class instance
+        (input) data -> Dictionary from package listing
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - successful operation
+            status[1] - Error message
+        (output) data -> Dictionary that has the kernel version status
+
+    """
+
+    status = (True, None)
+    pkgs_installed = dnf.get_install_pkgs()
+    data = dict(data) if data else create_template_dict(dnf)
+    data["Kernel"] = dict()
+    kernel_list = get_installed_kernels(pkgs_installed)
+    running = get_running_kernel(kernel_list)
+    data["Kernel"]["Current"] = str(running)
+
+    if len(kernel_list) > 1:
+        latest = get_latest_kernel(kernel_list)
+        data["Kernel"]["Installed"] = str(latest)
+
+        if latest.evr_cmp(running) == 1:
+            data["Kernel"]["RebootRequired"] = True
+
+        elif latest.evr_cmp(running) == 0:
+            data["Kernel"]["RebootRequired"] = False
+
+        else:
+            status = (
+                False,
+                "Error: kernel_check: Couldn't determine if reboot required")
+
+    elif len(kernel_list) == 1:
+        data["Kernel"]["Installed"] = kernel_list[0]
+        data["Kernel"]["RebootRequired"] = False
+
+    else:
+        status = (False, "Error: kernel_check: No kernel versions found")
+
+    return status, data
+
+
+def mongo_insert(db_tbl, class_cfg, data):
+
+    """Function:  mongo_insert
+
+    Description:  Insert data into MongoDB.
+
+    Arguments:
+        (input) db_tbl -> Database and table name (e.g. db1:tbl1)
+        (input) class_cfg -> Mongo server configuration
+        (input) data -> Dictionary that has package data
+        (output) status -> Tuple on Mongodb insertion status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    status = (True, None)
+    data = dict(data)
+
+    if db_tbl and class_cfg:
+        dbn, tbl = db_tbl.split(":")
+        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
+
+    return status
+
+
+def rabbitmq_publish(args, data):
+
+    """Function:  rabbitmq_publish
+
+    Description:  Insert data into MongoDB.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+        (output) status -> Tuple on RabbitMQ publication status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    status = (True, None)
+    data = dict(data)
+
+    if args.get_val("-r", def_val=False):
+        cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
+        status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
+
+    return status
+
+
+def write_file(args, data):
+
+    """Function:  write_file
+
+    Description:  Write data to a file.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+
+    """
+
+    ofile = args.get_val("-o", def_val=False)
+    mode = "a" if args.get_val("-a", def_val=False) else "w"
+
+    if ofile:
+        gen_libs.write_file(ofile, mode, data)
+
+
+def display_data(args, data):
+
+    """Function:  display_data
+
+    Description:  Display data to terminal.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> String dictionary that has package data
+
+    """
+
+    if not args.get_val("-z", def_val=False):
+        gen_libs.display_data(data)
+
+
+def mail_data(args, data):
+
+    """Function:  mail_data
+
+    Description:  Email data out.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> String dictionary that has package data
+
+    """
+
+    if args.get_val("-e", def_val=False):
+        mail = gen_class.setup_mail(
+            args.get_val("-e"), subj=args.get_val("-s", def_val=None))
+        mail.add_2_msg(data)
+        use_mailx = args.get_val("-u", def_val=False)
+        mail.send_mail(use_mailx=use_mailx)
+
+
+def output_run(args, data, **kwargs):
+
+    """Function:  output_run
+
+    Description:  Directs where the data output will go.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) data -> Dictionary that has package data
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    status = mongo_insert(
+        args.get_val("-i", def_val=False),
+        kwargs.get("class_cfg", False), data)
+
+    status2 = rabbitmq_publish(args, data)
+
+    if not status2[0] and status[0]:
+        status = (status2[0], status2[1])
+
+    elif not status2[0]:
+        status = (
+            status[0],
+            "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
+
+    indent = None if args.get_val("-f", def_val=False) else 4
+    data = json.dumps(data, indent=indent)
+    write_file(args, data)
+    display_data(args, data)
+    mail_data(args, data)
+
+    return status
+
+
+def kernel_run(args, dnf, **kwargs):
+
+    """Function:  kernel_check
+
+    Description:  Checks to see if the kernel check can be done and process
+        the output.
+
+    Note:  This is only available for the Dnf class use.
+
+    Arguments:
+        (input) args -> ArgParser class instance
+        (input) dnf -> Dnf class instance
+        (input) **kwargs:
+            class_cfg -> Mongo server configuration
+        (output) status -> Tuple on operation status
+            status[0] - True|False - Successful operation
+            status[1] - Error message
+
+    """
+
+    if sys.version_info >= (3, 0):
+        status, data = kernel_check(dnf)
+
+        if status[0]:
+            status = output_run(args, data, **kwargs)
+
+    else:
+        status = (
+            False, "Warning: kernel_run: Only available for Dnf class use")
 
     return status
 
@@ -418,7 +768,8 @@ def main():
     dir_perms_chk = {"-d": 5}
     file_perms_chk = {"-o": 6}
     file_crt = ["-o"]
-    func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo}
+    func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
+                 "-K": kernel_run}
     opt_def_dict = {"-i": "sysmon:server_pkgs"}
     opt_con_req_dict = {
         "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}

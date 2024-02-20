@@ -27,25 +27,19 @@
 
 # Prerequisites:
   * List of Linux packages that need to be installed on the serveri via git.
-    - git
-    - python-pip
     - Centos 7 (Running Python 2.7):
       -> python-devel
+      -> python-pip
     Redhat 8 (Running Python 3.6):
       -> python3-devel
-
-  * Local class/library dependencies within the program structure.
-    - python-lib
-    - mongo-lib
+      -> python3-pip
+      -> dnf==4.7.0
 
   * FIPS Environment:  If operating in a FIPS 104-2 environment, this package will require at least a minimum of pymongo==3.8.0 or better.  It will also require a manual change to the auth.py module in the pymongo package.  See below for changes to auth.py.  In addition, other modules may require to have the same modification as the auth.py module.  If a stacktrace occurs and it states "= hashlib.md5()" is the problem, then note the module name "= hashlib.md5()" is in and make the same change as in auth.py:  "usedforsecurity=False".
     - Locate the auth.py file python installed packages on the system in the pymongo package directory.
     - Edit the file and locate the \_password_digest function.
     - In the \_password_digest function there is an line that should match: "md5hash = hashlib.md5()".  Change it to "md5hash = hashlib.md5(usedforsecurity=False)".
     - Lastly, it will require the configuration file entry auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
-
-  *  If the platform is Redhat 8 and above, list of Linux packages that need to be installed on the server.
-    - dnf==4.7.0
 
 
 # Installation:
@@ -55,6 +49,7 @@ Install these programs using git.
 
 ```
 git clone git@sc.appdev.proj.coe.ic.gov:JAC-DSXD/package-admin.git
+cd package-admin
 ```
 
 Install/upgrade system modules.
@@ -187,7 +182,6 @@ test/unit/package_admin/unit_test_run.sh
 ### Code coverage:
 
 ```
-cd {Python_Project}/package-admin
 test/unit/package_admin/code_coverage.sh
 ```
 
@@ -204,23 +198,21 @@ Configure the project using the procedures in the Configuration section.
   * Exception:  The location of the configuration file will be different, see below.
 
 ```
-cd test/integration/package_admin/config
-cp ../../../../config/mongo.py.TEMPLATE mongo.py
-vim mongo.py
-chmod 600 mongo.py
+cd {Python_Project}/package-admin
+cp config/mongo.py.TEMPLATE test/integration/package_admin/config
+vim test/integration/package_admin/config/mongo.py
+chmod 600 test/integration/package_admin/config/mongo.py
 ```
 
 ### Testing:
 
 ```
-cd {Python_Project}/package_admin
 test/integration/package_admin/integration_test_run.sh
 ```
 
 ### Code coverage:
 
 ```
-cd {Python_Project}/package_admin
 test/integration/package_admin/code_coverage.sh
 ```
 
@@ -237,16 +229,15 @@ Configure the project using the procedures in the Configuration section.
   * Exception:  The location of the configuration file will be different, see below.
 
 ```
-cd test/blackbox/package_admin/config
-cp ../../../../config/mongo.py.TEMPLATE mongo.py
-vim mongo.py
-chmod 600 mongo.py
+cd {Python_Project}/package-admin
+cp config/mongo.py.TEMPLATE test/integration/package_admin/config
+vim test/blackbox/package_admin/config/mongo.py
+chmod 600 test/blackbox/package_admin/config/mongo.py
 ```
 
 ### Testing:
 
 ```
-cd {Python_Project}/package_admin
 test/blackbox/package_admin/blackbox_test.sh
 ```
 
