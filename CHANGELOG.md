@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.0] - 2024-02-06
+- Added option to determine if server requires a reboot based on current and installed kernel.
+- Updated python-lib to v3.0.2
+
+### Added
+- kernel_run: Checks to see if the kernel check can be done and process the output.
+- kernel_check: Compares the current running kernel version to the latest kernel installed version.
+- get_latest_kernel: Return the latest kernel version.
+- get_running_kernel: Return the running kernel version.
+- get_installed_kernels: Return the installed kernel versions on the server.
+- create_template_dict: Set up dictionary with server-level details.
+- mongo_insert: Insert data into MongoDB.
+- rabbitmq_publish: Publish data to RabbitMQ.
+- write_file: Write data to a file.
+- display_data: Display data to terminal.
+- mail_data: Email data out.
+- output_run: Directs where the data output will go.
+
+### Changed
+- list_upd_pkg: Refactored the function to use the new functions added instead of process_yum.
+- Documentation updates.
+
+
 ## [2.5.0] - 2024-01-18
 - Updated to work in Python 3 too
 - Added Dnf class to work on RedHat 8 servers
