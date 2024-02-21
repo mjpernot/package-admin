@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.1] - 2024-02-21
+
+
 ## [2.6.0] - 2024-02-06
 - Added option to determine if server requires a reboot based on current and installed kernel.
 - Updated python-lib to v3.0.2
