@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.1] - 2024-02-21
+- Updated module requirements for Python
+
+### Changed
+- Set simplejson to 3.12.0 for Python 3.
+- Set chardet to 3.0.4 for Python 2 and Python 3.
+- Added urllib3 set to 1.24.2 for Python 2 and 3.
+
+
 ## [2.6.0] - 2024-02-06
 - Added option to determine if server requires a reboot based on current and installed kernel.
 - Updated python-lib to v3.0.2
