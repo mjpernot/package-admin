@@ -687,7 +687,7 @@ def output_run(args, data, **kwargs):
 
 def kernel_run(args, dnf, **kwargs):
 
-    """Function:  kernel_check
+    """Function:  kernel_run
 
     Description:  Checks to see if the kernel check can be done and process
         the output.

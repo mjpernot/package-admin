@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.3] - 2024-06-24
+
+### Changed
+- Documentation updates.
+
+
 ## [2.6.2] - 2024-04-23
 - Updated mongo-lib to v4.3.0
 - Added TLS capability for Mongo
