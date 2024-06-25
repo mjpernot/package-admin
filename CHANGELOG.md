@@ -6,6 +6,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 
 ## [2.6.3] - 2024-06-24
 
+### Fixed
+- output_run: Retain the Boolean value properly in the dictionary for emailing purposes (i.e. RabbitMQ/rmq-sysmon).
+
 ### Changed
 - Documentation updates.
 

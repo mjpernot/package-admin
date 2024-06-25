@@ -674,13 +674,21 @@ def output_run(args, data, **kwargs):
     elif not status2[0]:
         status = (
             status[0],
+
             "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
 
     indent = None if args.get_val("-f", def_val=False) else 4
-    data = json.dumps(data, indent=indent)
-    write_file(args, data)
-    display_data(args, data)
-    mail_data(args, data)
+    data2 = json.dumps(data, indent=indent)
+    write_file(args, data2)
+    display_data(args, data2)
+
+    # The json.dumps converts boolean value to lowercase, require the
+    # dictionary to retain the Boolean value for RabbitMQ/rmq-sysmon use.
+    if args.get_val("-f"):
+        mail_data(args, str(data))
+
+    else:
+        mail_data(args, data2)
 
     return status
 
