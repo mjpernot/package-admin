@@ -674,20 +674,28 @@ def output_run(args, data, **kwargs):
     elif not status2[0]:
         status = (
             status[0],
+
             "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
 
     indent = None if args.get_val("-f", def_val=False) else 4
-    data = json.dumps(data, indent=indent)
-    write_file(args, data)
-    display_data(args, data)
-    mail_data(args, data)
+    data2 = json.dumps(data, indent=indent)
+    write_file(args, data2)
+    display_data(args, data2)
+
+    # The json.dumps converts boolean value to lowercase, require the
+    # dictionary to retain the Boolean value for RabbitMQ/rmq-sysmon use.
+    if args.get_val("-f"):
+        mail_data(args, str(data))
+
+    else:
+        mail_data(args, data2)
 
     return status
 
 
 def kernel_run(args, dnf, **kwargs):
 
-    """Function:  kernel_check
+    """Function:  kernel_run
 
     Description:  Checks to see if the kernel check can be done and process
         the output.
@@ -787,9 +795,10 @@ def main():
     # Process argument list from command line.
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, opt_def=opt_def_dict,
-        multi_val=opt_multi_list, do_parse=True)
+        multi_val=opt_multi_list)
 
-    if not gen_libs.help_func(args, __version__, help_message)              \
+    if args.arg_parse2()                                                    \
+       and not gen_libs.help_func(args, __version__, help_message)          \
        and args.arg_cond_req_or(opt_con_or=opt_con_req_dict)                \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                    \
        and args.arg_file_chk(file_perm_chk=file_perms_chk, file_crt=file_crt):
