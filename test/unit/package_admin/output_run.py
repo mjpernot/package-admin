@@ -76,6 +76,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_mail_expanded
+        test_mail_flatten
         test_mongo_rabbit_failure
         test_rabbit_failure
         test_rabbit_successful
@@ -95,6 +97,7 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args = ArgParser()
+        self.args2 = ArgParser()
         self.args.args_array = {"-i": True, "-f": True}
         self.data = {"Server": "ServerName"}
 
@@ -107,6 +110,48 @@ class UnitTest(unittest.TestCase):
         self.results4 = (False, "Rabbit_Message")
         self.results5 = (
             False, "MongoDB: Mongo_Message RabbitMQ: Rabbit_Message")
+
+    @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
+    @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
+    @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
+    @mock.patch("package_admin.rabbitmq_publish")
+    @mock.patch("package_admin.mongo_insert")
+    def test_mail_expanded(self, mock_mongo, mock_rabbit):
+
+        """Function:  test_mail_expanded
+
+        Description:  Test with expanded JSON for mail.
+
+        Arguments:
+
+        """
+
+        mock_rabbit.return_value = self.status2
+        mock_mongo.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.output_run(self.args2, self.data), self.results2)
+
+    @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
+    @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
+    @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
+    @mock.patch("package_admin.rabbitmq_publish")
+    @mock.patch("package_admin.mongo_insert")
+    def test_mail_flatten(self, mock_mongo, mock_rabbit):
+
+        """Function:  test_mail_flatten
+
+        Description:  Test with flatten dictionary for mail.
+
+        Arguments:
+
+        """
+
+        mock_rabbit.return_value = self.status2
+        mock_mongo.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.output_run(self.args, self.data), self.results2)
 
     @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
