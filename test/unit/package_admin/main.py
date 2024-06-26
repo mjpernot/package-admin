@@ -41,6 +41,7 @@ class ArgParser(object):
         arg_dir_chk
         arg_file_chk
         get_val
+        arg_parse2
 
     """
 
@@ -63,6 +64,7 @@ class ArgParser(object):
         self.file_crt = None
         self.opt_con_or = None
         self.opt_con_or2 = True
+        self.argparse2 = True
 
     def arg_cond_req_or(self, opt_con_or):
 
@@ -120,6 +122,18 @@ class ArgParser(object):
 
         return self.args_array.get(skey, def_val)
 
+    def arg_parse2(self):
+
+        """Method:  arg_parse2
+
+        Description:  Method stub holder for gen_class.ArgParser.arg_parse2.
+
+        Arguments:
+
+        """
+
+        return self.argparse2
+
 
 class ProgramLock(object):
 
@@ -156,6 +170,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_arg_parse2_false
+        test_arg_parse2_true
+        test_help_false
+        test_help_true
         test_help_true
         test_help_false
         test_cond_req_false
@@ -186,6 +204,40 @@ class UnitTest(unittest.TestCase):
         self.args_array2 = {"-c": "TEST_FILE", "-d": "TEST_DIR", "-I": True,
                             "-y": "Flavor"}
         self.proglock = ProgramLock(["cmdline"], "FlavorID")
+
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_arg_parse2_false(self, mock_arg):
+
+        """Function:  test_arg_parse2_false
+
+        Description:  Test arg_parser2 returns false.
+
+        Arguments:
+
+        """
+
+        self.args.argparse2 = False
+
+        mock_arg.return_value = self.args
+
+        self.assertFalse(package_admin.main())
+
+    @mock.patch("package_admin.gen_libs.help_func")
+    @mock.patch("package_admin.gen_class.ArgParser")
+    def test_arg_parse2_true(self, mock_arg, mock_help):
+
+        """Function:  test_arg_parse2_true
+
+        Description:  Test arg_parser2 returns true.
+
+        Arguments:
+
+        """
+
+        mock_arg.return_value = self.args
+        mock_help.return_value = True
+
+        self.assertFalse(package_admin.main())
 
     @mock.patch("package_admin.gen_libs.help_func")
     @mock.patch("package_admin.gen_class.ArgParser")

@@ -795,9 +795,10 @@ def main():
     # Process argument list from command line.
     args = gen_class.ArgParser(
         sys.argv, opt_val=opt_val_list, opt_def=opt_def_dict,
-        multi_val=opt_multi_list, do_parse=True)
+        multi_val=opt_multi_list)
 
-    if not gen_libs.help_func(args, __version__, help_message)              \
+    if args.arg_parse2()                                                    \
+       and not gen_libs.help_func(args, __version__, help_message)          \
        and args.arg_cond_req_or(opt_con_or=opt_con_req_dict)                \
        and args.arg_dir_chk(dir_perms_chk=dir_perms_chk)                    \
        and args.arg_file_chk(file_perm_chk=file_perms_chk, file_crt=file_crt):

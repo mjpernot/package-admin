@@ -10,6 +10,7 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - output_run: Retain the Boolean value properly in the dictionary for emailing purposes (i.e. RabbitMQ/rmq-sysmon).
 
 ### Changed
+- main: Removed parsing from gen_class.ArgParser call and called arg_parse2 as part of "if" statement.
 - Documentation updates.
 
 
