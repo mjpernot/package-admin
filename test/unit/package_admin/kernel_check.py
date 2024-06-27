@@ -116,14 +116,14 @@ class UnitTest(unittest.TestCase):
         setUp
         test_dict
         test_no_dict
-        test_reboot_false4
-        test_reboot_false3
-        test_reboot_false2
-        test_reboot_false
-        test_reboot_true4
-        test_reboot_true3
-        test_reboot_true2
-        test_reboot_true
+        test_reboot_no4
+        test_reboot_no3
+        test_reboot_no2
+        test_reboot_no
+        test_reboot_yes4
+        test_reboot_yes3
+        test_reboot_yes2
+        test_reboot_yes
         test_one_kernel_found2
         test_one_kernel_found
 
@@ -208,10 +208,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
-    def test_reboot_false4(self, mock_dict, mock_installed, mock_running,
-                           mock_latest):
+    def test_reboot_no4(self, mock_dict, mock_installed, mock_running,
+                        mock_latest):
 
-        """Function:  test_reboot_false4
+        """Function:  test_reboot_no4
 
         Description:  No reboot is required.
 
@@ -232,10 +232,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
-    def test_reboot_false3(self, mock_dict, mock_installed, mock_running,
-                           mock_latest):
+    def test_reboot_no3(self, mock_dict, mock_installed, mock_running,
+                        mock_latest):
 
-        """Function:  test_reboot_false3
+        """Function:  test_reboot_no3
 
         Description:  No reboot is required.
 
@@ -250,16 +250,16 @@ class UnitTest(unittest.TestCase):
 
         _, data = package_admin.kernel_check(self.dnf)
 
-        self.assertFalse(data["Kernel"]["RebootRequired"])
+        self.assertEqual(data["Kernel"]["RebootRequired"], "No")
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
-    def test_reboot_false2(self, mock_dict, mock_installed, mock_running,
-                           mock_latest):
+    def test_reboot_no2(self, mock_dict, mock_installed, mock_running,
+                        mock_latest):
 
-        """Function:  test_reboot_false2
+        """Function:  test_reboot_no2
 
         Description:  No reboot is required.
 
@@ -280,10 +280,10 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
-    def test_reboot_false(self, mock_dict, mock_installed, mock_running,
-                          mock_latest):
+    def test_reboot_no(self, mock_dict, mock_installed, mock_running,
+                       mock_latest):
 
-        """Function:  test_reboot_false
+        """Function:  test_reboot_no
 
         Description:  No reboot is required.
 
@@ -298,88 +298,88 @@ class UnitTest(unittest.TestCase):
 
         _, data = package_admin.kernel_check(self.dnf)
 
-        self.assertFalse(data["Kernel"]["RebootRequired"])
+        self.assertEqual(data["Kernel"]["RebootRequired"], "No")
 
     @mock.patch("package_admin.get_latest_kernel")
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
     @mock.patch("package_admin.create_template_dict")
-    def test_reboot_true4(self, mock_dict, mock_installed, mock_running,
-                          mock_latest):
-
-        """Function:  test_reboot_true4
-
-        Description:  Reboot is required.
-
-        Arguments:
-
-        """
-
-        mock_dict.return_value = self.data2
-        mock_installed.return_value = self.kernel_list
-        mock_running.return_value = self.pkg1
-        mock_latest.return_value = self.pkg2
-
-        status, _ = package_admin.kernel_check(self.dnf)
-
-        self.assertEqual(status, self.status)
-
-    @mock.patch("package_admin.get_latest_kernel")
-    @mock.patch("package_admin.get_running_kernel")
-    @mock.patch("package_admin.get_installed_kernels")
-    @mock.patch("package_admin.create_template_dict")
-    def test_reboot_true3(self, mock_dict, mock_installed, mock_running,
-                          mock_latest):
-
-        """Function:  test_reboot_true3
-
-        Description:  Reboot is required.
-
-        Arguments:
-
-        """
-
-        mock_dict.return_value = self.data2
-        mock_installed.return_value = self.kernel_list
-        mock_running.return_value = self.pkg1
-        mock_latest.return_value = self.pkg2
-
-        _, data = package_admin.kernel_check(self.dnf)
-
-        self.assertTrue(data["Kernel"]["RebootRequired"])
-
-    @mock.patch("package_admin.get_latest_kernel")
-    @mock.patch("package_admin.get_running_kernel")
-    @mock.patch("package_admin.get_installed_kernels")
-    @mock.patch("package_admin.create_template_dict")
-    def test_reboot_true2(self, mock_dict, mock_installed, mock_running,
-                          mock_latest):
-
-        """Function:  test_reboot_true2
-
-        Description:  Reboot is required.
-
-        Arguments:
-
-        """
-
-        mock_dict.return_value = self.data2
-        mock_installed.return_value = self.kernel_list3
-        mock_running.return_value = self.pkg1
-        mock_latest.return_value = self.pkg2
-
-        status, _ = package_admin.kernel_check(self.dnf)
-
-        self.assertEqual(status, self.status)
-
-    @mock.patch("package_admin.get_latest_kernel")
-    @mock.patch("package_admin.get_running_kernel")
-    @mock.patch("package_admin.get_installed_kernels")
-    @mock.patch("package_admin.create_template_dict")
-    def test_reboot_true(self, mock_dict, mock_installed, mock_running,
+    def test_reboot_yes4(self, mock_dict, mock_installed, mock_running,
                          mock_latest):
 
-        """Function:  test_reboot_true
+        """Function:  test_reboot_yes4
+
+        Description:  Reboot is required.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        status, _ = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(status, self.status)
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_reboot_yes3(self, mock_dict, mock_installed, mock_running,
+                         mock_latest):
+
+        """Function:  test_reboot_yes3
+
+        Description:  Reboot is required.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        _, data = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(data["Kernel"]["RebootRequired"], "Yes")
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_reboot_yes2(self, mock_dict, mock_installed, mock_running,
+                         mock_latest):
+
+        """Function:  test_reboot_yes2
+
+        Description:  Reboot is required.
+
+        Arguments:
+
+        """
+
+        mock_dict.return_value = self.data2
+        mock_installed.return_value = self.kernel_list3
+        mock_running.return_value = self.pkg1
+        mock_latest.return_value = self.pkg2
+
+        status, _ = package_admin.kernel_check(self.dnf)
+
+        self.assertEqual(status, self.status)
+
+    @mock.patch("package_admin.get_latest_kernel")
+    @mock.patch("package_admin.get_running_kernel")
+    @mock.patch("package_admin.get_installed_kernels")
+    @mock.patch("package_admin.create_template_dict")
+    def test_reboot_yes(self, mock_dict, mock_installed, mock_running,
+                        mock_latest):
+
+        """Function:  test_reboot_yes
 
         Description:  Reboot is required.
 
@@ -394,7 +394,7 @@ class UnitTest(unittest.TestCase):
 
         _, data = package_admin.kernel_check(self.dnf)
 
-        self.assertTrue(data["Kernel"]["RebootRequired"])
+        self.assertEqual(data["Kernel"]["RebootRequired"], "Yes")
 
     @mock.patch("package_admin.get_running_kernel")
     @mock.patch("package_admin.get_installed_kernels")
@@ -430,7 +430,7 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.results["Kernel"]["RebootRequired"] = False
+        self.results["Kernel"]["RebootRequired"] = "No"
 
         mock_dict.return_value = self.data2
         mock_installed.return_value = self.kernel_list2
