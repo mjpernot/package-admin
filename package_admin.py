@@ -519,10 +519,10 @@ def kernel_check(dnf, data=None):
         data["Kernel"]["Installed"] = str(latest)
 
         if latest.evr_cmp(running) == 1:
-            data["Kernel"]["RebootRequired"] = True
+            data["Kernel"]["RebootRequired"] = "Yes"
 
         elif latest.evr_cmp(running) == 0:
-            data["Kernel"]["RebootRequired"] = False
+            data["Kernel"]["RebootRequired"] = "No"
 
         else:
             status = (
@@ -531,7 +531,7 @@ def kernel_check(dnf, data=None):
 
     elif len(kernel_list) == 1:
         data["Kernel"]["Installed"] = kernel_list[0]
-        data["Kernel"]["RebootRequired"] = False
+        data["Kernel"]["RebootRequired"] = "No"
 
     else:
         status = (False, "Error: kernel_check: No kernel versions found")
@@ -678,17 +678,10 @@ def output_run(args, data, **kwargs):
             "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
 
     indent = None if args.get_val("-f", def_val=False) else 4
-    data2 = json.dumps(data, indent=indent)
-    write_file(args, data2)
-    display_data(args, data2)
-
-    # The json.dumps converts boolean value to lowercase, require the
-    # dictionary to retain the Boolean value for RabbitMQ/rmq-sysmon use.
-    if args.get_val("-f"):
-        mail_data(args, str(data))
-
-    else:
-        mail_data(args, data2)
+    data = json.dumps(data, indent=indent)
+    write_file(args, data)
+    display_data(args, data)
+    mail_data(args, data)
 
     return status
 

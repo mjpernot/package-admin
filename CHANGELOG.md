@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.4] - 2024-06-27
+
+### Fixed
+- kernel_check: Changed RebootRequired values from True|False to Yes|No due to json.dumps issue with boolean case.
+
+### Changed
+- output_run: Reverted the changes from the previous version v2.6.3 back to v2.6.2.
+
+
 ## [2.6.3] - 2024-06-24
 
 ### Fixed
