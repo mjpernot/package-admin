@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.5] - 2024-07-29
+- Set urllib3 to 1.26.19 for Python 2 for security reasons.
+
+### Fixed
+- list_upd_pkg: Only allow kernel_check call if on Python 3 or better.
+
+
 ## [2.6.4] - 2024-06-27
 
 ### Fixed

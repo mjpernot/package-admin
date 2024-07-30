@@ -336,7 +336,7 @@ def list_upd_pkg(args, dnf, **kwargs):
         if kwargs.get("data", None) else create_template_dict(dnf)
     data["UpdatePackages"] = dnf.fetch_update_pkgs()
 
-    if args.get_val("-k", def_val=False):
+    if args.get_val("-k", def_val=False) and sys.version_info >= (3, 0):
         status, data = kernel_check(dnf, data)
 
         if status[0]:
