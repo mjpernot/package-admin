@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.7] - 2024-08-02
+- Added idna==2.8 for Python 2.
+- Added certifi==2019.11.28 for Python 2.
+- Set simplejson==3.13.2
+
+
 ## [2.6.6] - 2024-07-31
 - Removed email from requirement packages.
 
