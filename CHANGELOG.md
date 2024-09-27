@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.9] - 2024-09-27
+- Updated pymongo to v4.1.1 for Python 3
+- Updated simplejson=3.13.2 for Python 3
+
+
 ## [2.6.8] - 2024-08-07
 - Updated requests==2.25.0
 - Added idna==2.10
