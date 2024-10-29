@@ -104,6 +104,7 @@ class Dnf(object):
 
         self.data = "Update_Package_List"
 
+
 class UnitTest(unittest.TestCase):
 
     """Class:  UnitTest

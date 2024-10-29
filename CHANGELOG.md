@@ -12,6 +12,9 @@ The format is based on "Keep a Changelog".  This project adheres to Semantic Ver
 - Updated psutil==5.9.4 for Python 3.
 - Updated requests==2.25.0 for Python 3.
 - Updated urllib3==1.26.19 for Python 3.
+- Updated python-lib to v3.0.7.
+- Updated rabbitmq-lib to v2.2.7.
+- Updated mongo-lib to v4.3.3.
 
 ### Changed
 - Updates to requirements3.txt.
