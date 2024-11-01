@@ -139,7 +139,6 @@ class UnitTest(unittest.TestCase):
         self.results = (True, None)
         self.results2 = (False, "Error Message")
 
-    #@unittest.skip("Will only work in Python 3.6 and above")
     @mock.patch("package_admin.output_run")
     @mock.patch("package_admin.kernel_check")
     @mock.patch("package_admin.create_template_dict")
@@ -162,7 +161,6 @@ class UnitTest(unittest.TestCase):
         self.assertEqual(
             package_admin.list_upd_pkg(self.args, self.dnf), self.results)
 
-    #@unittest.skip("Will only work in Python 3.6 and above")
     @mock.patch("package_admin.kernel_check")
     @mock.patch("package_admin.create_template_dict")
     def test_k_kernel_failure(self, mock_dict, mock_kernel):
