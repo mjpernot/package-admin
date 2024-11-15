@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [2.6.11] - 2024-11-15
+
+### Fixed
+- Set chardet==3.0.4 for Python 3.
+
+### Deprecated
+- Support for Python 2.7
+
+
 ## [2.6.10] - 2024-10-29
 - Updated chardet==4.0.0 for Python 3.
 - Updated distro==1.9.0 for Python 3.
