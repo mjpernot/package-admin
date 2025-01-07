@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.0.0] - 2025-01-07
+Breaking Changes
+
+- Removed support for Python 2.7.
+- Removed mongo insert (-i) option.
+- Updated python-lib v4.0.0
+
+### Fixed
+- main: Added -b to opt_val_list to ensure rabbitmq file name is passed.
+
+### Changed
+- kernel_run, run_program: Removed Python 2.7 code.
+- process_yum, output_run, run_program, main: Removed mongo code.
+- Documentation changes.
+
+### Removed
+- Removed mongo_insert function.
+- Removed mongo_lib library.
+- Removed distro module.
+- Removed dnf module.
+
+
 ## [2.6.11] - 2024-11-15
 
 ### Fixed

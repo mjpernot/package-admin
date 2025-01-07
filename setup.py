@@ -41,10 +41,6 @@ setuptools.setup(
         #  5 - Production/Stable
         "Development Status :: 5 - Production/Stable",
         "Operating System :: Linux",
-        "Operating System :: Linux :: Centos",
-        "Operating System :: Linux :: Centos :: 7",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Operating System :: Linux :: RedHat",
         "Operating System :: Linux :: RedHat :: 8",
         "Programming Language :: Python",
@@ -57,8 +53,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3.12",
         "Topic :: Database :: RabbitMQ",
         "Topic :: Database :: RabbitMQ :: 3.8",
-        "Topic :: Database :: Mongo",
-        "Topic :: Database :: Mongo :: 3.4",
-        "Topic :: Database :: Mongo :: 4.2",
         "Topic :: Administration",
         "Topic :: Administration :: Packages"])

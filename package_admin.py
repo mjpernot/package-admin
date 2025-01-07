@@ -4,7 +4,7 @@
 """Program:      package_admin.py
 
     Description:  Linux Package administration program for handling packages on
-        a Linux server using yum.  This program has a number of functions to
+        a Linux server using dnf.  This program has a number of functions to
         include listing current packages, listing any new package updates,
         installing package updates, and listing current repositories.
 
@@ -14,10 +14,10 @@
                 [-o dir_path/file [-a]] [-r -b file -d path] |
              -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] [-r -b file -d path] |
-             -U [-f] [-z] [-i db_name:table_name -c file -d path]
+             -U [-f] [-z]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] [-r -b file -d path] |
-             -K [-f] [-z] [-i db_name:table_name -c file -d path]
+             -K [-f] [-z]
                  [-e to_email [to_email2 ...] [-s subject_line] [-u]]
                  [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
@@ -41,10 +41,6 @@
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
             -k => Include a kernel check with this option.
-            -i { database:collection } => Name of database and collection to
-                    insert into Mongo database.  Default:  sysmon:server_pkgs
-                -c file => Mongo server configuration file.
-                -d dir path => Directory path to config file (-c).
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
@@ -73,10 +69,6 @@
         -K => Kernel check to see current and installed versions match.
             -f => Flatten the JSON data structure.
             -z => Suppress standard out.
-            -i { database:collection } => Name of database and collection to
-                    insert into Mongo database.  Default:  sysmon:server_pkgs
-                -c file => Mongo server configuration file.
-                -d dir path => Directory path to config file (-c).
             -e to_email_address(es) => Sends output to one or more email
                     addresses.  Email addresses are space delimited.
                 -s subject_line => Subject line of email.Will create own
@@ -95,118 +87,33 @@
         NOTE 1: -v and -h overrides all other options.
 
     Notes:
-        Mongo configuration file format (config/mongo.py.TEMPLATE).
-        The configuration file format for the Mongo connection used for
-        inserting data into a database.
-
-        There are two ways to connect methods:  single Mongo database or a
-        Mongo replica set.
-
-            Single Configuration file for Mongo Database Server.
-            user = "USER"
-            japd = "PSWORD"
-            host = "HOST_IP"
-            name = "HOSTNAME"
-            port = 27017
-            conf_file = None
-            auth = True
-            auth_db = "admin"
-            auth_mech = "SCRAM-SHA-1"
-
-            Replica set connection:  Same format as above, but with these
-                additional entries at the end of the configuration file.  By
-                default all these entries are set to None to represent not
-                connecting to a replica set.
-
-            repset = "REPLICA_SET_NAME"
-            repset_hosts = "HOST1:PORT, HOST2:PORT, [...]"
-            db_auth = "AUTHENTICATION_DATABASE"
-
-            If Mongo is set to use TLS or SSL connections, then one or more of
-                the following entries will need to be completed to connect
-                using TLS or SSL protocols.
-                Note:  Read the configuration file to determine which entries
-                    will need to be set.
-
-                SSL:
-                    auth_type = None
-                    ssl_client_ca = None
-                    ssl_client_key = None
-                    ssl_client_cert = None
-                    ssl_client_phrase = None
-                TLS:
-                    auth_type = None
-                    tls_ca_certs = None
-                    tls_certkey = None
-                    tls_certkey_phrase = None
-
-            FIPS Environment for Mongo:  If operating in a FIPS 104-2
-                environment, this package will require at least a minimum of
-                pymongo==3.8.0 or better.  It will also require a manual change
-                to the auth.py module in the pymongo package.  See below for
-                changes to auth.py.  In addition, other modules may require to
-                have the same modification as the auth.py module.  If a
-                stacktrace occurs and it states "= hashlib.md5()" is the
-                problem, then note the module name "= hashlib.md5()" is in and
-                make the same change as in auth.py:  "usedforsecurity=False".
-            - Locate the auth.py file python installed packages on the system
-                in the pymongo package directory.
-            - Edit the file and locate the "_password_digest" function.
-            - In the "_password_digest" function there is an line that should
-                match: "md5hash = hashlib.md5()".  Change it to
-                "md5hash = hashlib.md5(usedforsecurity=False)".
-            - Lastly, it will require the Mongo configuration file entry
-                auth_mech to be set to: SCRAM-SHA-1 or SCRAM-SHA-256.
-
-
-            RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
-            The configuration file format is for connecting and publishing to a
-            RabbitMQ.
+        RabbitMQ configuration file format (config/rabbitmq.py.TEMPLATE).
+        The configuration file format is for connecting and publishing to a
+        RabbitMQ.
 
             # Login information.
             user = "USER"
             japd = "PSWORD"
-            # Address to single RabbitMQ node.
             host = "HOSTNAME"
-            # List of hosts along with their ports to a multiple node RabbitMQ
-            #   cluster.
-            # Format of each entry is: "IP:PORT".
-            # Example: host_list = ["hostname:5672", "hostname2:5672"]
-            # Note:  If host_list is set, it will take precedence over the host
-            #   entry.
             host_list = []
-            # RabbitMQ Queue name.
             queue = "QUEUENAME"
-            # RabbitMQ R-Key name (normally same as queue name).
             r_key = "RKEYNAME"
-            # RabbitMQ Exchange name for each instance run.
             exchange_name = "EXCHANGE_NAME"
-
-            # These options will not need to be updated normally.
-            # RabbitMQ listening port
-            # Default is 5672
             port = 5672
-            # Type of exchange
-            # Names allowed:  direct, topic, fanout, headers
             exchange_type = "direct"
-            # Is exchange durable: True|False
             x_durable = True
-            # Are queues durable: True|False
             q_durable = True
-            # Do queues automatically delete once message is processed:
-            #   True|False
             auto_delete = False
 
         Configuration modules -> Name is runtime dependent as it can be used to
             connect to different databases with different names.
 
     Example:
-        package_admin.py -U -f -c mongo -d config -i
+        package_admin.py -U -f -b rabbitmq -d config -r
 
 """
 
 # Libraries and Global Variables
-from __future__ import print_function
 
 # Standard
 import sys
@@ -218,14 +125,12 @@ import platform
 try:
     from .lib import gen_libs
     from .lib import gen_class
-    from .mongo_lib import mongo_libs
     from .rabbit_lib import rabbitmq_class
     from . import version
 
 except (ValueError, ImportError) as err:
     import lib.gen_libs as gen_libs
     import lib.gen_class as gen_class
-    import mongo_lib.mongo_libs as mongo_libs
     import rabbit_lib.rabbitmq_class as rabbitmq_class
     import version
 
@@ -246,7 +151,7 @@ def help_message():
     print(__doc__)
 
 
-def process_yum(args, yum, dict_key, func_name, **kwargs):
+def process_yum(args, dnf, dict_key, func_name, **kwargs):
 
     """Function:  process_yum
 
@@ -255,46 +160,49 @@ def process_yum(args, yum, dict_key, func_name, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (input) dict_key -> Dictionary key value
         (input) func_name -> Name of class method to call
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
+#        (input) **kwargs:
+#            class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
-            status[0] - True|False - Mongo connection successful
-            status[1] - Error message if Mongo connection failed
+#            status[0] - True|False - Mongo connection successful
+#            status[1] - Error message if Mongo connection failed
+            status[0] - True|False - RabbitMQ connection successful
+            status[1] - Error message if RabbitMQ connection failed
 
     """
 
     status = (True, None)
-    os_distro = yum.get_distro()
-    data = {"Server": yum.get_hostname(),
+    os_distro = dnf.get_distro()
+    data = {"Server": dnf.get_hostname(),
             "OsRelease": os_distro[0] + " " + os_distro[1],
             "AsOf": datetime.datetime.strftime(
                 datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
     ofile = args.get_val("-o", def_val=False)
-    db_tbl = args.get_val("-i", def_val=False)
-    class_cfg = kwargs.get("class_cfg", False)
+#    db_tbl = args.get_val("-i", def_val=False)
+#    class_cfg = kwargs.get("class_cfg", False)
     mode = "a" if args.get_val("-a", def_val=False) else "w"
     indent = None if args.get_val("-f", def_val=False) else 4
 
-    if db_tbl and class_cfg:
-        dbn, tbl = db_tbl.split(":")
-        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
-
-        if not status[0]:
-            status = (status[0], "Mongo_Insert: " + status[1])
+#    if db_tbl and class_cfg:
+#        dbn, tbl = db_tbl.split(":")
+#        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
+#
+#        if not status[0]:
+#            status = (status[0], "Mongo_Insert: " + status[1])
 
     if args.get_val("-r", def_val=False):
         cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
         t_status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
 
-        if not t_status[0] and status[0]:
+#        if not t_status[0] and status[0]:
+        if not status[0]:
             status = (t_status[0], "RabbitMQ: " + t_status[1])
-
-        elif not t_status[0]:
-            status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
+#
+#        elif not t_status[0]:
+#            status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
 
     data = json.dumps(data, indent=indent)
 
@@ -322,7 +230,7 @@ def list_upd_pkg(args, dnf, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) dnf -> Yum/Dnf class instance
+        (input) dnf -> Dnf class instance
         (input) **kwargs:
             data -> Dictionary containing server details
             class_cfg -> Mongo server configuration
@@ -347,7 +255,7 @@ def list_upd_pkg(args, dnf, **kwargs):
     return status
 
 
-def list_ins_pkg(args, yum, **kwargs):
+def list_ins_pkg(args, dnf, **kwargs):
 
     """Function:  list_ins_pkg
 
@@ -355,7 +263,7 @@ def list_ins_pkg(args, yum, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
@@ -365,7 +273,7 @@ def list_ins_pkg(args, yum, **kwargs):
     """
 
     status = process_yum(
-        args, yum, "InstalledPackages", yum.fetch_install_pkgs, **kwargs)
+        args, dnf, "InstalledPackages", dnf.fetch_install_pkgs, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_ins_pkg: " + status[1])
@@ -373,7 +281,7 @@ def list_ins_pkg(args, yum, **kwargs):
     return status
 
 
-def list_repo(args, yum, **kwargs):
+def list_repo(args, dnf, **kwargs):
 
     """Function:  list_repo
 
@@ -381,7 +289,7 @@ def list_repo(args, yum, **kwargs):
 
     Arguments:
         (input) args -> ArgParser class instance
-        (input) yum -> Yum class instance
+        (input) dnf -> Dnf class instance
         (input) **kwargs:
             class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
@@ -390,7 +298,7 @@ def list_repo(args, yum, **kwargs):
 
     """
 
-    status = process_yum(args, yum, "Repos", yum.fetch_repos, **kwargs)
+    status = process_yum(args, dnf, "Repos", dnf.fetch_repos, **kwargs)
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
@@ -426,7 +334,7 @@ def get_installed_kernels(pkgs_installed):
     Description:  Return the installed kernel versions on the server.
 
     Arguments:
-        (input) pkgs_installed -> Yum.get_install_pkgs class instance
+        (input) pkgs_installed -> Dnf.get_install_pkgs class instance
         (output) kernel_list -> List of installed kernel version instances
 
     """
@@ -539,7 +447,7 @@ def kernel_check(dnf, data=None):
     return status, data
 
 
-def mongo_insert(db_tbl, class_cfg, data):
+#def mongo_insert(db_tbl, class_cfg, data):
 
     """Function:  mongo_insert
 
@@ -555,14 +463,14 @@ def mongo_insert(db_tbl, class_cfg, data):
 
     """
 
-    status = (True, None)
-    data = dict(data)
-
-    if db_tbl and class_cfg:
-        dbn, tbl = db_tbl.split(":")
-        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
-
-    return status
+#    status = (True, None)
+#    data = dict(data)
+#
+#    if db_tbl and class_cfg:
+#        dbn, tbl = db_tbl.split(":")
+#        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
+#
+#    return status
 
 
 def rabbitmq_publish(args, data):
@@ -654,28 +562,29 @@ def output_run(args, data, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) data -> Dictionary that has package data
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
+#        (input) **kwargs:
+#            class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - Successful operation
             status[1] - Error message
 
     """
 
-    status = mongo_insert(
-        args.get_val("-i", def_val=False),
-        kwargs.get("class_cfg", False), data)
+#    status = mongo_insert(
+#        args.get_val("-i", def_val=False),
+#        kwargs.get("class_cfg", False), data)
 
     status2 = rabbitmq_publish(args, data)
 
-    if not status2[0] and status[0]:
-        status = (status2[0], status2[1])
-
-    elif not status2[0]:
-        status = (
-            status[0],
-
-            "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
+#    if not status2[0] and status[0]:
+#        status = (status2[0], status2[1])
+#
+#    elif not status2[0]:
+#        status = (
+#            status[0],
+#            "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
+    if not status2[0]:
+        status = ("RabbitMQ: " + status2[1])
 
     indent = None if args.get_val("-f", def_val=False) else 4
     data = json.dumps(data, indent=indent)
@@ -706,15 +615,15 @@ def kernel_run(args, dnf, **kwargs):
 
     """
 
-    if sys.version_info >= (3, 0):
-        status, data = kernel_check(dnf)
+#    if sys.version_info >= (3, 0):
+    status2, data = kernel_check(dnf)
 
-        if status[0]:
-            status = output_run(args, data, **kwargs)
+    if status2[0]:
+        status = output_run(args, data, **kwargs)
 
-    else:
-        status = (
-            False, "Warning: kernel_run: Only available for Dnf class use")
+#    else:
+#        status = (
+#            False, "Warning: kernel_run: Only available for Dnf class use")
 
     return status
 
@@ -732,21 +641,22 @@ def run_program(args, func_dict):
     """
 
     func_dict = dict(func_dict)
-    mongo_cfg = None
+#    mongo_cfg = None
+#
+#    if sys.version_info < (3, 0):
+#        yum = gen_class.Yum()
+#
+#    else:
+#        yum = gen_class.Dnf()
+    dnf = gen_class.Dnf()
 
-    if sys.version_info < (3, 0):
-        yum = gen_class.Yum()
-
-    else:
-        yum = gen_class.Dnf()
-
-    if args.get_val("-c", def_val=False):
-        mongo_cfg = gen_libs.load_module(
-            args.get_val("-c"), args.get_val("-d"))
+#    if args.get_val("-c", def_val=False):
+#        mongo_cfg = gen_libs.load_module(
+#            args.get_val("-c"), args.get_val("-d"))
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for item in set(args.get_args_keys()) & set(func_dict.keys()):
-        status = func_dict[item](args, yum, class_cfg=mongo_cfg)
+        status = func_dict[item](args, dnf, class_cfg=mongo_cfg)
 
         if not status[0]:
             print("Error Detected: %s" % (status[1]))
@@ -764,7 +674,7 @@ def main():
         file_perms_chk -> contains file names and their octal permissions
         file_crt -> contains options which require files to be created
         func_dict -> dictionary list for the function calls or other options
-        opt_def_dict -> contains options with their default values
+#        opt_def_dict -> contains options with their default values
         opt_con_req_dict -> contains the options that require other options
         opt_multi_list -> contains the options that will have multiple values
         opt_val_list -> contains options which require values
@@ -779,11 +689,13 @@ def main():
     file_crt = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
                  "-K": kernel_run}
-    opt_def_dict = {"-i": "sysmon:server_pkgs"}
-    opt_con_req_dict = {
-        "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
+#    opt_def_dict = {"-i": "sysmon:server_pkgs"}
+#    opt_con_req_dict = {
+#        "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
+    opt_con_req_dict = {"-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
     opt_multi_list = ["-e", "-s"]
-    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
+#    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
+    opt_val_list = ["-b", "-d", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
