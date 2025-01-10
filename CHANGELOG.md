@@ -15,8 +15,11 @@ Breaking Changes
 - main: Added -b to opt_val_list to ensure rabbitmq file name is passed.
 
 ### Changed
+- run_program: Replaced gen_class.Dnf with gen_dnf.Dnf.
 - kernel_run, run_program: Removed Python 2.7 code.
+- get_installed_kernels, kernel_check: Replaced dict() with {} and list() with [].
 - process_yum, output_run, run_program, main: Removed mongo code.
+- main, run_program: Converted strings to f-strings.
 - Documentation changes.
 
 ### Removed

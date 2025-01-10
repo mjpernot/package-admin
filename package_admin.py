@@ -118,20 +118,26 @@
 # Standard
 import sys
 import datetime
-import json
 import platform
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Local
 try:
     from .lib import gen_libs
     from .lib import gen_class
+    from .lib import gen_dnf
     from .rabbit_lib import rabbitmq_class
     from . import version
 
 except (ValueError, ImportError) as err:
-    import lib.gen_libs as gen_libs
-    import lib.gen_class as gen_class
-    import rabbit_lib.rabbitmq_class as rabbitmq_class
+    import lib.gen_libs as gen_libs                     # pylint:disable=R0402
+    import lib.gen_class as gen_class                   # pylint:disable=R0402
+    import lib.gen_dnf as gen_dnf                       # pylint:disable=R0402
+    import rabbit_lib.rabbitmq_class as rabbitmq_class  # pylint:disable=R0402
     import version
 
 __version__ = version.__version__
@@ -163,11 +169,7 @@ def process_yum(args, dnf, dict_key, func_name, **kwargs):
         (input) dnf -> Dnf class instance
         (input) dict_key -> Dictionary key value
         (input) func_name -> Name of class method to call
-#        (input) **kwargs:
-#            class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
-#            status[0] - True|False - Mongo connection successful
-#            status[1] - Error message if Mongo connection failed
             status[0] - True|False - RabbitMQ connection successful
             status[1] - Error message if RabbitMQ connection failed
 
@@ -181,28 +183,15 @@ def process_yum(args, dnf, dict_key, func_name, **kwargs):
                 datetime.datetime.now(), "%Y-%m-%d %H:%M:%S"),
             dict_key: func_name()}
     ofile = args.get_val("-o", def_val=False)
-#    db_tbl = args.get_val("-i", def_val=False)
-#    class_cfg = kwargs.get("class_cfg", False)
     mode = "a" if args.get_val("-a", def_val=False) else "w"
     indent = None if args.get_val("-f", def_val=False) else 4
-
-#    if db_tbl and class_cfg:
-#        dbn, tbl = db_tbl.split(":")
-#        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
-#
-#        if not status[0]:
-#            status = (status[0], "Mongo_Insert: " + status[1])
 
     if args.get_val("-r", def_val=False):
         cfg = gen_libs.load_module(args.get_val("-b"), args.get_val("-d"))
         t_status = rabbitmq_class.pub_2_rmq(cfg, json.dumps(data))
 
-#        if not t_status[0] and status[0]:
-        if not status[0]:
+        if not t_status[0]:
             status = (t_status[0], "RabbitMQ: " + t_status[1])
-#
-#        elif not t_status[0]:
-#            status = (status[0], status[1] + " RabbitMQ: " + t_status[1])
 
     data = json.dumps(data, indent=indent)
 
@@ -340,7 +329,7 @@ def get_installed_kernels(pkgs_installed):
     """
 
     kernel_name = "kernel-core"
-    kernel_list = list()
+    kernel_list = []
 
     for pkg in pkgs_installed.run():
 
@@ -417,7 +406,7 @@ def kernel_check(dnf, data=None):
     status = (True, None)
     pkgs_installed = dnf.get_install_pkgs()
     data = dict(data) if data else create_template_dict(dnf)
-    data["Kernel"] = dict()
+    data["Kernel"] = {}
     kernel_list = get_installed_kernels(pkgs_installed)
     running = get_running_kernel(kernel_list)
     data["Kernel"]["Current"] = str(running)
@@ -445,32 +434,6 @@ def kernel_check(dnf, data=None):
         status = (False, "Error: kernel_check: No kernel versions found")
 
     return status, data
-
-
-#def mongo_insert(db_tbl, class_cfg, data):
-
-    """Function:  mongo_insert
-
-    Description:  Insert data into MongoDB.
-
-    Arguments:
-        (input) db_tbl -> Database and table name (e.g. db1:tbl1)
-        (input) class_cfg -> Mongo server configuration
-        (input) data -> Dictionary that has package data
-        (output) status -> Tuple on Mongodb insertion status
-            status[0] - True|False - Successful operation
-            status[1] - Error message
-
-    """
-
-#    status = (True, None)
-#    data = dict(data)
-#
-#    if db_tbl and class_cfg:
-#        dbn, tbl = db_tbl.split(":")
-#        status = mongo_libs.ins_doc(class_cfg, dbn, tbl, data)
-#
-#    return status
 
 
 def rabbitmq_publish(args, data):
@@ -570,21 +533,11 @@ def output_run(args, data, **kwargs):
 
     """
 
-#    status = mongo_insert(
-#        args.get_val("-i", def_val=False),
-#        kwargs.get("class_cfg", False), data)
-
+    status = (True, None)
     status2 = rabbitmq_publish(args, data)
 
-#    if not status2[0] and status[0]:
-#        status = (status2[0], status2[1])
-#
-#    elif not status2[0]:
-#        status = (
-#            status[0],
-#            "MongoDB: " + status[1] + " RabbitMQ: " + status2[1])
     if not status2[0]:
-        status = ("RabbitMQ: " + status2[1])
+        status = (status2[0], status2[1])
 
     indent = None if args.get_val("-f", def_val=False) else 4
     data = json.dumps(data, indent=indent)
@@ -641,25 +594,14 @@ def run_program(args, func_dict):
     """
 
     func_dict = dict(func_dict)
-#    mongo_cfg = None
-#
-#    if sys.version_info < (3, 0):
-#        yum = gen_class.Yum()
-#
-#    else:
-#        yum = gen_class.Dnf()
-    dnf = gen_class.Dnf()
-
-#    if args.get_val("-c", def_val=False):
-#        mongo_cfg = gen_libs.load_module(
-#            args.get_val("-c"), args.get_val("-d"))
+    dnf = gen_dnf.Dnf()
 
     # Intersect args.args_array & func_dict to find which functions to call.
     for item in set(args.get_args_keys()) & set(func_dict.keys()):
-        status = func_dict[item](args, dnf, class_cfg=mongo_cfg)
+        status = func_dict[item](args, dnf)
 
         if not status[0]:
-            print("Error Detected: %s" % (status[1]))
+            print(f"Error Detected: {status[1]}")
 
 
 def main():
@@ -674,7 +616,6 @@ def main():
         file_perms_chk -> contains file names and their octal permissions
         file_crt -> contains options which require files to be created
         func_dict -> dictionary list for the function calls or other options
-#        opt_def_dict -> contains options with their default values
         opt_con_req_dict -> contains the options that require other options
         opt_multi_list -> contains the options that will have multiple values
         opt_val_list -> contains options which require values
@@ -689,18 +630,13 @@ def main():
     file_crt = ["-o"]
     func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
                  "-K": kernel_run}
-#    opt_def_dict = {"-i": "sysmon:server_pkgs"}
-#    opt_con_req_dict = {
-#        "-i": ["-c", "-d"], "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
     opt_con_req_dict = {"-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
     opt_multi_list = ["-e", "-s"]
-#    opt_val_list = ["-c", "-d", "-i", "-o", "-e", "-s", "-y"]
     opt_val_list = ["-b", "-d", "-o", "-e", "-s", "-y"]
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
-        sys.argv, opt_val=opt_val_list, opt_def=opt_def_dict,
-        multi_val=opt_multi_list)
+        sys.argv, opt_val=opt_val_list, multi_val=opt_multi_list)
 
     if args.arg_parse2()                                                    \
        and not gen_libs.help_func(args, __version__, help_message)          \
@@ -715,8 +651,8 @@ def main():
             del proglock
 
         except gen_class.SingleInstanceException:
-            print("WARNING:  Lock in place for package_admin with id of: %s"
-                  % (args.get_val("-y", def_val="")))
+            print(f'WARNING:  Lock in place for package_admin with id of:'
+                  f' {args.get_val("-y", def_val="")}')
 
 
 if __name__ == "__main__":

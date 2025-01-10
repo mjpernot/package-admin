@@ -24,13 +24,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser(object):                                # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -76,11 +76,8 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_mongo_rabbit_failure
         test_rabbit_failure
         test_rabbit_successful
-        test_mongo_failure
-        test_mongo_successful
 
     """
 
@@ -100,42 +97,20 @@ class UnitTest(unittest.TestCase):
         self.data = {"Server": "ServerName"}
 
         self.status2 = (True, None)
-        self.status3 = (False, "Mongo_Message")
+#        self.status3 = (False, "Mongo_Message")
         self.status4 = (False, "Rabbit_Message")
 
         self.results2 = (True, None)
-        self.results3 = (False, "Mongo_Message")
+#        self.results3 = (False, "Mongo_Message")
         self.results4 = (False, "Rabbit_Message")
-        self.results5 = (
-            False, "MongoDB: Mongo_Message RabbitMQ: Rabbit_Message")
+#        self.results5 = (
+#            False, "MongoDB: Mongo_Message RabbitMQ: Rabbit_Message")
 
     @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
     @mock.patch("package_admin.rabbitmq_publish")
-    @mock.patch("package_admin.mongo_insert")
-    def test_mongo_rabbit_failure(self, mock_mongo, mock_rabbit):
-
-        """Function:  test_mongo_rabbit_failure
-
-        Description:  Test with mongo insert and rabbitmq publication failure.
-
-        Arguments:
-
-        """
-
-        mock_rabbit.return_value = self.status4
-        mock_mongo.return_value = self.status3
-
-        self.assertEqual(
-            package_admin.output_run(self.args, self.data), self.results5)
-
-    @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
-    @mock.patch("package_admin.rabbitmq_publish")
-    @mock.patch("package_admin.mongo_insert")
-    def test_rabbit_failure(self, mock_mongo, mock_rabbit):
+    def test_rabbit_failure(self, mock_rabbit):
 
         """Function:  test_rabbit_failure
 
@@ -146,7 +121,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_rabbit.return_value = self.status4
-        mock_mongo.return_value = self.status2
 
         self.assertEqual(
             package_admin.output_run(self.args, self.data), self.results4)
@@ -155,8 +129,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
     @mock.patch("package_admin.rabbitmq_publish")
-    @mock.patch("package_admin.mongo_insert")
-    def test_rabbit_successful(self, mock_mongo, mock_rabbit):
+    def test_rabbit_successful(self, mock_rabbit):
 
         """Function:  test_rabbit_successful
 
@@ -167,49 +140,6 @@ class UnitTest(unittest.TestCase):
         """
 
         mock_rabbit.return_value = self.status2
-        mock_mongo.return_value = self.status2
-
-        self.assertEqual(
-            package_admin.output_run(self.args, self.data), self.results2)
-
-    @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
-    @mock.patch("package_admin.rabbitmq_publish")
-    @mock.patch("package_admin.mongo_insert")
-    def test_mongo_failure(self, mock_mongo, mock_rabbit):
-
-        """Function:  test_mongo_failure
-
-        Description:  Test with mongo insert failure.
-
-        Arguments:
-
-        """
-
-        mock_rabbit.return_value = self.status2
-        mock_mongo.return_value = self.status3
-
-        self.assertEqual(
-            package_admin.output_run(self.args, self.data), self.results3)
-
-    @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
-    @mock.patch("package_admin.write_file", mock.Mock(return_value=True))
-    @mock.patch("package_admin.rabbitmq_publish")
-    @mock.patch("package_admin.mongo_insert")
-    def test_mongo_successful(self, mock_mongo, mock_rabbit):
-
-        """Function:  test_mongo_successful
-
-        Description:  Test with mongo insert successful.
-
-        Arguments:
-
-        """
-
-        mock_rabbit.return_value = self.status2
-        mock_mongo.return_value = self.status2
 
         self.assertEqual(
             package_admin.output_run(self.args, self.data), self.results2)

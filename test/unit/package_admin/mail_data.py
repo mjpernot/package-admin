@@ -22,8 +22,8 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -87,7 +87,7 @@ class Mail(object):
         return status
 
 
-class ArgParser(object):
+class ArgParser(object):                                # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -110,7 +110,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -158,7 +158,7 @@ class UnitTest(unittest.TestCase):
         self.args3.args_array = {"-e": "ToAddress", "-s": "Subject"}
         self.args4.args_array = {
             "-e": "ToAddress", "-s": "Subject", "-u": True}
-        self.data = dict()
+        self.data = {}
         self.mail = Mail()
 
     def test_no_mail(self):

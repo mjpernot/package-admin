@@ -22,9 +22,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import lib.gen_libs as gen_libs
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs                 # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -95,7 +95,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -122,7 +122,7 @@ class ArgParser(object):
         return list(self.args_array.keys())
 
 
-class Yum(object):
+class Yum(object):                                      # pylint:disable=R0903
 
     """Class:  Yum
 
