@@ -51,7 +51,7 @@ class ArgParser(object):                                # pylint:disable=R0903
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -95,7 +95,7 @@ class UnitTest(unittest.TestCase):
         self.args3 = ArgParser()
         self.args2.args_array = {"-z": True}
         self.args3.args_array = {"-z": False}
-        self.data = dict()
+        self.data = {}
 
     @mock.patch("package_admin.gen_libs.display_data",
                 mock.Mock(return_value=True))

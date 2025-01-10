@@ -525,8 +525,6 @@ def output_run(args, data, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) data -> Dictionary that has package data
-#        (input) **kwargs:
-#            class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - Successful operation
             status[1] - Error message
@@ -568,15 +566,10 @@ def kernel_run(args, dnf, **kwargs):
 
     """
 
-#    if sys.version_info >= (3, 0):
-    status2, data = kernel_check(dnf)
+    status, data = kernel_check(dnf)
 
-    if status2[0]:
+    if status[0]:
         status = output_run(args, data, **kwargs)
-
-#    else:
-#        status = (
-#            False, "Warning: kernel_run: Only available for Dnf class use")
 
     return status
 

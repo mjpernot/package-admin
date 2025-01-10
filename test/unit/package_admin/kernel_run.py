@@ -1,14 +1,12 @@
 #!/usr/bin/python
 # Classification (U)
 
-"""Program:  kernel_run3.py
+"""Program:  kernel_run.py
 
     Description:  Unit testing of kernel_run in package_admin.py.
 
-    Note:  This is only for Python 3 testing.
-
     Usage:
-        test/unit/package_admin/kernel_run3.py
+        test/unit/package_admin/kernel_run.py
 
     Arguments:
 
@@ -87,9 +85,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_output_failure
+        test_output_successful
         test_kernel_failure
         test_kernel_successful
-        test_python_30
 
     """
 
@@ -110,9 +109,47 @@ class UnitTest(unittest.TestCase):
 
         self.status = (False, "Kernel_Message")
         self.status2 = (True, None)
+        self.status3 = (False, "Output_Message")
 
         self.results = (False, "Kernel_Message")
         self.results2 = (True, None)
+        self.results3 = (False, "Output_Message")
+
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    def test_output_failure(self, mock_chk, mock_output):
+
+        """Function:  test_output_failure
+
+        Description:  Test with output_run failure.
+
+        Arguments:
+
+        """
+
+        mock_output.return_value = self.status3
+        mock_chk.return_value = self.status2, self.data
+
+        self.assertEqual(
+            package_admin.kernel_run(self.args, self.dnf), self.results3)
+
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    def test_output_successful(self, mock_chk, mock_output):
+
+        """Function:  test_output_successful
+
+        Description:  Test with output_run successful.
+
+        Arguments:
+
+        """
+
+        mock_output.return_value = self.status2
+        mock_chk.return_value = self.status2, self.data
+
+        self.assertEqual(
+            package_admin.kernel_run(self.args, self.dnf), self.results2)
 
     @mock.patch("package_admin.kernel_check")
     def test_kernel_failure(self, mock_chk):
@@ -147,22 +184,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.kernel_run(self.args, self.dnf), self.results2)
-
-    @mock.patch("package_admin.kernel_check")
-    def test_python_30(self, mock_chk):
-
-        """Function:  test_python_30
-
-        Description:  Test with python 3.0 environment.
-
-        Arguments:
-
-        """
-
-        mock_chk.return_value = self.status, dict()
-
-        self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.results)
 
 
 if __name__ == "__main__":

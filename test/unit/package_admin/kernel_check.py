@@ -143,7 +143,7 @@ class UnitTest(unittest.TestCase):
         self.data = {
             "Server": "Server_Name", "OsRelease": "OS_Release",
             "AsOf": "2024-02-14 14:15:45"}
-        self.data2 = dict()
+        self.data2 = {}
         self.pkg1 = Package(1)
         self.pkg2 = Package(2)
         self.pkg3 = Package(3)
@@ -155,7 +155,7 @@ class UnitTest(unittest.TestCase):
         self.status = (True, None)
 
         self.results = dict(self.data)
-        self.results["Kernel"] = dict()
+        self.results["Kernel"] = {}
         self.results["Kernel"]["Current"] = str(self.pkg1.kversion)
         self.results["Kernel"]["Installed"] = self.pkg1.kversion
 
