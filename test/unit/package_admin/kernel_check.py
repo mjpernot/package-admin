@@ -28,7 +28,7 @@ import version                                  # pylint:disable=E0401,C0413
 __version__ = version.__version__
 
 
-class Package(object):                                  # pylint:disable=R0903
+class Package():                                        # pylint:disable=R0903
 
     """Class:  Package
 
@@ -68,7 +68,7 @@ class Package(object):                                  # pylint:disable=R0903
         return 0
 
 
-class Dnf(object):                                      # pylint:disable=R0903
+class Dnf():                                            # pylint:disable=R0903
 
     """Class:  Dnf
 

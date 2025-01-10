@@ -28,7 +28,7 @@ import version                                  # pylint:disable=E0401,C0413
 __version__ = version.__version__
 
 
-class Dnf(object):
+class Dnf():
 
     """Class:  Dnf
 

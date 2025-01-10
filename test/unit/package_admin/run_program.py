@@ -18,13 +18,12 @@
 import sys
 import os
 import unittest
-import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin                            # pylint:disable=E0401,C0413
-import lib.gen_libs as gen_libs                 # pylint:disable=E0401,C0413
-import version                                  # pylint:disable=E0401,C0413
+import package_admin                        # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                              # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -34,10 +33,6 @@ def list_upd_pkg(args_array, yum, **kwargs):
     """Function:  list_upd_pkg
 
     Description:  This is a function stub for package_admin.list_upd_pkg.
-
-    Arguments:
-        args_array
-        yum
 
     """
 
@@ -56,10 +51,6 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     Description:  This is a function stub for package_admin.list_ins_pkg.
 
-    Arguments:
-        args_array
-        yum
-
     """
 
     status = (True, None)
@@ -71,7 +62,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
     return status
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -122,7 +113,7 @@ class ArgParser(object):
         return list(self.args_array.keys())
 
 
-class Yum(object):                                      # pylint:disable=R0903
+class Yum():                                            # pylint:disable=R0903
 
     """Class:  Yum
 

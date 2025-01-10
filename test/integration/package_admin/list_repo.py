@@ -23,12 +23,76 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin                            # pylint:disable=E0401,C0413
-import lib.gen_libs as gen_libs                 # pylint:disable=E0401,C0413
-import lib.gen_class as gen_class               # pylint:disable=E0401,C0413
-import version                                  # pylint:disable=E0401,C0413
+import package_admin                        # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
+import version                              # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
+
+
+class Yum():
+
+    """Class:  Yum
+
+    Description:  Class which is a representation of the Yum class.
+
+    Methods:
+        __init__
+        get_hostname
+        get_distro
+        fetch_update_pkgs
+
+    """
+
+    def __init__(self):
+
+        """Method:  __init__
+
+        Description:  Initialization instance of the Mail class.
+
+        Arguments:
+
+        """
+
+        self.hostname = "Server_Host_Name"
+        self.data = ['REPOSITORY_LIST']
+        self.distro = ("OS_Name", "Version_Release", "Type_Release")
+
+    def get_distro(self):
+
+        """Method:  get_distro
+
+        Description:  Return self.distro attribute.
+
+        Arguments:
+
+        """
+
+        return self.distro
+
+    def get_hostname(self):
+
+        """Method:  get_hostname
+
+        Description:  Return Server's hostname.
+
+        Arguments:
+
+        """
+
+        return self.hostname
+
+    def fetch_repos(self):
+
+        """Method:  fetch_repos
+
+        Description:  Return Server's update package data.
+
+        Arguments:
+
+        """
+
+        return self.data
 
 
 class UnitTest(unittest.TestCase):
@@ -56,70 +120,6 @@ class UnitTest(unittest.TestCase):
         Arguments:
 
         """
-
-        class Yum(object):
-
-            """Class:  Yum
-
-            Description:  Class which is a representation of the Yum class.
-
-            Methods:
-                __init__
-                get_hostname
-                get_distro
-                fetch_update_pkgs
-
-            """
-
-            def __init__(self):
-
-                """Method:  __init__
-
-                Description:  Initialization instance of the Mail class.
-
-                Arguments:
-
-                """
-
-                self.hostname = "Server_Host_Name"
-                self.data = ['REPOSITORY_LIST']
-                self.distro = ("OS_Name", "Version_Release", "Type_Release")
-
-            def get_distro(self):
-
-                """Method:  get_distro
-
-                Description:  Return self.distro attribute.
-
-                Arguments:
-
-                """
-
-                return self.distro
-
-            def get_hostname(self):
-
-                """Method:  get_hostname
-
-                Description:  Return Server's hostname.
-
-                Arguments:
-
-                """
-
-                return self.hostname
-
-            def fetch_repos(self):
-
-                """Method:  fetch_repos
-
-                Description:  Return Server's update package data.
-
-                Arguments:
-
-                """
-
-                return self.data
 
         self.yum = Yum()
         self.base_dir = "test/integration/package_admin"

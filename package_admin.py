@@ -157,7 +157,7 @@ def help_message():
     print(__doc__)
 
 
-def process_yum(args, dnf, dict_key, func_name, **kwargs):
+def process_yum(args, dnf, dict_key, func_name):
 
     """Function:  process_yum
 
@@ -236,14 +236,14 @@ def list_upd_pkg(args, dnf, **kwargs):
         status, data = kernel_check(dnf, data)
 
         if status[0]:
-            status = output_run(args, data, **kwargs)
+            status = output_run(args, data)
     else:
-        status = output_run(args, data, **kwargs)
+        status = output_run(args, data)
 
     return status
 
 
-def list_ins_pkg(args, dnf, **kwargs):
+def list_ins_pkg(args, dnf):
 
     """Function:  list_ins_pkg
 
@@ -259,7 +259,7 @@ def list_ins_pkg(args, dnf, **kwargs):
     """
 
     status = process_yum(
-        args, dnf, "InstalledPackages", dnf.fetch_install_pkgs, **kwargs)
+        args, dnf, "InstalledPackages", dnf.fetch_install_pkgs)
 
     if not status[0]:
         status = (status[0], "list_ins_pkg: " + status[1])
@@ -267,7 +267,7 @@ def list_ins_pkg(args, dnf, **kwargs):
     return status
 
 
-def list_repo(args, dnf, **kwargs):
+def list_repo(args, dnf):
 
     """Function:  list_repo
 
@@ -282,7 +282,7 @@ def list_repo(args, dnf, **kwargs):
 
     """
 
-    status = process_yum(args, dnf, "Repos", dnf.fetch_repos, **kwargs)
+    status = process_yum(args, dnf, "Repos", dnf.fetch_repos)
 
     if not status[0]:
         status = (status[0], "list_repo: " + status[1])
@@ -509,7 +509,7 @@ def mail_data(args, data):
         mail.send_mail(use_mailx=use_mailx)
 
 
-def output_run(args, data, **kwargs):
+def output_run(args, data):
 
     """Function:  output_run
 
@@ -539,7 +539,7 @@ def output_run(args, data, **kwargs):
     return status
 
 
-def kernel_run(args, dnf, **kwargs):
+def kernel_run(args, dnf):
 
     """Function:  kernel_run
 
@@ -560,7 +560,7 @@ def kernel_run(args, dnf, **kwargs):
     status, data = kernel_check(dnf)
 
     if status[0]:
-        status = output_run(args, data, **kwargs)
+        status = output_run(args, data)
 
     return status
 

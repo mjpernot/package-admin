@@ -27,7 +27,7 @@ import version                                  # pylint:disable=E0401,C0413
 __version__ = version.__version__
 
 
-class Package(object):                                  # pylint:disable=R0903
+class Package():                                        # pylint:disable=R0903
 
     """Class:  Package
 
@@ -99,7 +99,7 @@ class UnitTest(unittest.TestCase):
 
         self.results1 = [data2]
         self.results2 = [data2, "kernel-core-7.7"]
-        self.results3 = list()
+        self.results3 = []
 
     def test_no_kernel(self):
 

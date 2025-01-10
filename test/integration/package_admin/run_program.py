@@ -23,10 +23,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin                            # pylint:disable=E0401,C0413
-import lib.gen_libs as gen_libs                 # pylint:disable=E0401,C0413
-import lib.gen_class as gen_class               # pylint:disable=E0401,C0413
-import version                                  # pylint:disable=E0401,C0413
+import package_admin                        # pylint:disable=E0401,C0413
+import lib.gen_class as gen_class           # pylint:disable=E0401,C0413,R0402
+import version                              # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -111,7 +110,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_upd_file(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_upd_file
 
@@ -140,7 +139,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_upd_file_json(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_upd_file_json
 
@@ -217,7 +216,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_ins_file(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_ins_file
 
@@ -246,7 +245,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_ins_file_json(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_ins_file_json
 
@@ -323,7 +322,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_repo_file(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_repo_file
 
@@ -352,7 +351,7 @@ class UnitTest(unittest.TestCase):
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
     @mock.patch("package_admin.datetime")
     def test_run_program_repo_file_json(
-        self, mock_date, mock_host, mock_data, mock_distro):
+            self, mock_date, mock_host, mock_data, mock_distro):
 
         """Function:  test_run_program_repo_file_json
 

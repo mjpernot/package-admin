@@ -23,9 +23,9 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin                            # pylint:disable=E0401,C0413
-import lib.gen_libs as gen_libs                 # pylint:disable=E0401,C0413
-import version                                  # pylint:disable=E0401,C0413
+import package_admin                        # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                              # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -431,11 +431,9 @@ class UnitTest(unittest.TestCase):
 
         """
 
-        self.config_path = os.path.join(self.test_path, "bad_config")
         sys.argv = self.argv_list2
 
-        with gen_libs.no_std_out():
-            self.assertFalse(package_admin.main())
+        self.assertFalse(package_admin.main())
 
     def test_main_arg_cond_rep_false(self):
 
