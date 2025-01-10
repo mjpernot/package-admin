@@ -222,10 +222,9 @@ def list_upd_pkg(args, dnf, **kwargs):
         (input) dnf -> Dnf class instance
         (input) **kwargs:
             data -> Dictionary containing server details
-            class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
-            status[0] - True|False - Mongo connection successful
-            status[1] - Error message if Mongo connection failed
+            status[0] - True|False - kernel check successful
+            status[1] - Error message if kernel check failed
 
     """
 
@@ -253,11 +252,9 @@ def list_ins_pkg(args, dnf, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) dnf -> Dnf class instance
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
-            status[0] - True|False - Mongo connection successful
-            status[1] - Error message if Mongo connection failed
+            status[0] - True|False - RabbitMQ connection successful
+            status[1] - Error message if RabbitMQ connection failed
 
     """
 
@@ -279,11 +276,9 @@ def list_repo(args, dnf, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) dnf -> Dnf class instance
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
         (output) status -> Tuple on connection status
-            status[0] - True|False - Mongo connection successful
-            status[1] - Error message if Mongo connection failed
+            status[0] - True|False - RabbitMQ connection successful
+            status[1] - Error message if RabbitMQ connection failed
 
     """
 
@@ -394,8 +389,6 @@ def kernel_check(dnf, data=None):
     Arguments:
         (input) dnf -> Dnf class instance
         (input) data -> Dictionary from package listing
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - successful operation
             status[1] - Error message
@@ -440,7 +433,7 @@ def rabbitmq_publish(args, data):
 
     """Function:  rabbitmq_publish
 
-    Description:  Insert data into MongoDB.
+    Description:  Publish data to RabbitMQ.
 
     Arguments:
         (input) args -> ArgParser class instance
@@ -558,8 +551,6 @@ def kernel_run(args, dnf, **kwargs):
     Arguments:
         (input) args -> ArgParser class instance
         (input) dnf -> Dnf class instance
-        (input) **kwargs:
-            class_cfg -> Mongo server configuration
         (output) status -> Tuple on operation status
             status[0] - True|False - Successful operation
             status[1] - Error message

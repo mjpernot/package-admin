@@ -11,12 +11,6 @@ pipeline {
                 dir ('lib') {
                     git branch: "mod/292", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
                 }
-                dir ('mongo_lib') {
-                    git branch: "mod/421", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/mongo-lib.git"
-                }
-                dir ('mongo_lib/lib') {
-                    git branch: "mod/286", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/python-lib.git"
-                }
                 dir ('rabbit_lib') {
                     git branch: "mod/221", credentialsId: "2cfb403c-be21-4fac-94d7-c8cd5c531feb", url: "https://gitlab.code.dicelab.net/JAC-IDM/rabbitmq-lib.git"
                 }
@@ -24,7 +18,6 @@ pipeline {
                 virtualenv test_env
                 source test_env/bin/activate
                 pip2 install mock==2.0.0 --user
-                pip2 install pymongo==3.8.0 --user
                 pip2 install psutil==5.4.3 --user
                 ./test/unit/package_admin/help_message.py
                 ./test/unit/package_admin/process_yum.py
@@ -42,7 +35,6 @@ pipeline {
             steps {
                 sh './test/unit/sonarqube_code_coverage.sh'
                 sh 'rm -rf lib'
-                sh 'rm -rf mongo_lib'
                 script {
                     scannerHome = tool 'sonar-scanner';
                 }

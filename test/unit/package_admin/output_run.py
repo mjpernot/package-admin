@@ -97,14 +97,10 @@ class UnitTest(unittest.TestCase):
         self.data = {"Server": "ServerName"}
 
         self.status2 = (True, None)
-#        self.status3 = (False, "Mongo_Message")
         self.status4 = (False, "Rabbit_Message")
 
         self.results2 = (True, None)
-#        self.results3 = (False, "Mongo_Message")
         self.results4 = (False, "Rabbit_Message")
-#        self.results5 = (
-#            False, "MongoDB: Mongo_Message RabbitMQ: Rabbit_Message")
 
     @mock.patch("package_admin.mail_data", mock.Mock(return_value=True))
     @mock.patch("package_admin.display_data", mock.Mock(return_value=True))
