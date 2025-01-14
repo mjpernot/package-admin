@@ -19,15 +19,19 @@ import os
 import sys
 import datetime
 import shutil
-import socket
 
-# Third-party
-import json
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 # Local
 sys.path.append(os.getcwd())
-import lib.gen_libs as gen_libs
-import version
+try:
+    from . import version
+
+except (ValueError, ImportError) as err:
+    import version
 
 __version__ = version.__version__
 
@@ -52,9 +56,10 @@ def file_check(out_file, hold_file, search_list, json_fmt=False):
 
     if os.path.isfile(out_file):
         for item in search_list:
-            if item not in open(out_file).read():
+            if item not in open(                        # pylint:disable=R1732
+                out_file, "r", encoding="UTF-8").read():
                 status = False
-                print("\t\tError:  %s not present in %s" % (item, out_file))
+                print(f"\t\tError:  {item} not present in {out_file}")
 
                 if not os.path.isfile(hold_file):
                     shutil.copy2(out_file, hold_file)
@@ -66,7 +71,7 @@ def file_check(out_file, hold_file, search_list, json_fmt=False):
 
     else:
         status = False
-        print("\t\tError:  %s is not present" % (out_file))
+        print(f"\t\tError: {out_file} is not present")
 
     return status
 
@@ -86,11 +91,12 @@ def _check_json(out_file, status, hold_file):
     """
 
     try:
-        _ = json.load(open(out_file))
+        _ = json.load(
+            open(out_file, "r", encoding="UTF-8"))      # pylint:disable=R1732
 
     except ValueError:
         status = False
-        print("\t\tError:  %s is not in JSON format" % (out_file))
+        print(f"\t\tError:  {out_file} is not in JSON format")
 
         if not os.path.isfile(hold_file):
             shutil.copy2(out_file, hold_file)
@@ -126,9 +132,6 @@ def main():
     hold_file = out_file + "." + ext + ".HOLD"
     search_list = ["AsOf", "Server"]
     status = True
-    hostname = socket.gethostname()
-    dbn = "test_sysmon"
-    tbl = "test_server_pkgs"
 
     if "-L" in sys.argv:
         search_list.append("InstalledPackages")

@@ -18,7 +18,6 @@
 import sys
 import os
 import unittest
-import filecmp
 import mock
 
 try:
