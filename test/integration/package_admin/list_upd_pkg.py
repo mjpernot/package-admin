@@ -133,16 +133,17 @@ class UnitTest(unittest.TestCase):
         self.out_file = os.path.join(self.tmp_path, "package_upd_list.txt")
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
-        self.array2 = ["./package_admin.py", "-o", self.out_file, "-z"]
+        prog = "./package_admin.py"
+        self.array2 = [prog, "-o", self.out_file, "-z"]
         self.args_array2 = gen_class.ArgParser(self.array2)
         self.args_array2.arg_parse2()
         self.args_array2.args_array["-o"] = self.out_file
         self.args_array2.args_array["-z"] = True
-        self.array4 = ["./package_admin.py", "-z"]
+        self.array4 = [prog, "-z"]
         self.args_array4 = gen_class.ArgParser(self.array4)
         self.args_array4.arg_parse2()
         self.args_array4.args_array["-z"] = True
-        self.array5 = ["./package_admin.py"]
+        self.array5 = [prog]
         self.args_array5 = gen_class.ArgParser(self.array5)
         self.time_str = "2018-01-01 01:00:00"
 

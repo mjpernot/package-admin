@@ -78,6 +78,7 @@ class UnitTest(unittest.TestCase):
                            "-R": package_admin.list_repo}
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
+        prog = "./package_admin.py"
         self.hostname = "Server_Host_Name"
         self.distro = ("OS_Name", "Version_Release", "Type_Release")
         self.upd_data = {"Package": "PACKAGE_NAME", "Ver": "0.0.0",
@@ -85,16 +86,16 @@ class UnitTest(unittest.TestCase):
         self.ins_data = {"Package": "PACKAGE_NAME", "Ver": "0.0.0",
                          "Arch": "LINUX"}
         self.repo_data = ['REPOSITORY_LIST']
-        self.array2 = ["./package_admin.py", "-o", self.out_file, "-z"]
+        self.array2 = [prog, "-o", self.out_file, "-z"]
         self.args_array2 = gen_class.ArgParser(self.array2)
         self.args_array2.arg_parse2()
         self.args_array2.args_array["-o"] = self.out_file
         self.args_array2.args_array["-z"] = True
-        self.array4 = ["./package_admin.py", "-z"]
+        self.array4 = [prog, "-z"]
         self.args_array4 = gen_class.ArgParser(self.array4)
         self.args_array4.arg_parse2()
         self.args_array4.args_array["-z"] = True
-        self.array5 = ["./package_admin.py", "-z"]
+        self.array5 = [prog, "-z"]
         self.args_array5 = gen_class.ArgParser(self.array5)
         self.args_array5.arg_parse2()
         self.time_str = "2018-01-01 01:00:00"
