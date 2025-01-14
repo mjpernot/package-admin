@@ -229,7 +229,6 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.class_cfg = "class_cfg_listing"
         self.dict_key = "Update_Packages"
         self.func_names = self.yum.fetch_update_pkgs
         self.mail = Mail()
@@ -364,8 +363,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_json(self, mock_mail):
@@ -384,8 +383,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_mailx_std(self, mock_mail):
@@ -404,8 +403,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_std(self, mock_mail):
@@ -424,8 +423,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
     def test_write_file_json(self, mock_write):
