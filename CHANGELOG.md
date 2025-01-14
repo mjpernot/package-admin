@@ -9,7 +9,8 @@ Breaking Changes
 
 - Removed support for Python 2.7.
 - Removed mongo insert (-i) option.
-- Updated python-lib v4.0.0
+- Updated python-lib==4.0.0
+- Updated rabbitmq-lib==2.2.8
 
 ### Fixed
 - main: Added -b to opt_val_list to ensure rabbitmq file name is passed.
