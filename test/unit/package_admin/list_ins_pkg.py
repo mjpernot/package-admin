@@ -101,6 +101,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_list_ins_pkg_fail
         test_list_upd_pkg
 
     """
@@ -123,11 +124,27 @@ class UnitTest(unittest.TestCase):
         self.results = (False, "list_ins_pkg: Error Message")
 
     @mock.patch("package_admin.process_yum")
+    def test_list_ins_pkg_fail(self, mock_yum):
+
+        """Function:  test_list_ins_pkg_fail
+
+        Description:  Test call with failed return.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.list_ins_pkg(self.args, self.yum), self.results)
+
+    @mock.patch("package_admin.process_yum")
     def test_list_ins_pkg(self, mock_yum):
 
         """Function:  test_list_ins_pkg
 
-        Description:  Test call to list_ins_pkg function.
+        Description:  Test call with successful return.
 
         Arguments:
 

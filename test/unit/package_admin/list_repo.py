@@ -101,6 +101,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
+        test_list_repo_fail
         test_list_repo
 
     """
@@ -124,11 +125,27 @@ class UnitTest(unittest.TestCase):
         self.results = (False, "list_repo: Error Message")
 
     @mock.patch("package_admin.process_yum")
+    def test_list_repo_fail(self, mock_yum):
+
+        """Function:  test_list_repo_fail
+
+        Description:  Test call with failed return.
+
+        Arguments:
+
+        """
+
+        mock_yum.return_value = self.status2
+
+        self.assertEqual(
+            package_admin.list_repo(self.args, self.yum), self.results)
+
+    @mock.patch("package_admin.process_yum")
     def test_list_repo(self, mock_yum):
 
         """Function:  test_list_repo
 
-        Description:  Test call to list_repo function.
+        Description:  Test call with successful return.
 
         Arguments:
 
