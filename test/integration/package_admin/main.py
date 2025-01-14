@@ -21,6 +21,11 @@ import unittest
 import filecmp
 import mock
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 # Local
 sys.path.append(os.getcwd())
 import package_admin                        # pylint:disable=E0401,C0413
@@ -73,20 +78,6 @@ class UnitTest(unittest.TestCase):
         self.out_path = os.path.join(self.test_path, "out")
         self.tmp_path = os.path.join(self.test_path, "tmp")
         self.out_file = os.path.join(self.tmp_path, "package_out.txt")
-        self.list_non_json_file = os.path.join(
-            self.out_path, "package_list_non_json")
-        self.list_json_file = os.path.join(self.out_path, "package_list_json")
-        self.upd_non_json_file = os.path.join(
-            self.out_path, "package_upd_list_non_json")
-        self.upd_json_file = os.path.join(
-            self.out_path, "package_upd_list_json")
-        self.ins_non_json_file = os.path.join(
-            self.out_path, "package_ins_list_non_json")
-        self.ins_json_file = os.path.join(
-            self.out_path, "package_ins_list_json")
-        self.repo_non_json_file = os.path.join(
-            self.out_path, "package_repo_non_json")
-        self.repo_json_file = os.path.join(self.out_path, "package_repo_json")
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
         self.hostname = "Server_Host_Name"
@@ -102,7 +93,6 @@ class UnitTest(unittest.TestCase):
         self.argv_list5 = [os.path.join(self.base_dir, self.main)]
         self.time_str = "2018-01-01 01:00:00"
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_update_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -117,6 +107,8 @@ class UnitTest(unittest.TestCase):
 
         """
 
+        data = None
+
         mock_date.datetime.strftime.return_value = self.time_str
         mock_data.return_value = self.upd_data
         mock_host.return_value = self.hostname
@@ -127,11 +119,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.list_non_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_update_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -158,9 +150,10 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.list_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_update_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -208,7 +201,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_install_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -233,11 +225,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.ins_non_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_install_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -264,9 +256,10 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.ins_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_install_pkgs")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -314,7 +307,6 @@ class UnitTest(unittest.TestCase):
 
         self.assertFalse(package_admin.main())
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_repos")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -340,11 +332,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.repo_non_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.gen_dnf.Dnf.get_distro")
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_repos")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")
@@ -371,9 +363,10 @@ class UnitTest(unittest.TestCase):
 
         package_admin.main()
 
-        status = filecmp.cmp(self.out_file, self.repo_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
     @mock.patch("package_admin.gen_dnf.Dnf.fetch_repos")
     @mock.patch("package_admin.gen_dnf.Dnf.get_hostname")

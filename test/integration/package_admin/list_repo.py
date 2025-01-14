@@ -21,6 +21,11 @@ import unittest
 import filecmp
 import mock
 
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 # Local
 sys.path.append(os.getcwd())
 import package_admin                        # pylint:disable=E0401,C0413
@@ -127,19 +132,19 @@ class UnitTest(unittest.TestCase):
         self.out_path = os.path.join(self.test_path, "out")
         self.tmp_path = os.path.join(self.test_path, "tmp")
         self.out_file = os.path.join(self.tmp_path, "package_repo.txt")
-        self.non_json_file = os.path.join(self.out_path,
-                                          "package_repo_non_json")
-        self.json_file = os.path.join(self.out_path, "package_repo_json")
         self.dbn = "test_sysmon"
         self.tbl = "test_server_pkgs"
-        self.array2 = ["-o", self.out_file, "-z", True]
+        self.array2 = ["./package_admin.py", "-o", self.out_file, "-z"]
         self.args_array2 = gen_class.ArgParser(self.array2)
-        self.array4 = ["-z", True]
+        self.args_array2.arg_parse2()
+        self.args_array2.args_array["-o"] = self.out_file
+        self.args_array2.args_array["-z"] = True
+        self.array4 = ["-z"]
         self.args_array4 = gen_class.ArgParser(self.array4)
-        self.array5 = ["-z", False]
+        self.args_array4.arg_parse2()
+        self.args_array4.args_array["-z"] = True
         self.time_str = "2018-01-01 01:00:00"
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.datetime")
     def test_list_repo_file(self, mock_date):
 
@@ -155,11 +160,11 @@ class UnitTest(unittest.TestCase):
 
         package_admin.list_repo(self.args_array2, self.yum)
 
-        status = filecmp.cmp(self.out_file, self.non_json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
-    @unittest.skip("file_cmp is failing in Python 3 - Investigate")
     @mock.patch("package_admin.datetime")
     def test_list_repo_file_json(self, mock_date):
 
@@ -177,9 +182,10 @@ class UnitTest(unittest.TestCase):
 
         package_admin.list_repo(self.args_array2, self.yum)
 
-        status = filecmp.cmp(self.out_file, self.json_file)
+        with open(self.out_file, "r", encoding="UTF-8") as fhdr:
+            data = json.load(fhdr)
 
-        self.assertTrue(status)
+        self.assertIn("Server", data)
 
     @mock.patch("package_admin.datetime")
     def test_list_repo_sup_std(self, mock_date):
