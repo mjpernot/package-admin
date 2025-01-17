@@ -22,13 +22,13 @@ import unittest
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Dnf(object):
+class Dnf():
 
     """Class:  Dnf
 

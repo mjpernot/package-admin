@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -51,7 +51,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -94,7 +94,7 @@ class UnitTest(unittest.TestCase):
         self.args2 = ArgParser()
         self.args.args_array = {"-r": True, "-b": "rabbitmq", "-d": "config"}
         self.args2.args_array = {"-b": "rabbitmq", "-d": "config"}
-        self.data = dict()
+        self.data = {}
 
         self.status = (True, None)
         self.status2 = (False, "Error Message Here")

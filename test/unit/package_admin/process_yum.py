@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class Mail(object):
+class Mail():
 
     """Class:  Mail
 
@@ -87,7 +87,7 @@ class Mail(object):
         return status
 
 
-class Yum(object):
+class Yum():
 
     """Class:  Yum
 
@@ -155,7 +155,7 @@ class Yum(object):
         return self.data
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -178,7 +178,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -205,13 +205,10 @@ class UnitTest(unittest.TestCase):
         test_rabbitmq_success
         test_append_file_json
         test_append_file
-        test_mongo_conn_fail
-        test_mongo_conn_success
         test_mailx_json
         test_email_json
         test_mailx_std
         test_email_std
-        test_mongo_insert
         test_write_file_json
         test_write_file_true
         test_suppress_false_json
@@ -232,7 +229,6 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.class_cfg = "class_cfg_listing"
         self.dict_key = "Update_Packages"
         self.func_names = self.yum.fetch_update_pkgs
         self.mail = Mail()
@@ -264,35 +260,7 @@ class UnitTest(unittest.TestCase):
 
         self.status = (True, None)
         self.status2 = (False, "Error_Message")
-        self.results = (False, "Mongo_Insert: Error_Message")
         self.results2 = (False, "RabbitMQ: Error_Message")
-        self.results3 = (
-            False, "Mongo_Insert: Error_Message RabbitMQ: Error_Message")
-
-    @mock.patch(
-        "package_admin.gen_libs.load_module", mock.Mock(return_value=True))
-    @mock.patch("package_admin.mongo_libs.ins_doc")
-    @mock.patch("package_admin.rabbitmq_class.pub_2_rmq")
-    def test_rabbitmq_mongo_fail(self, mock_rmq, mock_mongo):
-
-        """Function:  test_rabbitmq_mongo_fail
-
-        Description:  Test with failed publish to RabbitMQ and failed to
-            insert into Mongodb.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array11
-
-        mock_rmq.return_value = self.status2
-        mock_mongo.return_value = self.status2
-
-        self.assertEqual(
-            package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.results3)
 
     @mock.patch(
         "package_admin.gen_libs.load_module", mock.Mock(return_value=True))
@@ -378,46 +346,6 @@ class UnitTest(unittest.TestCase):
                 self.args, self.yum, self.dict_key, self.func_names),
             self.status)
 
-    @mock.patch("package_admin.mongo_libs.ins_doc")
-    def test_mongo_conn_fail(self, mock_insert):
-
-        """Function:  test_mongo_conn_fail
-
-        Description:  Test with failed Mongo connection.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array6
-
-        mock_insert.return_value = self.status2
-
-        self.assertEqual(
-            package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.results)
-
-    @mock.patch("package_admin.mongo_libs.ins_doc")
-    def test_mongo_conn_success(self, mock_insert):
-
-        """Function:  test_mongo_conn_success
-
-        Description:  Test with successful Mongo connection.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array6
-
-        mock_insert.return_value = self.status
-
-        self.assertEqual(
-            package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
-
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_mailx_json(self, mock_mail):
 
@@ -435,8 +363,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_json(self, mock_mail):
@@ -455,8 +383,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_mailx_std(self, mock_mail):
@@ -475,8 +403,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_class.setup_mail")
     def test_email_std(self, mock_mail):
@@ -495,28 +423,8 @@ class UnitTest(unittest.TestCase):
 
         self.assertEqual(
             package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
-
-    @mock.patch("package_admin.mongo_libs.ins_doc")
-    def test_mongo_insert(self, mock_insert):
-
-        """Function:  test_mongo_insert
-
-        Description:  Test with sending data to Mongo database.
-
-        Arguments:
-
-        """
-
-        self.args.args_array = self.args_array6
-
-        mock_insert.return_value = self.status
-
-        self.assertEqual(
-            package_admin.process_yum(
-                self.args, self.yum, self.dict_key, self.func_names,
-                class_cfg=self.class_cfg), self.status)
+                self.args, self.yum, self.dict_key, self.func_names),
+            self.status)
 
     @mock.patch("package_admin.gen_libs.write_file")
     def test_write_file_json(self, mock_write):

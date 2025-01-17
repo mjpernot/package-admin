@@ -5,8 +5,6 @@
 
     Description:  Unit testing of kernel_run in package_admin.py.
 
-    Note:  This is only for Python 2 testing.
-
     Usage:
         test/unit/package_admin/kernel_run.py
 
@@ -20,16 +18,17 @@
 import sys
 import os
 import unittest
+import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -37,8 +36,6 @@ class ArgParser(object):
 
     Methods:
         __init__
-        get_val
-        get_args_keys
 
     """
 
@@ -56,7 +53,7 @@ class ArgParser(object):
         self.args_array = {"-i": "Database_Name:Table_Name"}
 
 
-class Dnf(object):
+class Dnf():                                            # pylint:disable=R0903
 
     """Class:  Dnf
 
@@ -88,7 +85,10 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_python_27
+        test_output_failure
+        test_output_successful
+        test_kernel_failure
+        test_kernel_successful
 
     """
 
@@ -104,22 +104,86 @@ class UnitTest(unittest.TestCase):
 
         self.dnf = Dnf()
         self.args = ArgParser()
-        self.status = (True, None)
-        self.status2 = (
-            False, "Warning: kernel_run: Only available for Dnf class use")
+        self.args.args_array = {"-i": True, "-f": True}
+        self.data = {"Server": "ServerName"}
 
-    def test_python_27(self):
+        self.status = (False, "Kernel_Message")
+        self.status2 = (True, None)
+        self.status3 = (False, "Output_Message")
 
-        """Function:  test_python_27
+        self.results = (False, "Kernel_Message")
+        self.results2 = (True, None)
+        self.results3 = (False, "Output_Message")
 
-        Description:  Test with python 2.7 environment.
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    def test_output_failure(self, mock_chk, mock_output):
+
+        """Function:  test_output_failure
+
+        Description:  Test with output_run failure.
 
         Arguments:
 
         """
 
+        mock_output.return_value = self.status3
+        mock_chk.return_value = self.status2, self.data
+
         self.assertEqual(
-            package_admin.kernel_run(self.args, self.dnf), self.status2)
+            package_admin.kernel_run(self.args, self.dnf), self.results3)
+
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    def test_output_successful(self, mock_chk, mock_output):
+
+        """Function:  test_output_successful
+
+        Description:  Test with output_run successful.
+
+        Arguments:
+
+        """
+
+        mock_output.return_value = self.status2
+        mock_chk.return_value = self.status2, self.data
+
+        self.assertEqual(
+            package_admin.kernel_run(self.args, self.dnf), self.results2)
+
+    @mock.patch("package_admin.kernel_check")
+    def test_kernel_failure(self, mock_chk):
+
+        """Function:  test_kernel_failure
+
+        Description:  Test with kernel check failure.
+
+        Arguments:
+
+        """
+
+        mock_chk.return_value = self.status, self.data
+
+        self.assertEqual(
+            package_admin.kernel_run(self.args, self.dnf), self.results)
+
+    @mock.patch("package_admin.output_run")
+    @mock.patch("package_admin.kernel_check")
+    def test_kernel_successful(self, mock_chk, mock_output):
+
+        """Function:  test_kernel_successful
+
+        Description:  Test with kernel check successful.
+
+        Arguments:
+
+        """
+
+        mock_output.return_value = self.status2
+        mock_chk.return_value = self.status2, self.data
+
+        self.assertEqual(
+            package_admin.kernel_run(self.args, self.dnf), self.results2)
 
 
 if __name__ == "__main__":

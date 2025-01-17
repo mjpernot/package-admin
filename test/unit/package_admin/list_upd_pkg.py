@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -67,7 +67,7 @@ class ArgParser(object):
         return self.args_array.get(skey, def_val)
 
 
-class Dnf(object):
+class Dnf():                                            # pylint:disable=R0903
 
     """Class:  Dnf
 
