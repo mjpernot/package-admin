@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -52,10 +52,10 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
 
-class Yum(object):
+class Yum():                                            # pylint:disable=R0903
 
     """Class:  Yum
 
@@ -101,8 +101,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_mongo_failure
-        test_mongo_successful
+        test_list_repo_fail
         test_list_repo
 
     """
@@ -126,11 +125,11 @@ class UnitTest(unittest.TestCase):
         self.results = (False, "list_repo: Error Message")
 
     @mock.patch("package_admin.process_yum")
-    def test_mongo_failure(self, mock_yum):
+    def test_list_repo_fail(self, mock_yum):
 
-        """Function:  test_mongo_failure
+        """Function:  test_list_repo_fail
 
-        Description:  Test with failed Mongo connection.
+        Description:  Test call with failed return.
 
         Arguments:
 
@@ -142,27 +141,11 @@ class UnitTest(unittest.TestCase):
             package_admin.list_repo(self.args, self.yum), self.results)
 
     @mock.patch("package_admin.process_yum")
-    def test_mongo_successful(self, mock_yum):
-
-        """Function:  test_mongo_successful
-
-        Description:  Test with successful Mongo connection.
-
-        Arguments:
-
-        """
-
-        mock_yum.return_value = self.status
-
-        self.assertEqual(
-            package_admin.list_repo(self.args, self.yum), self.status)
-
-    @mock.patch("package_admin.process_yum")
     def test_list_repo(self, mock_yum):
 
         """Function:  test_list_repo
 
-        Description:  Test call to list_repo function.
+        Description:  Test call with successful return.
 
         Arguments:
 

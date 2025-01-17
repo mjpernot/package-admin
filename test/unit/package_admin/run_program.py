@@ -18,13 +18,12 @@
 import sys
 import os
 import unittest
-import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import lib.gen_libs as gen_libs
-import version
+import package_admin                        # pylint:disable=E0401,C0413
+import lib.gen_libs as gen_libs             # pylint:disable=E0401,C0413,R0402
+import version                              # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
@@ -34,10 +33,6 @@ def list_upd_pkg(args_array, yum, **kwargs):
     """Function:  list_upd_pkg
 
     Description:  This is a function stub for package_admin.list_upd_pkg.
-
-    Arguments:
-        args_array
-        yum
 
     """
 
@@ -56,10 +51,6 @@ def list_ins_pkg(args_array, yum, **kwargs):
 
     Description:  This is a function stub for package_admin.list_ins_pkg.
 
-    Arguments:
-        args_array
-        yum
-
     """
 
     status = (True, None)
@@ -71,7 +62,7 @@ def list_ins_pkg(args_array, yum, **kwargs):
     return status
 
 
-class ArgParser(object):
+class ArgParser():
 
     """Class:  ArgParser
 
@@ -95,7 +86,7 @@ class ArgParser(object):
         """
 
         self.cmdline = None
-        self.args_array = dict()
+        self.args_array = {}
 
     def get_val(self, skey, def_val=None):
 
@@ -122,7 +113,7 @@ class ArgParser(object):
         return list(self.args_array.keys())
 
 
-class Yum(object):
+class Yum():                                            # pylint:disable=R0903
 
     """Class:  Yum
 
@@ -176,14 +167,13 @@ class UnitTest(unittest.TestCase):
 
         self.yum = Yum()
         self.args = ArgParser()
-        self.args_array = {"-c": "mongo", "-d": "config"}
-        self.args_array2 = {"-c": "mongo", "-d": "config", "-L": True}
-        self.args_array3 = {"-c": "mongo", "-d": "config", "-U": True}
+        self.args_array = {}
+        self.args_array2 = {"-L": True}
+        self.args_array3 = {"-U": True}
         self.func_dict1 = {"-L": list_ins_pkg}
         self.func_dict2 = {"-U": list_upd_pkg}
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_func_failed(self, mock_load):
+    def test_func_failed(self):
 
         """Function:  test_func_failed
 
@@ -195,14 +185,11 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array3
 
-        mock_load.return_value = "Config_File"
-
         with gen_libs.no_std_out():
             self.assertFalse(
                 package_admin.run_program(self.args, self.func_dict2))
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_func_successful(self, mock_load):
+    def test_func_successful(self):
 
         """Function:  test_func_successful
 
@@ -214,12 +201,9 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array2
 
-        mock_load.return_value = "Config_File"
-
         self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_args_array_true(self, mock_load):
+    def test_args_array_true(self):
 
         """Function:  test_args_array_true
 
@@ -231,12 +215,9 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_load.return_value = "Config_File"
-
         self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_args_array_false(self, mock_load):
+    def test_args_array_false(self):
 
         """Function:  test_args_array_false
 
@@ -248,12 +229,9 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_load.return_value = "Config_File"
-
         self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_loop_zero(self, mock_load):
+    def test_loop_zero(self):
 
         """Function:  test_loop_zero
 
@@ -265,12 +243,9 @@ class UnitTest(unittest.TestCase):
 
         self.args.args_array = self.args_array
 
-        mock_load.return_value = "Config_File"
-
         self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 
-    @mock.patch("package_admin.gen_libs.load_module")
-    def test_loop_one(self, mock_load):
+    def test_loop_one(self):
 
         """Function:  test_loop_one
 
@@ -281,8 +256,6 @@ class UnitTest(unittest.TestCase):
         """
 
         self.args.args_array = self.args_array2
-
-        mock_load.return_value = "Config_File"
 
         self.assertFalse(package_admin.run_program(self.args, self.func_dict1))
 

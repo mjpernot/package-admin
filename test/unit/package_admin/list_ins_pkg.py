@@ -22,13 +22,13 @@ import mock
 
 # Local
 sys.path.append(os.getcwd())
-import package_admin
-import version
+import package_admin                            # pylint:disable=E0401,C0413
+import version                                  # pylint:disable=E0401,C0413
 
 __version__ = version.__version__
 
 
-class ArgParser(object):
+class ArgParser():                                      # pylint:disable=R0903
 
     """Class:  ArgParser
 
@@ -55,7 +55,7 @@ class ArgParser(object):
         self.args_array = {"-i": "Database_Name:Table_Name"}
 
 
-class Yum(object):
+class Yum():                                            # pylint:disable=R0903
 
     """Class:  Yum
 
@@ -101,8 +101,7 @@ class UnitTest(unittest.TestCase):
 
     Methods:
         setUp
-        test_mongo_failure
-        test_mongo_successful
+        test_list_ins_pkg_fail
         test_list_upd_pkg
 
     """
@@ -125,11 +124,11 @@ class UnitTest(unittest.TestCase):
         self.results = (False, "list_ins_pkg: Error Message")
 
     @mock.patch("package_admin.process_yum")
-    def test_mongo_failure(self, mock_yum):
+    def test_list_ins_pkg_fail(self, mock_yum):
 
-        """Function:  test_mongo_failure
+        """Function:  test_list_ins_pkg_fail
 
-        Description:  Test with failed Mongo connection.
+        Description:  Test call with failed return.
 
         Arguments:
 
@@ -141,27 +140,11 @@ class UnitTest(unittest.TestCase):
             package_admin.list_ins_pkg(self.args, self.yum), self.results)
 
     @mock.patch("package_admin.process_yum")
-    def test_mongo_successful(self, mock_yum):
-
-        """Function:  test_mongo_successful
-
-        Description:  Test with successful Mongo connection.
-
-        Arguments:
-
-        """
-
-        mock_yum.return_value = self.status
-
-        self.assertEqual(
-            package_admin.list_ins_pkg(self.args, self.yum), self.status)
-
-    @mock.patch("package_admin.process_yum")
     def test_list_ins_pkg(self, mock_yum):
 
         """Function:  test_list_ins_pkg
 
-        Description:  Test call to list_ins_pkg function.
+        Description:  Test call with successful return.
 
         Arguments:
 
