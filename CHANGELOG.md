@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on "Keep a Changelog".  This project adheres to Semantic Versioning.
 
 
+## [3.1.0] - 2025-07-15
+- Add ability to send email data as an file attachment.
+- Updated python-lib v4.0.3
+- Updated rabbitmq-lib v2.4.1
+
+### Changed
+- mail_data: Added ability to email data out as a file attachment.
+- main: Added -j and -g options to allow for email attachments.
+- Documentation changes.
+
+
 ## [3.0.0] - 2025-01-07
 Breaking Changes
 
