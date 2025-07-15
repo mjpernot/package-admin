@@ -57,7 +57,7 @@ def file_check(out_file, hold_file, search_list, json_fmt=False):
     if os.path.isfile(out_file):
         for item in search_list:
             if item not in open(                        # pylint:disable=R1732
-                out_file, "r", encoding="UTF-8").read():
+               out_file, "r", encoding="UTF-8").read():
                 status = False
                 print(f"\t\tError:  {item} not present in {out_file}")
 
