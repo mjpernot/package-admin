@@ -10,15 +10,21 @@
 
     Usage:
         package_admin.py
-            {-L [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
-                [-o dir_path/file [-a]] [-r -b file -d path] |
-             -R [-f] [-z] [-e to_email [to_email2 ...] [-s subject_line] [-u]]
+            {-L [-f] [-z]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]
+                     [-j FileName [-g]]]
+                 [-o dir_path/file [-a]] [-r -b file -d path] |
+             -R [-f] [-z]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]
+                     [-j FileName [-g]]]
                  [-o dir_path/file [-a]] [-r -b file -d path] |
              -U [-f] [-z]
-                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]
+                     [-j FileName [-g]]]
                  [-o dir_path/file [-a]] [-r -b file -d path] |
              -K [-f] [-z]
-                 [-e to_email [to_email2 ...] [-s subject_line] [-u]]
+                 [-e to_email [to_email2 ...] [-s subject_line] [-u]
+                     [-j FileName [-g]]]
                  [-o dir_path/file [-a]] [-r -b file -d path]}
             [-y flavor_id] [-v | -h]
 
@@ -31,11 +37,14 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
                 -u => Override the default mail command and use mailx.
+                -j file_name => Attach data to email as attachment and the
+                        file name of the attachment.
+                    -g => Add hostname to file attachment name.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
             -r => Publish entry to RabbitMQ.
                 -b file => RabbitMQ configuration file.
-                -d dir path => Directory path to config file (-b).
+                -d dir path => Directory path to config file.
 
         -U => List update packages awaiting for the server.
             -f => Flatten the JSON data structure.
@@ -46,11 +55,14 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
                 -u => Override the default mail command and use mailx.
+                -j file_name => Attach data to email as attachment and the
+                        file name of the attachment.
+                    -g => Add hostname to file attachment name.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
             -r => Publish entry to RabbitMQ.
                 -b file => RabbitMQ configuration file.
-                -d dir path => Directory path to config file (-b).
+                -d dir path => Directory path to config file.
 
         -R => List current repositories.
             -f => Flatten the JSON data structure.
@@ -60,11 +72,14 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
                 -u => Override the default mail command and use mailx.
+                -j file_name => Attach data to email as attachment and the
+                        file name of the attachment.
+                    -g => Add hostname to file attachment name.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
             -r => Publish entry to RabbitMQ.
                 -b file => RabbitMQ configuration file.
-                -d dir path => Directory path to config file (-b).
+                -d dir path => Directory path to config file.
 
         -K => Kernel check to see current and installed versions match.
             -f => Flatten the JSON data structure.
@@ -74,11 +89,14 @@
                 -s subject_line => Subject line of email.Will create own
                     subject line if one is not provided.
                 -u => Override the default mail command and use mailx.
+                -j file_name => Attach data to email as attachment and the
+                        file name of the attachment.
+                    -g => Add hostname to file attachment name.
             -o path/file => Directory path and file name for output.
                 -a => Append output to output file.
             -r => Publish entry to RabbitMQ.
                 -b file => RabbitMQ configuration file.
-                -d dir path => Directory path to config file (-b).
+                -d dir path => Directory path to config file.
 
         -y value => A flavor id for the program lock.  To create unique lock.
         -v => Display version of this program.
@@ -119,6 +137,7 @@
 import sys
 import datetime
 import platform
+import socket
 
 try:
     import simplejson as json
@@ -493,7 +512,7 @@ def mail_data(args, data):
 
     """Function:  mail_data
 
-    Description:  Email data out.
+    Description:  Email data out either in the email body or as an attachment.
 
     Arguments:
         (input) args -> ArgParser class instance
@@ -501,7 +520,18 @@ def mail_data(args, data):
 
     """
 
-    if args.get_val("-e", def_val=False):
+    if args.arg_exist("-e") and args.arg_exist("-j"):
+        mail = gen_class.Mail2(
+            args.get_val("-s", def_val=None), args.get_val("-e"))
+        fname = [args.get_val("-j")]
+
+        if args.arg_exist("-g"):
+            fname.append(socket.gethostname())
+
+        mail.add_attachment(fname, "json", data)
+        mail.send_email()
+
+    elif args.arg_exist("-e"):
         mail = gen_class.setup_mail(
             args.get_val("-e"), subj=args.get_val("-s", def_val=None))
         mail.add_2_msg(data)
@@ -612,11 +642,13 @@ def main():
     dir_perms_chk = {"-d": 5}
     file_perms_chk = {"-o": 6}
     file_crt = ["-o"]
-    func_dict = {"-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
-                 "-K": kernel_run}
-    opt_con_req_dict = {"-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"]}
+    func_dict = {
+        "-L": list_ins_pkg, "-U": list_upd_pkg, "-R": list_repo,
+        "-K": kernel_run}
+    opt_con_req_dict = {
+        "-s": ["-e"], "-u": ["-e"], "-r": ["-b", "-d"], "-g": ["-j"]}
     opt_multi_list = ["-e", "-s"]
-    opt_val_list = ["-b", "-d", "-o", "-e", "-s", "-y"]
+    opt_val_list = ["-b", "-d", "-o", "-e", "-s", "-y", "-j"]
 
     # Process argument list from command line.
     args = gen_class.ArgParser(
